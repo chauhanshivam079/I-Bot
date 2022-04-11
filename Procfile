@@ -1,1 +1,1 @@
-web: yarn main
+worker: yarn main
