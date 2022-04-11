@@ -455,7 +455,7 @@ const startSock = async () => {
         //   });
       }
     } catch (err) {
-      console.log(err);
+      console.log("Errorrrrrrrrrrrrrrrrrrrr", err);
     }
   });
   //to check whether given id is admin or member or not
