@@ -1,0 +1,4 @@
+{
+  "extends": "@adiwajshing",
+  "quotes": [2, "single", "avoid-escape"]
+}
