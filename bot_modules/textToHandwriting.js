@@ -144,7 +144,7 @@ class textToHand {
             setTimeout(() => {
                 browser.close();
                 fs.rm(
-                    "`media/${_name}.pdf`", { recursive: true, force: true },
+                    `Media/${_name}.pdf`, { recursive: true, force: true },
                     (err) => {
                         if (err) console.log("Error");
                     },
