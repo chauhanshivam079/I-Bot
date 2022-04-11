@@ -262,7 +262,7 @@ class Search {
                 fs.unlinkSync(`Media/Audio/${randomName}.mp3`);
             }
         } catch (err) {
-            console.log(err);
+            console.log("MP3 Error: ", err);
             await sock.sendMessage(
                 chatId, { text: "Some Error Occured!" }, { quoted: msg }
             );

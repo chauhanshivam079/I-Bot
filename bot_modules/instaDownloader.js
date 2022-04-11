@@ -24,27 +24,31 @@ class InstaDownloader {
             });
     }
     static async download(sock, chatId, msg, link) {
-        let finalLink = link.split("?")[0];
-        const value = await instagram_download.downloadMedia(
-            finalLink,
-            "Media/Video"
-        );
-        console.log(value);
-        if (value.type === "Video") {
-            await sock.sendMessage(
-                chatId, {
-                    video: fs.readFileSync(value.file),
-                    caption: "",
-                    gifPlayback: false,
-                }, { quoted: msg }
+        try {
+            let finalLink = link.split("?")[0];
+            const value = await instagram_download.downloadMedia(
+                finalLink,
+                "Media/Video"
             );
-        } else {
-            await sock.sendMessage(
-                chatId, {
-                    image: { url: value.file },
-                    caption: "",
-                }, { quoted: msg }
-            );
+            console.log(value);
+            if (value.type === "Video") {
+                await sock.sendMessage(
+                    chatId, {
+                        video: fs.readFileSync(value.file),
+                        caption: "",
+                        gifPlayback: false,
+                    }, { quoted: msg }
+                );
+            } else {
+                await sock.sendMessage(
+                    chatId, {
+                        image: { url: value.file },
+                        caption: "",
+                    }, { quoted: msg }
+                );
+            }
+        } catch (err) {
+            console.log("Insta Error: ", err);
         }
     }
 }
