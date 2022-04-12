@@ -36,8 +36,9 @@ class textToHand {
         _cont
     ) {
         const browser = await puppeteer.launch({
-            headless: false,
-            args: ["--devtools-flags=disable"],
+            headless: True,
+            args: ["--devtools-flags=disable", "--no-sandbox"],
+
             defaultViewport: { width: 1280, height: 900 },
         });
         const page = await browser.newPage();
