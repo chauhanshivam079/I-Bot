@@ -8,16 +8,13 @@ class InstaDownloader {
             let instaId = link.replace("https://instagram.com/", "");
             instaId = instaId.replace("?utm_medium=copy_link", "");
             console.log("Insta id to search: ", instaId);
-            const res = await fetch(`https://www.instagram.com/${instaId}/?__a=1`, {
-                method: "GET",
-                headers: {
-                    "User-Agent": "ANYTHING_WILL_WORK_HERE",
-                    Accept: "application/json, text/plain, */*",
-                    "Content-Type": "application/json",
-                },
-            });
+            const res = await axios.get(
+                `https://www.instagram.com/${instaId}/?__a=1`, {
+                    headers: { "content-type": "application/json" },
+                }
+            );
             console.log(res);
-            const jsonData = await res.json();
+            const jsonData = res.data;
             console.log(jsonData);
             console.log(jsonData.graphql.user.profile_pic_url_hd);
             await sock.sendMessage(
