@@ -8,11 +8,9 @@ class InstaDownloader {
             let instaId = link.replace("https://instagram.com/", "");
             instaId = instaId.replace("?utm_medium=copy_link", "");
             console.log("Insta id to search: ", instaId);
-            const res = await axios.get(
-                `https://www.instagram.com/${instaId}/?__a=1`, {
-                    headers: { "content-type": "application/json" },
-                }
-            );
+            const res = await axios.get("https://www.instagram.com/rock/?__a=1", {
+                headers: { "content-type": "application/json" },
+            });
             console.log(res);
             const jsonData = res.data;
             console.log(jsonData);
