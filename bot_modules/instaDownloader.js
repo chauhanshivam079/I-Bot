@@ -19,6 +19,7 @@ class InstaDownloader {
                 // Do stuffs
             })
             .catch((err) => {
+                console.log(err);
                 sock.sendMessage(
                     chatId, { text: "Give the correct Profile Link" }, { quoted: msg }
                 );
