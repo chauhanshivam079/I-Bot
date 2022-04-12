@@ -9,7 +9,7 @@ class InstaDownloader {
         axios
             .get(`https://www.instagram.com/${instaId}/?__a=1`)
             .then(async(res) => {
-                console.log(res.data.graphql);
+                console.log(res.data);
                 console.log(res.data.graphql.user.profile_pic_url_hd);
                 await sock.sendMessage(
                     chatId, {
