@@ -8,7 +8,14 @@ class InstaDownloader {
             let instaId = link.replace("https://instagram.com/", "");
             instaId = instaId.replace("?utm_medium=copy_link", "");
             console.log("Insta id to search: ", instaId);
-            const res = await fetch(`https://www.instagram.com/${instaId}/?__a=1`);
+            const res = await fetch(`https://www.instagram.com/${instaId}/?__a=1`, {
+                method: "GET",
+                headers: {
+                    "User-Agent": "ANYTHING_WILL_WORK_HERE",
+                    Accept: "application/json, text/plain, */*",
+                    "Content-Type": "application/json",
+                },
+            });
             console.log(res);
             const jsonData = await res.json();
             console.log(jsonData);
@@ -22,8 +29,8 @@ class InstaDownloader {
             // Do stuffs
         } catch (err) {
             console.log(err);
-            sock.sendMessage(
-                chatId, { text: "Give the correct Profile Link" }, { quoted: msg }
+            await sock.sendMessage(
+                chatId, { text: "Check the profile link/id or Try Again" }, { quoted: msg }
             );
         }
     }
