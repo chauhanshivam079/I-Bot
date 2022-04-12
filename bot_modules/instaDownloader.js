@@ -8,7 +8,7 @@ class InstaDownloader {
             let instaId = link.replace("https://instagram.com/", "");
             instaId = instaId.replace("?utm_medium=copy_link", "");
             console.log("Insta id to search: ", instaId);
-            const res = await fetch(`https://www.instagram.com/${instaId}/?__a=1/`);
+            const res = await fetch(`https://www.instagram.com/${instaId}/?__a=1`);
             console.log(res);
             const jsonData = await res.json();
             console.log(jsonData);
