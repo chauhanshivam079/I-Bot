@@ -5,6 +5,7 @@ class InstaDownloader {
     static async iProfile(sock, chatId, msg, link) {
         let instaId = link.replace("https://instagram.com/", "");
         instaId = instaId.replace("?utm_medium=copy_link", "");
+        console.log("Insta id to search: ", instaId);
         axios
             .get(`https://www.instagram.com/${instaId}/?__a=1`)
             .then(async(res) => {
