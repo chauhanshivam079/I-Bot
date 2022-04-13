@@ -202,8 +202,8 @@ class Search {
                     await sock.sendMessage(
                         chatId, { text: "Audio size must be less than 40 mb" }, { quoted: msg }
                     );
+                    fs.unlinkSync(`Media/Audio/${randomName}.mp3`);
                 }
-                fs.unlinkSync(`Media/Audio/${randomName}.mp3`);
             }
         } catch (err) {
             console.log(err);
@@ -254,12 +254,13 @@ class Search {
                             mimetype: "audio/mp4",
                         }, { quoted: msg }
                     );
+                    fs.unlinkSync(`Media/Audio/${randomName}.mp3`);
                 } else {
                     await sock.sendMessage(
                         chatId, { text: "Audio size is greater than 40 mb" }, { quoted: msg }
                     );
+                    fs.unlinkSync(`Media/Audio/${randomName}.mp3`);
                 }
-                fs.unlinkSync(`Media/Audio/${randomName}.mp3`);
             }
         } catch (err) {
             console.log("MP3 Error: ", err);
