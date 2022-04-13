@@ -1,6 +1,7 @@
 import { Boom } from "@hapi/boom";
 import { is } from "cheerio/lib/api/traversing";
 import P from "pino";
+import { WAMessage } from "./src";
 import makeWASocket, {
   AnyMessageContent,
   delay,
@@ -14,7 +15,19 @@ const textToHand = require("./bot_modules/textToHandwriting.js");
 const ProductSearch = require("./bot_modules/ProductSearch.js");
 const Search = require("./bot_modules/Search.js");
 const fs = require("fs");
-
+const Helper = require("./bot_modules/helper.js");
+const Sticker = require("./bot_modules/sticker.ts");
+const InstaDownloader = require("./bot_modules/instaDownloader.js");
+const Crypto = require("./bot_modules/crypto.js");
+const { MongoClient, ServerApiVersion } = require("mongodb");
+const uri =
+  "mongodb+srv://karma:akabane@cluster0.br8pm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const mdClient = new MongoClient(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverApi: ServerApiVersion.v1,
+});
+mdClient.connect();
 // the store maintains the data of the WA connection in memory
 // can be written out to a file & read from it
 const store = makeInMemoryStore({
@@ -77,261 +90,252 @@ const startSock = async () => {
   const pre = "#";
   const botId = "17207416585@s.whatsapp.net";
   let i = 0;
-  let z;
-  const tthUserDetail = new Map();
-  sock.ev.on("messages.upsert", async (m) => {
-    console.log(JSON.stringify(m, undefined, 2));
-    const msg = m.messages[0];
-    if (msg.hasOwnProperty("message")) {
-      const senderId = m.messages[0].key.participant;
-      const isMe = m.messages[0].key.fromMe;
-      const senderName = m.messages[0].pushName;
-      const chatId = m.messages[0].key.remoteJid;
-      const msgKey = m.messages[0].message;
 
-      if (msgKey.hasOwnProperty("conversation")) {
-        const msgType = "conversation";
-        const msgText = m.messages[0].message.conversation;
-        if (msgText[0] === pre) {
-          const cmd = msgText.toLowerCase();
-          const cmdArr = cmd.split(" ");
-          if (
-            [pre + "add", pre + "kick", pre + "promote", pre + "demote"].find(
-              (id) => id === cmdArr[0]
-            )
-          ) {
-            if (isAdminOrMember(chatId, botId, "isAdmin")) {
-              let result = getWhatsappId(m, cmdArr);
-              if (result.length > 0) {
-                if (cmdArr[0] === pre + "add")
-                  groupManage.add(sock, chatId, [result], senderId, msg);
-                else if (cmdArr[0] === pre + "kick")
-                  groupManage.remove(sock, chatId, [result], senderId, msg);
-                else if (cmdArr[0] === pre + "promote")
-                  groupManage.promote(sock, chatId, [result], senderId, msg);
-                else if (cmdArr[0] === pre + "demote")
-                  groupManage.demote(sock, chatId, [result], senderId, msg);
+  const tthUserDetail = new Map();
+  setInterval(() => {
+    Crypto.getNews(sock, "120363040241737423@g.us", { msgText: "" });
+    //Crypto.getNnews(sock, "918329198682-1612849199@g.us", { msgText: "" });
+    //Crypto.news(driver, "918329198682-1614096949@g.us", CRYPTOPANIC_API, "")
+  }, 43200000 / 2);
+  sock.ev.on("messages.upsert", async (m) => {
+    try {
+      //console.log(JSON.stringify(m, undefined, 2));
+      const msg = m.messages[0];
+      if (msg.hasOwnProperty("message")) {
+        const senderId = m.messages[0].key.participant;
+        const isMe = m.messages[0].key.fromMe;
+        const senderName = m.messages[0].pushName;
+        const chatId = m.messages[0].key.remoteJid;
+        const msgKey = m.messages[0].message;
+        const msgData = Helper.getMessageData(msgKey, pre);
+        console.log(msgData);
+        if (msgData.isCmd) {
+          switch (msgData.cmd) {
+            case "add":
+            case "kick":
+            case "promote":
+            case "demote":
+              if (await isAdminOrMember(chatId, botId, "isAdmin")) {
+                const tempId =
+                  msgData.msgText.length === 0
+                    ? msgData.quotedMessage.participant
+                    : getWhatsappId(m, msgData.msgText);
+                if (tempId.length > 0) {
+                  switch (msgData.cmd) {
+                    case "add":
+                      groupManage.add(sock, chatId, [tempId], senderId, msg);
+                      break;
+                    case "kick":
+                      groupManage.remove(sock, chatId, [tempId], senderId, msg);
+                      break;
+                    case "promote":
+                      groupManage.promote(
+                        sock,
+                        chatId,
+                        [tempId],
+                        senderId,
+                        msg
+                      );
+                      break;
+                    case "demote":
+                      groupManage.demote(sock, chatId, [tempId], senderId, msg);
+                      break;
+                  }
+                } else {
+                  await sock.sendMessage(
+                    chatId,
+                    {
+                      text: "Wrong Number!!\nYou Noob who made u the admin of this group",
+                    },
+                    { quoted: m.messages[0] }
+                  );
+                }
               } else {
                 await sock.sendMessage(
                   chatId,
-                  {
-                    text: "Wrong Number!!\nYou Noob who made u the admin of this group",
-                  },
+                  { text: "Bot not an Admin" },
                   { quoted: m.messages[0] }
                 );
               }
-            } else {
-              await sock.sendMessage(
-                chatId,
-                { text: "Bot not an Admin" },
-                { quoted: m.messages[0] }
-              );
-            }
-          } else if (cmdArr[0] === pre + "tth") {
-            try {
-              if (tthUserDetail.has(senderId)) {
+              break;
+            case "link":
+              if (await isAdminOrMember(chatId, botId, "isAdmin")) {
+                groupManage.getLink(sock, chatId, senderId, msg);
+              } else {
+                await sock.sendMessage(
+                  chatId,
+                  { text: "Bot not an Admin!" },
+                  { quoted: msg }
+                );
+              }
+
+              break;
+            case "is":
+              Search.isearch(sock, chatId, msg, msgData.msgText);
+              break;
+
+            case "gs":
+              Search.gsearch(sock, chatId, msg, msgData.msgText);
+              break;
+
+            case "vs":
+              Search.vsearch(sock, chatId, msg, msgData.msgText);
+
+              break;
+
+            case "ps":
+              ProductSearch.search(sock, chatId, msg, msgData.msgText);
+
+              break;
+            case "mp3s":
+              Search.searchMp3ByName(sock, chatId, msg, msgData.msgText);
+
+              break;
+            case "mp3c":
+              Search.mp3Convertor(sock, chatId, msg, msgData.msgText);
+              break;
+
+            case "tth":
+              try {
+                if (tthUserDetail.has(senderId)) {
+                  await sock.sendMessage(
+                    chatId,
+                    {
+                      text: "You already initiated the process.",
+                    },
+                    { quoted: msg }
+                  );
+
+                  textToHand.checkForLeftOverDetails(
+                    tthUserDetail,
+                    senderId,
+                    sock,
+                    chatId
+                  );
+                } else {
+                  await sock.sendMessage(
+                    chatId,
+                    {
+                      text: "Enter your name\n*Reply to this message with # as Prefix*",
+                    },
+                    { quoted: m.messages[0] }
+                  );
+                }
+              } catch (err) {
+                console.log(err);
                 await sock.sendMessage(
                   chatId,
                   {
-                    text: "You already initiated the process.",
+                    text: "Sorry! Some Error Occured\nTry Again",
                   },
                   { quoted: msg }
                 );
-
-                textToHand.checkForLeftOverDetails(
-                  tthUserDetail,
-                  senderId,
-                  sock,
-                  chatId
+              }
+              break;
+            case "s":
+            case "sticker":
+              if (
+                msgData.isQuoted &&
+                (msgData.quotedMessage.quotedMessage.hasOwnProperty(
+                  "imageMessage"
+                ) ||
+                  msgData.quotedMessage.quotedMessage.hasOwnProperty(
+                    "videoMessage"
+                  ))
+              ) {
+                Sticker.imgToSticker(sock, chatId, msg, msgData);
+              } else if (
+                msgData.msgType === "image" ||
+                msgData.msgType === "video"
+              ) {
+                Sticker.imgToSticker(sock, chatId, msg, msgData);
+              }
+              break;
+            case "toimg":
+              if (msgData.isQuoted) {
+                Sticker.stickerToImg(sock, chatId, msg, msgData);
+              } else {
+                sock.sendMessage(
+                  chatId,
+                  { text: "Tag a sticker!" },
+                  { quoted: msg }
                 );
+              }
+              break;
+            case "iprof":
+              InstaDownloader.iProfile(sock, chatId, msg, msgData.msgText);
+              break;
+            case "igd":
+              InstaDownloader.download(sock, chatId, msg, msgData.msgText);
+              break;
+            case "tagall":
+              if (await isAdminOrMember(chatId, senderId, "isAdmin")) {
+                groupManage.tagAll(sock, chatId, msgData, msg, false);
               } else {
                 await sock.sendMessage(
                   chatId,
-                  {
-                    text: "Enter your name\n*Reply to this message with # as Prefix*",
-                  },
-                  { quoted: m.messages[0] }
+                  { text: "Admin only Command!" },
+                  { quoted: msg }
                 );
               }
-            } catch (err) {
-              console.log(err);
-              await sock.sendMessage(
-                chatId,
-                {
-                  text: "Sorry! Some Error Occured\nTry Again",
-                },
-                { quoted: msg }
-              );
-            }
-          } else if (cmdArr[0] === pre + "psearch") {
-            let productName = "";
-            for (let i = 1; i < cmdArr.length; i++) {
-              productName = productName + cmdArr[i] + " ";
-            }
 
-            console.log(productName);
-            ProductSearch.search(
-              sock,
-              chatId,
-              msg,
-              productName.slice(0, productName.length - 1)
-            );
-          } else if (cmdArr[0] === pre + "gs") {
-            Search.gsearch(
-              sock,
-              chatId,
-              msg,
-              cmdArr.slice(1, cmdArr.length).join(" ")
-            );
-          } else if (cmdArr[0] === pre + "is") {
-            Search.isearch(
-              sock,
-              chatId,
-              msg,
-              cmdArr.slice(1, cmdArr.length).join(" ")
-            );
-          } else if (cmdArr[0] === pre + "vs") {
-            Search.vsearch(
-              sock,
-              chatId,
-              msg,
-              cmdArr.slice(1, cmdArr.length).join(" ")
-            );
-          } else if (cmdArr[0] === pre + "mp3s") {
-            Search.searchMp3ByName(
-              sock,
-              chatId,
-              msg,
-              cmdArr.slice(1, cmdArr.length).join(" ")
-            );
-          } else if (cmdArr[0] === pre + "mp3c") {
-            const tempMsgText = msgText.split(" ")[1];
-            Search.mp3Convertor(sock, chatId, msg, tempMsgText);
-          }
-          //next command
-        }
+              break;
+            case "tagadmins":
+              if (await isAdminOrMember(chatId, senderId, "isAdmin")) {
+                groupManage.tagAll(sock, chatId, msgData, msg, true);
+              } else {
+                await sock.sendMessage(
+                  chatId,
+                  { text: "Admin Only Command!" },
+                  { quoted: msg }
+                );
+              }
+              break;
+            case "cp":
+              Crypto.getPrices(sock, chatId, msgData, msg);
+              break;
+            case "cn":
+              Crypto.getNews(sock, chatId, msgData);
+              break;
+            case "sp":
+              Crypto.getStockPrice(sock, chatId, msgData, msg);
+              break;
+            case "..":
+              const collection = mdClient.db("Users").collection("userProfile");
+              try {
+                const a = await collection.find().toArray();
 
-        // if (msgText===pre+"1")
-        // groupManage.remove(sock,chatId,participantList,senderId,msg)
-        // if (msgText===pre+"2") groupManage.add();
-        // if (msgText===pre+"3") groupManage.demote(sock,chatId,participantList,senderId,msg)
-        // if (msgText===pre+"4")	groupManage.promote(sock, chatId, participantList, senderId,msg)
-        if (msgText === pre + "5")
-          groupManage.getLink(sock, chatId, senderId, msg);
-        // console.log(typeof m)
-      } else if (msgKey.hasOwnProperty("audioMessage")) {
-        const msgType = "audioMessage";
-      } else if (msgKey.hasOwnProperty("imageMessage")) {
-        if (msgKey.imageMessage.hasOwnProperty("caption")) {
-          let caption = msgKey.imageMessage.caption;
-          if (caption === pre + "") {
+                a.forEach(async (el) => {
+                  console.log(el["data"]);
+                  if (el["_id"] === 3434) {
+                    let obj: WAMessage = JSON.parse(el["data"]);
+                    await sock.sendMessage(
+                      chatId,
+                      { text: "Asdas" },
+                      { quoted: obj }
+                    );
+                  }
+                });
+              } catch (err) {
+                console.log(err);
+              }
+              break;
+            case ".":
+              const collectio = mdClient.db("Users").collection("userProfile");
+              let data = JSON.stringify(msg);
+              collectio.insertOne({ _id: 344, data: data });
+              console.log(await collectio.find().toArray());
+              // perform actions on the collection object
+              console.log(JSON.stringify(msg, undefined, 2));
           }
-        }
-      } else if (msgKey.hasOwnProperty("videoMessage")) {
-        const msgType = "videoMessage";
-      } else if (msgKey.hasOwnProperty("stickerMessage")) {
-        const msgType = "stickerMessage";
-      } else if (msgKey.hasOwnProperty("reactionMessage")) {
-        const msgType = "reactionMessage";
-        const reactionMsg = m.messages[0].message.reactionMessage.text;
-      } else if (msgKey.hasOwnProperty("extendedTextMessage")) {
-        const msgType = "reply";
-        const msgText = m.messages[0].message.extendedTextMessage.text;
-        const cmd = msgText.toLowerCase();
-        const cmdArr = cmd.split(" ");
-        let quotedMessageId = "";
-        const pre = "#";
-        if (cmdArr[0] === pre + "psearch") {
-          let productName = "";
-          for (let i = 1; i < cmdArr.length; i++) {
-            productName = productName + cmdArr[i] + " ";
-          }
-          ProductSearch.search(
-            sock,
-            chatId,
-            msg,
-            productName.slice(0, productName.length - 1)
-          );
-        } else if (msgText[0] === pre) {
-          const quotedMessage =
-            m.messages[0].message.extendedTextMessage.contextInfo;
-          quotedMessageId = quotedMessage.participant
-            ? quotedMessage.participant
-            : quotedMessage.mentionedJid[0];
-          console.log(await isAdminOrMember(chatId, botId, "isAdmin"));
-          const isAdmin = await isAdminOrMember(chatId, botId, "isAdmin");
-
-          if (msgText.split(" ")[0] === pre + "add") {
-            if (isAdmin) {
-              groupManage.add(sock, chatId, [quotedMessageId], senderId, msg);
-            } else {
-              await sock.sendMessage(
-                chatId,
-                { text: " BOT not Admin Yet!" },
-                { quoted: m.messages[0] }
-              );
-            }
-          } else if (msgText.split(" ")[0] === pre + "kick") {
-            if (isAdmin) {
-              groupManage.remove(
-                sock,
-                chatId,
-                [quotedMessageId],
-                senderId,
-                msg
-              );
-            } else {
-              await sock.sendMessage(
-                chatId,
-                { text: " BOT not Admin Yet!" },
-                { quoted: m.messages[0] }
-              );
-            }
-          } else if (msgText.split(" ")[0] === pre + "promote") {
-            if (isAdmin) {
-              groupManage.promote(
-                sock,
-                chatId,
-                [quotedMessageId],
-                senderId,
-                msg
-              );
-            } else {
-              await sock.sendMessage(
-                chatId,
-                { text: " BOT not Admin Yet!" },
-                { quoted: m.messages[0] }
-              );
-            }
-          } else if (msgText.split(" ")[0] === pre + "demote") {
-            if (isAdmin) {
-              groupManage.demote(
-                sock,
-                chatId,
-                [quotedMessageId],
-                senderId,
-                msg
-              );
-            } else {
-              await sock.sendMessage(
-                chatId,
-                { text: " BOT not Admin Yet!" },
-                { quoted: m.messages[0] }
-              );
-            }
-          } else if (msgText === pre + "name") {
-            await sock.sendMessage(
-              chatId,
-              { text: "I-Bot" },
-              { quoted: m.messages[0] }
-            );
-          } else if (
-            quotedMessage.quotedMessage.conversation ===
-            "Enter your name\n*Reply to this message with # as Prefix*"
+          if (
+            msgData.isQuoted &&
+            msgData.quotedMessage.quotedMessage.conversation ===
+              "Enter your name\n*Reply to this message with # as Prefix*"
           ) {
             const userDetail = {
               senderId: senderId,
-              name: msgText.slice(1),
+              name: msgData.cmd + msgData.msgText,
             };
             tthUserDetail.set(senderId, userDetail);
             await sock.sendMessage(
@@ -339,37 +343,39 @@ const startSock = async () => {
               {
                 text: "Enter the second thing to put below name\n*Reply to this message with # as Prefix*",
               },
-              { quoted: m.messages[0] }
+              { quoted: msg }
             );
           } else if (
-            quotedMessage.quotedMessage.conversation ===
-            "Enter the second thing to put below name\n*Reply to this message with # as Prefix*"
+            msgData.isQuoted &&
+            msgData.quotedMessage.quotedMessage.conversation ===
+              "Enter the second thing to put below name\n*Reply to this message with # as Prefix*"
           ) {
             if (tthUserDetail.has(senderId)) {
               let temp = tthUserDetail.get(senderId);
-              temp.secondField = msgText.slice(1);
+              temp.secondField = msgData.cmd + msgData.msgText;
               tthUserDetail.set(senderId, temp);
               await sock.sendMessage(
                 chatId,
                 {
                   text: "Enter the heading of your content\n*Reply to this message with # as Prefix*",
                 },
-                { quoted: m.messages[0] }
+                { quoted: msg }
               );
             } else {
               await sock.sendMessage(
                 chatId,
                 { text: "You have not initiated the process\nSend #tth" },
-                { quoted: m.messages[0] }
+                { quoted: msg }
               );
             }
           } else if (
-            quotedMessage.quotedMessage.conversation ===
-            "Enter the heading of your content\n*Reply to this message with # as Prefix*"
+            msgData.isQuoted &&
+            msgData.quotedMessage.quotedMessage.conversation ===
+              "Enter the heading of your content\n*Reply to this message with # as Prefix*"
           ) {
             if (tthUserDetail.has(senderId)) {
               let temp = tthUserDetail.get(senderId);
-              temp.heading = msgText.slice(1);
+              temp.heading = msgData.cmd + msgData.msgText;
               tthUserDetail.set(senderId, temp);
               await sock.sendMessage(
                 chatId,
@@ -386,12 +392,15 @@ const startSock = async () => {
               );
             }
           } else if (
-            quotedMessage.quotedMessage.conversation ===
-            "Enter the content\n*Reply to this message with # as Prefix*"
+            msgData.isQuoted &&
+            msgData.quotedMessage.quotedMessage.conversation ===
+              "Enter the content\n*Reply to this message with # as Prefix*"
           ) {
             if (tthUserDetail.has(senderId)) {
               let temp = tthUserDetail.get(senderId);
-              temp.content = msgText.slice(1).split("\n").join("<br>");
+              temp.content = (msgData.cmd + msgData.msgText)
+                .split("\n")
+                .join("<br>");
               tthUserDetail.set(senderId, temp);
 
               let userDetailObj = tthUserDetail.get(senderId);
@@ -426,58 +435,40 @@ const startSock = async () => {
               await sock.sendMessage(
                 chatId,
                 { text: "You have not initiated the process\nSend #tth" },
-                { quoted: m.messages[0] }
+                { quoted: msg }
               );
             }
-          } else if (cmdArr[0] === pre + "gs") {
-            Search.gsearch(
-              sock,
-              chatId,
-              msg,
-              cmdArr.slice(1, cmdArr.length).join(" ")
-            );
-          } else if (cmdArr[0] === pre + "is") {
-            Search.isearch(
-              sock,
-              chatId,
-              msg,
-              cmdArr.slice(1, cmdArr.length).join(" ")
-            );
-          } else if (cmdArr[0] === pre + "vs") {
-            Search.vsearch(
-              sock,
-              chatId,
-              msg,
-              cmdArr.slice(1, cmdArr.length).join(" ")
-            );
-          } else if (cmdArr[0] === pre + "mp3s") {
-            Search.searchMp3ByName(
-              sock,
-              chatId,
-              msg,
-              cmdArr.slice(1, cmdArr.length).join(" ")
-            );
-          } else if (cmdArr[0] === pre + "mp3c") {
-            Search.mp3Converter(sock, chatId, msg, msgText.split(" ")[1]);
           }
         }
+
+        //       // const chat_id=m
+        //       // if ()
+        //       // if(!msg.key.fromMe /*&& m.type === 'notify'*/) {
+        //       // 	console.log(m.type)
+
+        //       // 	console.log("=====================================================================================================")
+        //       // 	//console.log('replying to', m.messages[0].key.remoteJid)
+        //       // 	//await sock!.sendReadReceipt(msg.key.remoteJid, msg.key.participant, [msg.key.id])
+        //       // 	//await sendMessageWTyping({ text: 'Hello there!' }, msg.key.remoteJid)
+        //       // }
+        //     }
+        //   });
       }
-
-      // const chat_id=m
-      // if ()
-      // if(!msg.key.fromMe /*&& m.type === 'notify'*/) {
-      // 	console.log(m.type)
-
-      // 	console.log("=====================================================================================================")
-      // 	//console.log('replying to', m.messages[0].key.remoteJid)
-      // 	//await sock!.sendReadReceipt(msg.key.remoteJid, msg.key.participant, [msg.key.id])
-      // 	//await sendMessageWTyping({ text: 'Hello there!' }, msg.key.remoteJid)
-      // }
+    } catch (err) {
+      console.log("Errorrrrrrrrrrrrrrrrrrrr", err);
     }
   });
-
   //to check whether given id is admin or member or not
   const isAdminOrMember = async (chatId, senderId, check) => {
+    senderId = senderId.replace(
+      senderId.substring(
+        senderId.indexOf(":") === -1
+          ? senderId.indexOf("@")
+          : senderId.indexOf(":"),
+        senderId.indexOf("@")
+      ),
+      ""
+    );
     const grpMembers = await sock.groupMetadata(chatId);
     const grpAdminList = [];
     const grpMemberList = [];
@@ -493,12 +484,13 @@ const startSock = async () => {
   };
 
   //to get whatsappId from the msg
-  const getWhatsappId = (m, cmdArr) => {
+  const getWhatsappId = (m, msgText) => {
     let whatsappId = "";
     let numToAdd = "";
     let i;
-    for (i = 1; i < cmdArr.length; i++) {
-      numToAdd += cmdArr[i];
+    let arr = msgText.split(" ");
+    for (i = 0; i < arr.length; i++) {
+      numToAdd += arr[i];
     }
     console.log("numtoadd", numToAdd, numToAdd.length);
     if (
