@@ -149,8 +149,9 @@ const startSock = async () => {
         const chatId = m.messages[0].key.remoteJid;
         const msgKey = m.messages[0].message;
         const msgData = Helper.getMessageData(msgKey, pre);
-        console.log(msgData);
+
         if (msgData.isCmd) {
+          console.log(msgData);
           switch (msgData.cmd) {
             case "add":
             case "kick":
@@ -368,6 +369,14 @@ const startSock = async () => {
               console.log(await collectio.find().toArray());
               // perform actions on the collection object
               console.log(JSON.stringify(msg, undefined, 2));
+              break;
+            case "a":
+              await sock.sendMessage(
+                chatId,
+                { text: "Yup! I am active" },
+                { quoted: msg }
+              );
+              break;
           }
           if (
             msgData.isQuoted &&
