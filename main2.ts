@@ -20,9 +20,12 @@ const Sticker = require("./bot_modules/sticker.ts");
 const InstaDownloader = require("./bot_modules/instaDownloader.js");
 const Crypto = require("./bot_modules/crypto.js");
 const { MongoClient, ServerApiVersion } = require("mongodb");
+require("dotenv").config({ path: "./Keys.env" });
 const mdbUsername = process.env.MDB_USERNAME;
 const mdbPassword = process.env.MDB_PASSWORD;
 const uri = `mongodb+srv://${mdbUsername}:${mdbPassword}@cluster0.br8pm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+console.log(uri);
+
 const mdClient = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
