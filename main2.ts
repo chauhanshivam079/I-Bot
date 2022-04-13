@@ -20,15 +20,16 @@ const Sticker = require("./bot_modules/sticker.ts");
 const InstaDownloader = require("./bot_modules/instaDownloader.js");
 const Crypto = require("./bot_modules/crypto.js");
 const { MongoClient, ServerApiVersion } = require("mongodb");
-const uri =
-  "mongodb+srv://karma:akabane@cluster0.br8pm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const mdbUsername = process.env.MDB_USERNAME;
+const mdbPassword = process.env.MDB_PASSWORD;
+const uri = `mongodb+srv://${mdbUsername}:${mdbPassword}@cluster0.br8pm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const mdClient = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   serverApi: ServerApiVersion.v1,
 });
 mdClient.connect();
-console.log("connected");
+console.log("Mongo DB Connected");
 // the store maintains the data of the WA connection in memory
 // can be written out to a file & read from it
 const store = makeInMemoryStore({

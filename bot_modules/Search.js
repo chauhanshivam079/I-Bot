@@ -1,13 +1,13 @@
 const fetch = require("node-fetch");
 const fs = require("fs");
 const ytdl = require("ytdl-core");
-const API = "AIzaSyBmI4gi_mtjIKU3lQfYM33m0Wsu9KezWGA";
-const API2 = "AIzaSyAfI0wLyLMMqDTkYbcgXpaBqr1gV2HQr_Q";
-const ENGINE_ID = "f2d05312f898b060b";
+const gApi = process.env.G_API;
+const ytApi = process.env.YT_API;
+const gApiEngineId = process.env.G_API_ENGINE_ID;
 class Search {
     static async gsearch(sock, chatId, msg, ques) {
         console.log(ques);
-        let url = `https://www.googleapis.com/customsearch/v1?key=${API}&cx=${ENGINE_ID}&q=${ques}`;
+        let url = `https://www.googleapis.com/customsearch/v1?key=${gApi}&cx=${gApiEngineId}&q=${ques}`;
 
         try {
             const q = await fetch(url, {
@@ -54,7 +54,7 @@ class Search {
     static async isearch(sock, chatId, msg, ques) {
         console.log(ques);
         console.log("////////////////");
-        let url = `https://www.googleapis.com/customsearch/v1?key=${API}&cx=${ENGINE_ID}&q=Images of ${ques}`;
+        let url = `https://www.googleapis.com/customsearch/v1?key=${gApi}&cx=${gApiEngineId}&q=Images of ${ques}`;
         try {
             const q = await fetch(url, {
                 method: "GET",
@@ -104,7 +104,7 @@ class Search {
 
     static async vsearch(sock, chatId, msg, ques) {
         let randomName = (Math.random() + 1).toString(36).substring(7);
-        let url = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=${ques}&key=${API2}`;
+        let url = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=${ques}&key=${ytApi}`;
         try {
             const q = await fetch(url, {
                 method: "GET",
@@ -215,7 +215,7 @@ class Search {
 
     static async searchMp3ByName(sock, chatId, msg, ques) {
         let randomName = (Math.random() + 1).toString(36).substring(7);
-        let url = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=${ques}&key=${API2}`;
+        let url = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=${ques}&key=${ytApi}`;
         try {
             const q = await fetch(url, {
                 method: "GET",

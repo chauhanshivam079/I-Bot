@@ -8,7 +8,7 @@ class Crypto {
     _coinsData;
     _coinsDataName;
     _coinsDetails;
-    _newsApiKey = "cedfe1ec374e4888836d017a0e244ecb";
+    _newsApiKey = process.env.NEWS_API;
     constructor() {
         this._baseUrl = "https://api.coingecko.com/api/v3/";
         fetch("https://api.coingecko.com/api/v3/coins/list").then((res) =>
