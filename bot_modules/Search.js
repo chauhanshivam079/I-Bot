@@ -60,15 +60,26 @@ class Search {
                 method: "GET",
             });
             const data = await q.json();
-
+            //console.log(data);
+            console.log(data.searchInformation.totalResults);
             if (data.searchInformation.totalResults !== "0") {
                 const imgSrcArr = [data.items[0], data.items[1], data.items[2]];
                 const imgSrc = [];
-
+                console.log("Imge array source :", imgSrcArr);
                 for (let i = 0; i < imgSrcArr.length; i++) {
                     if (imgSrcArr[i].pagemap.hasOwnProperty("imageobject")) {
-                        imgSrc.push(imgSrcArr[i].pagemap.imageobject[0].thumbnailurl);
-                        imgSrc.push(imgSrcArr[i].pagemap.imageobject[1].thumbnailurl);
+                        let url1 = imgSrcArr[i].pagemap.imageobject[0].image ?
+                            imgSrcArr[i].pagemap.imageobject[0].image :
+                            imgSrcArr[i].pagemap.imageobject[0].thumbnailurl ?
+                            imgSrcArr[i].pagemap.imageobject[0].thumbnailurl :
+                            imgSrcArr[i].pagemap.imageobject[0].contenturl;
+                        let url2 = imgSrcArr[i].pagemap.imageobject[1].image ?
+                            imgSrcArr[i].pagemap.imageobject[1].image :
+                            imgSrcArr[i].pagemap.imageobject[1].thumbnailurl ?
+                            imgSrcArr[i].pagemap.imageobject[1].thumbnailurl :
+                            imgSrcArr[i].pagemap.imageobject[1].contenturl;
+                        imgSrc.push(url1);
+                        imgSrc.push(url2);
 
                         break;
                     }
@@ -77,6 +88,7 @@ class Search {
                     imgSrc.push(imgSrcArr[0].pagemap.cse_image[0].src);
                     imgSrc.push(imgSrcArr[1].pagemap.cse_image[0].src);
                 }
+                console.log(imgSrc);
                 await sock.sendMessage(
                     chatId, {
                         image: { url: imgSrc[0] },
