@@ -100,7 +100,7 @@ const startSock = async () => {
     // implement to handle retries
     getMessage: async (key) => {
       return {
-        conversation: "hello",
+        conversation: "Bot on pause retrying!",
       };
     },
   });
