@@ -158,7 +158,7 @@ class InstaDownloader {
                 );
             }
 
-            fs.unlinkSync(fileName);
+            fs.unlinkSync(savePath + fileName);
         } catch (error) {
             console.log("Insta download error: ", error);
             await sock.sendMessage(
