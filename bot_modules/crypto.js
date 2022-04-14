@@ -56,6 +56,12 @@ class Crypto {
         }, 5000);
     }
     async getPrices(sock, chatId, msgData, msg) {
+        if (msgData.msgText === "") {
+            await sock.sendMessage(
+                chatId, { text: "Empty Parameter!" }, { quoted: msg }
+            );
+            return;
+        }
         let coinName = msgData.msgText.toLowerCase();
         let finalStr = "";
         let flag = 0;
@@ -125,6 +131,12 @@ class Crypto {
         await sock.sendMessage(chatId, { text: finalStr });
     }
     async getStockPrice(sock, chatId, msgData, msg) {
+        if (msgData.msgText === "") {
+            await sock.sendMessage(
+                chatId, { text: "Empty Parameter!" }, { quoted: msg }
+            );
+            return;
+        }
         const url = `https://www.google.com/finance/quote/${msgData.msgText}:NSE`;
         try {
             // Fetch HTML of the page we want to scrape

@@ -4,6 +4,12 @@ const pretty = require("pretty");
 class ProductSearch {
     // Async function which scrapes the data
     static async search(sock, chatId, msg, productName) {
+        if (productName === "") {
+            await sock.sendMessage(
+                chatId, { text: "Empty Parameter!" }, { quoted: msg }
+            );
+            return;
+        }
         productName = productName.split(" ").join("+");
         const url = `https://www.smartprix.com/products/?q=${productName}`;
         try {

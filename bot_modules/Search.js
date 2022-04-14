@@ -7,6 +7,12 @@ const gApiEngineId = process.env.G_API_ENGINE_ID;
 class Search {
     static async gsearch(sock, chatId, msg, ques) {
         console.log(ques);
+        if (ques === "") {
+            await sock.sendMessage(
+                chatId, { text: "Empty Parameter!" }, { quoted: msg }
+            );
+            return;
+        }
         let url = `https://www.googleapis.com/customsearch/v1?key=${gApi}&cx=${gApiEngineId}&q=${ques}`;
 
         try {
@@ -53,6 +59,12 @@ class Search {
 
     static async isearch(sock, chatId, msg, ques) {
         console.log(ques);
+        if (ques === "") {
+            await sock.sendMessage(
+                chatId, { text: "Empty Parameter!" }, { quoted: msg }
+            );
+            return;
+        }
         console.log("////////////////");
         let url = `https://www.googleapis.com/customsearch/v1?key=${gApi}&cx=${gApiEngineId}&q=Images of ${ques}`;
         try {
@@ -115,6 +127,12 @@ class Search {
     }
 
     static async vsearch(sock, chatId, msg, ques) {
+        if (ques === "") {
+            await sock.sendMessage(
+                chatId, { text: "Empty Parameter!" }, { quoted: msg }
+            );
+            return;
+        }
         let randomName = (Math.random() + 1).toString(36).substring(7);
         let url = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=${ques}&key=${ytApi}`;
         try {
@@ -171,6 +189,12 @@ class Search {
     }
 
     static async mp3Convertor(sock, chatId, msg, ques) {
+        if (ques === "") {
+            await sock.sendMessage(
+                chatId, { text: "Empty Parameter!" }, { quoted: msg }
+            );
+            return;
+        }
         try {
             let randomName = (Math.random() + 1).toString(36).substring(7);
             let finalVideoUrl = ques;
@@ -226,6 +250,12 @@ class Search {
     }
 
     static async searchMp3ByName(sock, chatId, msg, ques) {
+        if (ques === "") {
+            await sock.sendMessage(
+                chatId, { text: "Empty Parameter!" }, { quoted: msg }
+            );
+            return;
+        }
         let randomName = (Math.random() + 1).toString(36).substring(7);
         let url = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=${ques}&key=${ytApi}`;
         try {

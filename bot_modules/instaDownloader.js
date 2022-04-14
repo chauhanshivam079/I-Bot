@@ -6,6 +6,12 @@ const INTL = require("intl");
 const instagram_download = require("@juliendu11/instagram-downloader");
 class InstaDownloader {
     static async iProfile(sock, chatId, msg, link) {
+        if (link === "") {
+            await sock.sendMessage(
+                chatId, { text: "Empty Parameter!" }, { quoted: msg }
+            );
+            return;
+        }
         try {
             let instaId = link.replace("https://instagram.com/", "");
             instaId = instaId.replace("?utm_medium=copy_link", "");
@@ -72,6 +78,12 @@ class InstaDownloader {
         });
     }
     static async igDownload(sock, chatId, msg, link) {
+        if (link === "") {
+            await sock.sendMessage(
+                chatId, { text: "Empty Parameter!" }, { quoted: msg }
+            );
+            return;
+        }
         try {
             let finalLink = link.split("?")[0];
             if (finalLink.slice(-1) != "/") {
