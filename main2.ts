@@ -385,6 +385,12 @@ const startSock = async () => {
                 { quoted: msg }
               );
               break;
+            case "make him gay":
+              await sock.sendMessage(
+                chatId,
+                { text: "No need *tejash* already izzz" },
+                { quoted: msg }
+              );
             default:
               sock.sendMessage(
                 chatId,
