@@ -1,3 +1,4 @@
+require("dotenv").config({ path: "./Keys.env" });
 import { Boom } from "@hapi/boom";
 import { is } from "cheerio/lib/api/traversing";
 import P from "pino";
@@ -20,7 +21,7 @@ const Sticker = require("./bot_modules/sticker.ts");
 const InstaDownloader = require("./bot_modules/instaDownloader.js");
 const Crypto = require("./bot_modules/crypto.js");
 const { MongoClient, ServerApiVersion } = require("mongodb");
-require("dotenv").config({ path: "./Keys.env" });
+
 const mdbUsername = process.env.MDB_USERNAME;
 const mdbPassword = process.env.MDB_PASSWORD;
 const uri = `mongodb+srv://${mdbUsername}:${mdbPassword}@cluster0.br8pm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
@@ -155,6 +156,7 @@ const startSock = async () => {
 
         if (msgData.isCmd) {
           console.log(msgData);
+          const cmdList = `*Use # as a prefix in all commands*\nadd -to add a number to the grp\nkick -to remove a number from the group\npromote -to promote a group member\ndemote -to demote a group member\nlink -to get the link of the group\nis -to get the image \ngs -to search for your query \nvs -to download a video\nps -to search for a product\nmp3s -to download mp3song\nmp3c -to convert a yt video to mp3\ntth -to make pdf\ns -to make sticker\ntoimg -to convert sticker to image\niprof -to get the profile picture of a user\nigd -to download insta video\ntagall -to tag all members of a group\ntagadmins -to tag admins of the group\ncp -to get the price of a crypto coin\ncn -to get news for a specific crypto name\nsp -to get the price for the stock\na -to check the status of the bot`;
           switch (msgData.cmd) {
             case "add":
             case "kick":
@@ -296,6 +298,9 @@ const startSock = async () => {
                 Sticker.imgToSticker(sock, chatId, msg, msgData);
               }
               break;
+            case "help":
+              sock.sendMessage(chatId, { text: cmdList }, { quoted: msg });
+              break;
             case "toimg":
               if (msgData.isQuoted) {
                 Sticker.stickerToImg(sock, chatId, msg, msgData);
@@ -311,7 +316,7 @@ const startSock = async () => {
               InstaDownloader.iProfile(sock, chatId, msg, msgData.msgText);
               break;
             case "igd":
-              InstaDownloader.download(sock, chatId, msg, msgData.msgText);
+              InstaDownloader.igDownload(sock, chatId, msg, msgData.msgText);
               break;
             case "tagall":
               if (await isAdminOrMember(chatId, senderId, "isAdmin")) {
@@ -380,6 +385,12 @@ const startSock = async () => {
                 { quoted: msg }
               );
               break;
+            default:
+              sock.sendMessage(
+                chatId,
+                { text: "Use #help to know the ryt cmd of bot" },
+                { quoted: msg }
+              );
           }
           if (
             msgData.isQuoted &&
