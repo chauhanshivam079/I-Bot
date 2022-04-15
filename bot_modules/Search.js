@@ -90,10 +90,11 @@ class Search {
                             imgSrcArr[i].pagemap.imageobject[1].thumbnailurl ?
                             imgSrcArr[i].pagemap.imageobject[1].thumbnailurl :
                             imgSrcArr[i].pagemap.imageobject[1].contenturl;
-                        imgSrc.push(url1);
-                        imgSrc.push(url2);
-
-                        break;
+                        if (url1 && url2) {
+                            imgSrc.push(url1);
+                            imgSrc.push(url2);
+                            break;
+                        }
                     }
                 }
                 if (imgSrc.length === 0) {
