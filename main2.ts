@@ -22,6 +22,8 @@ const InstaDownloader = require("./bot_modules/instaDownloader.js");
 const Crypto = require("./bot_modules/crypto.js");
 const { MongoClient, ServerApiVersion } = require("mongodb");
 
+let ownerIdsString = process.env.OWNER_IDS;
+const ownerIds = ownerIdsString.split(" ").map((id) => id + "@s.whatsapp.net");
 const mdbUsername = process.env.MDB_USERNAME;
 const mdbPassword = process.env.MDB_PASSWORD;
 const uri = `mongodb+srv://${mdbUsername}:${mdbPassword}@cluster0.br8pm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
@@ -52,7 +54,7 @@ try {
       sessionAuth = JSON.parse(sessionAuth);
       sessionAuth = JSON.stringify(sessionAuth);
       //console.log(session);
-      fs.writeFileSync("./auth_info_multi.json", sessionAuth);
+      //fs.writeFileSync("./auth_info_multi.json", sessionAuth);
     });
   });
   console.log("Local file written");
@@ -89,7 +91,7 @@ const startSock = async () => {
   const { version, isLatest } = await fetchLatestBaileysVersion();
   //console.log(`using WA v${version.join(".")}, isLatest: ${isLatest}`);
   console.log("Waiting for session file to write to form");
-  await delay(15_000);
+  await delay(5_000);
   const { state, saveState } = useSingleFileAuthState("./auth_info_multi.json");
 
   const sock = makeWASocket({
@@ -154,9 +156,10 @@ const startSock = async () => {
         const chatId = m.messages[0].key.remoteJid;
         const msgKey = m.messages[0].message;
         const msgData = Helper.getMessageData(msgKey, pre);
-        //.log(JSON.stringify(msg, undefined, 2));
+        //console.log(JSON.stringify(msg, undefined, 2));
         if (msgData.isCmd) {
           console.log(msgData);
+          console.log(JSON.stringify(msg, undefined, 2));
           switch (msgData.cmd) {
             case "add":
             case "kick":
@@ -385,12 +388,41 @@ const startSock = async () => {
                 { quoted: msg }
               );
               break;
-            case "make him gay":
-              await sock.sendMessage(
-                chatId,
-                { text: "No need *tejash* already izzz" },
-                { quoted: msg }
-              );
+            case "makehimgay":
+              if (msgData.isQuoted) {
+                let text = `No need @${
+                  msgData.quotedMessage.participant.split("@")[0]
+                } already izzz`;
+                let list = [msgData.quotedMessage.participant];
+                let id = msgData.quotedMessage.participant;
+                if (
+                  id !== ownerIds[0] &&
+                  id !== ownerIds[1] &&
+                  id !== ownerIds[2]
+                ) {
+                  await sock.sendMessage(
+                    chatId,
+                    {
+                      text: text,
+                      mentions: list,
+                    },
+                    { quoted: msg }
+                  );
+                } else {
+                  await sock.sendMessage(
+                    chatId,
+                    { text: "You are Gay!!" },
+                    { quoted: msg }
+                  );
+                }
+              } else {
+                await sock.sendMessage(
+                  chatId,
+                  { text: "Tag someone message" },
+                  { quoted: msg }
+                );
+              }
+              break;
             default:
               sock.sendMessage(
                 chatId,
