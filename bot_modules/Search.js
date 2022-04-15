@@ -5,8 +5,15 @@ const gApi = process.env.G_API;
 const ytApi = process.env.YT_API;
 const gApiEngineId = process.env.G_API_ENGINE_ID;
 class Search {
-    static async gsearch(sock, chatId, msg, ques) {
+    static async gsearch(sock, chatId, msg, msgData) {
+        let ques;
+        if (msgData.isQuoted && msgData.quotedMessage.quotedMessage.conversation) {
+            ques = msgData.quotedMessage.quotedMessage.conversation;
+        } else {
+            ques = msgData.msgText;
+        }
         console.log(ques);
+
         if (ques === "") {
             await sock.sendMessage(
                 chatId, { text: "Empty Parameter!" }, { quoted: msg }
@@ -57,15 +64,22 @@ class Search {
         }
     }
 
-    static async isearch(sock, chatId, msg, ques) {
+    static async isearch(sock, chatId, msg, msgData) {
+        let ques;
+        if (msgData.isQuoted && msgData.quotedMessage.quotedMessage.conversation) {
+            ques = msgData.quotedMessage.quotedMessage.conversation;
+        } else {
+            ques = msgData.msgText;
+        }
         console.log(ques);
+
         if (ques === "") {
             await sock.sendMessage(
                 chatId, { text: "Empty Parameter!" }, { quoted: msg }
             );
             return;
         }
-        console.log("////////////////");
+
         let url = `https://www.googleapis.com/customsearch/v1?key=${gApi}&cx=${gApiEngineId}&q=Images of ${ques}`;
         try {
             const q = await fetch(url, {
@@ -134,13 +148,29 @@ class Search {
         }
     }
 
-    static async vsearch(sock, chatId, msg, ques) {
+    static async vsearch(sock, chatId, msg, msgData) {
+        let ques;
+        if (msgData.isQuoted && msgData.quotedMessage.quotedMessage.conversation) {
+            ques = msgData.quotedMessage.quotedMessage.conversation;
+        } else {
+            ques = msgData.msgText;
+        }
+
         if (ques === "") {
             await sock.sendMessage(
                 chatId, { text: "Empty Parameter!" }, { quoted: msg }
             );
             return;
         }
+
+        let link = ques.split(" ").find((str) => str.slice(0, 6) === "https:");
+        if (link) {
+            ques = link;
+        }
+
+        ques = ques.replace("shorts/", "");
+        ques = ques.split("?")[0];
+        console.log(ques);
         let randomName = (Math.random() + 1).toString(36).substring(7);
         let url = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=${ques}&key=${ytApi}`;
         try {
@@ -149,6 +179,7 @@ class Search {
             });
             const data = await q.json();
             const vurl = data.items[0].id.videoId;
+            console.log(vurl);
             let finalVideoUrl = `https://www.youtube.com/watch?v=${vurl}`;
             let info = await ytdl.getInfo(vurl);
             if (info.videoDetails.lengthSeconds >= 1800) {
@@ -196,13 +227,29 @@ class Search {
         }
     }
 
-    static async mp3Convertor(sock, chatId, msg, ques) {
+    static async mp3Convertor(sock, chatId, msg, msgData) {
+        let ques;
+        if (msgData.isQuoted && msgData.quotedMessage.quotedMessage.conversation) {
+            ques = msgData.quotedMessage.quotedMessage.conversation;
+        } else {
+            ques = msgData.msgText;
+        }
+
         if (ques === "") {
             await sock.sendMessage(
                 chatId, { text: "Empty Parameter!" }, { quoted: msg }
             );
             return;
         }
+
+        let link = ques.split(" ").find((str) => str.slice(0, 6) === "https:");
+        if (link) {
+            ques = link;
+        }
+
+        ques = ques.replace("shorts/", "");
+        ques = ques.split("?")[0];
+
         try {
             let randomName = (Math.random() + 1).toString(36).substring(7);
             let finalVideoUrl = ques;
@@ -210,7 +257,10 @@ class Search {
             if (vurl.length <= 1) {
                 vurl = finalVideoUrl.split("=");
             }
-            console.log(vurl);
+            if (vurl.length <= 1) {
+                vurl = finalVideoUrl.split(".com/");
+            }
+            console.log(vurl[1]);
             let info = await ytdl.getInfo(vurl[1]);
             if (info.videoDetails.lengthSeconds >= 1800) {
                 await sock.sendMessage(
@@ -257,13 +307,30 @@ class Search {
         }
     }
 
-    static async searchMp3ByName(sock, chatId, msg, ques) {
+    static async searchMp3ByName(sock, chatId, msg, msgData) {
+        let ques;
+        if (msgData.isQuoted && msgData.quotedMessage.quotedMessage.conversation) {
+            ques = msgData.quotedMessage.quotedMessage.conversation;
+        } else {
+            ques = msgData.msgText;
+        }
+
         if (ques === "") {
             await sock.sendMessage(
                 chatId, { text: "Empty Parameter!" }, { quoted: msg }
             );
             return;
         }
+
+        let link = ques.split(" ").find((str) => str.slice(0, 6) === "https:");
+        if (link) {
+            ques = link;
+        }
+
+        ques = ques.replace("shorts/", "");
+        ques = ques.split("?")[0];
+
+        console.log(ques);
         let randomName = (Math.random() + 1).toString(36).substring(7);
         let url = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=${ques}&key=${ytApi}`;
         try {

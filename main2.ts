@@ -54,7 +54,7 @@ try {
       sessionAuth = JSON.parse(sessionAuth);
       sessionAuth = JSON.stringify(sessionAuth);
       //console.log(session);
-      //fs.writeFileSync("./auth_info_multi.json", sessionAuth);
+      fs.writeFileSync("./auth_info_multi.json", sessionAuth);
     });
   });
   console.log("Local file written");
@@ -221,28 +221,28 @@ const startSock = async () => {
 
               break;
             case "is":
-              Search.isearch(sock, chatId, msg, msgData.msgText);
+              Search.isearch(sock, chatId, msg, msgData);
               break;
 
             case "gs":
-              Search.gsearch(sock, chatId, msg, msgData.msgText);
+              Search.gsearch(sock, chatId, msg, msgData);
               break;
 
             case "vs":
-              Search.vsearch(sock, chatId, msg, msgData.msgText);
+              Search.vsearch(sock, chatId, msg, msgData);
 
               break;
 
             case "ps":
-              ProductSearch.search(sock, chatId, msg, msgData.msgText);
+              ProductSearch.search(sock, chatId, msg, msgData);
 
               break;
             case "mp3s":
-              Search.searchMp3ByName(sock, chatId, msg, msgData.msgText);
+              Search.searchMp3ByName(sock, chatId, msg, msgData);
 
               break;
             case "mp3c":
-              Search.mp3Convertor(sock, chatId, msg, msgData.msgText);
+              Search.mp3Convertor(sock, chatId, msg, msgData);
               break;
 
             case "tth":
