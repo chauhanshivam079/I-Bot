@@ -80,16 +80,23 @@ class Search {
                 console.log("Imge array source :", imgSrcArr);
                 for (let i = 0; i < imgSrcArr.length; i++) {
                     if (imgSrcArr[i].pagemap.hasOwnProperty("imageobject")) {
-                        let url1 = imgSrcArr[i].pagemap.imageobject[0].image ?
-                            imgSrcArr[i].pagemap.imageobject[0].image :
-                            imgSrcArr[i].pagemap.imageobject[0].thumbnailurl ?
-                            imgSrcArr[i].pagemap.imageobject[0].thumbnailurl :
-                            imgSrcArr[i].pagemap.imageobject[0].contenturl;
-                        let url2 = imgSrcArr[i].pagemap.imageobject[1].image ?
-                            imgSrcArr[i].pagemap.imageobject[1].image :
-                            imgSrcArr[i].pagemap.imageobject[1].thumbnailurl ?
-                            imgSrcArr[i].pagemap.imageobject[1].thumbnailurl :
-                            imgSrcArr[i].pagemap.imageobject[1].contenturl;
+                        let url1;
+                        let url2;
+                        try {
+                            url1 = imgSrcArr[i].pagemap.imageobject[0].image ?
+                                imgSrcArr[i].pagemap.imageobject[0].image :
+                                imgSrcArr[i].pagemap.imageobject[0].thumbnailurl ?
+                                imgSrcArr[i].pagemap.imageobject[0].thumbnailurl :
+                                imgSrcArr[i].pagemap.imageobject[0].contenturl;
+                            url2 = imgSrcArr[i].pagemap.imageobject[1].image ?
+                                imgSrcArr[i].pagemap.imageobject[1].image :
+                                imgSrcArr[i].pagemap.imageobject[1].thumbnailurl ?
+                                imgSrcArr[i].pagemap.imageobject[1].thumbnailurl :
+                                imgSrcArr[i].pagemap.imageobject[1].contenturl;
+                        } catch (err) {
+                            console.log(err);
+                            continue;
+                        }
                         if (url1 && url2) {
                             imgSrc.push(url1);
                             imgSrc.push(url2);
