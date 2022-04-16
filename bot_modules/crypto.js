@@ -9,7 +9,9 @@ class Crypto {
     _coinsDataName;
     _coinsDetails;
     _newsApiKey = process.env.NEWS_API;
+
     constructor() {
+        console.log("1111111111111", this._newsApiKey);
         this._baseUrl = "https://api.coingecko.com/api/v3/";
         fetch("https://api.coingecko.com/api/v3/coins/list").then((res) =>
             res
@@ -53,7 +55,7 @@ class Crypto {
                     ]);
                 }
             }
-        }, 5000);
+        }, 10000);
     }
     async getPrices(sock, chatId, msgData, msg) {
         if (msgData.msgText === "") {
