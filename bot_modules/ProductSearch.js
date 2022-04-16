@@ -3,7 +3,8 @@ const cheerio = require("cheerio");
 const pretty = require("pretty");
 class ProductSearch {
     // Async function which scrapes the data
-    static async search(sock, chatId, msg, productName) {
+    static async search(sock, chatId, msg, msgData) {
+        let productName = msgData.msgText;
         if (productName === "") {
             await sock.sendMessage(
                 chatId, { text: "Empty Parameter!" }, { quoted: msg }
