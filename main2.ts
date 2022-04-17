@@ -21,21 +21,22 @@ const Sticker = require("./bot_modules/sticker.ts");
 const InstaDownloader = require("./bot_modules/instaDownloader.js");
 const Crypto = require("./bot_modules/crypto.js");
 const { MongoClient, ServerApiVersion } = require("mongodb");
-
+const mdClient = require("./Db/dbConnection.js");
+const DbOperation = require("./Db/dbOperation.js");
 let ownerIdsString = process.env.OWNER_IDS;
 const ownerIds = ownerIdsString.split(" ").map((id) => id + "@s.whatsapp.net");
-const mdbUsername = process.env.MDB_USERNAME;
-const mdbPassword = process.env.MDB_PASSWORD;
-const uri = `mongodb+srv://${mdbUsername}:${mdbPassword}@cluster0.br8pm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
-console.log(uri);
+// const mdbUsername = process.env.MDB_USERNAME;
+// const mdbPassword = process.env.MDB_PASSWORD;
+// const uri = `mongodb+srv://${mdbUsername}:${mdbPassword}@cluster0.br8pm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+// console.log(uri);
 
-const mdClient = new MongoClient(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  serverApi: ServerApiVersion.v1,
-});
+// const mdClient = new MongoClient(uri, {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+//   serverApi: ServerApiVersion.v1,
+// });
 mdClient.connect();
-console.log("Mongo DB Connected");
+
 // the store maintains the data of the WA connection in memory
 // can be written out to a file & read from it
 const store = makeInMemoryStore({
@@ -62,10 +63,10 @@ try {
   console.error("Local file writing error :", err);
 }
 
-store.readFromFile("./baileys_store_multi.json");
+//store.readFromFile("./baileys_store_multi.json");
 // save every 10s
 setInterval(() => {
-  store.writeToFile("./baileys_store_multi.json");
+  //store.writeToFile("./baileys_store_multi.json");
   try {
     let sessionDataAuth = fs.readFileSync("./auth_info_multi.json");
     sessionDataAuth = JSON.parse(sessionDataAuth);
@@ -74,7 +75,7 @@ setInterval(() => {
     let collection2 = mdClient
       .db("whatsappSession")
       .collection("whatsappSessionAuth");
-
+    //(chatid,{})
     collection2.updateOne(
       { _id: 1 },
       { $set: { sessionAuth: sessionDataAuth } }
@@ -91,7 +92,7 @@ const startSock = async () => {
   const { version, isLatest } = await fetchLatestBaileysVersion();
   //console.log(`using WA v${version.join(".")}, isLatest: ${isLatest}`);
   console.log("Waiting for session file to write to form");
-  await delay(5_000);
+  await delay(15_000);
   const { state, saveState } = useSingleFileAuthState("./auth_info_multi.json");
 
   const sock = makeWASocket({
@@ -138,8 +139,35 @@ const startSock = async () => {
   const botId = "17207416585@s.whatsapp.net";
   let i = 0;
   const cmdList = `*Use # as a prefix in all commands*\n\n​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​add -to add a number to the grp\n\nkick -to remove a number from the group\n\npromote -to promote a group member\n\ndemote -to demote a group member\n\nlink -to get the link of the group\n\nis -to search an image \n\ngs -to search anything on google \n\nvs -to download a video\n\nps -to search for a product\n\nmp3s -to download mp3song\n\nmp3c -to convert a yt video to mp3\n\ns -to make sticker\n\ntoimg -to convert sticker to image\n\niprof -to get the profile picture of a user\n\nigd -to download insta video\n\ntagall -to tag all members of a group\n\ntagadmins -to tag admins of the group\n\ncp -to get the price of a crypto coin\n\ncn -to get news for a specific crypto name\n\nsp -to get the price for the stock\n\na -to check the status of the bot`;
-
+  const allMsgArray = [];
   const tthUserDetail = new Map();
+
+  //to update the dababase constantly
+  setInterval(async () => {
+    while (allMsgArray.length > 0) {
+      let tempMsg = allMsgArray.shift();
+      let chatId = tempMsg[2];
+      let senderId = tempMsg[3];
+      senderId = senderId.replace(
+        senderId.substring(
+          senderId.indexOf(":") === -1
+            ? senderId.indexOf("@")
+            : senderId.indexOf(":"),
+          senderId.indexOf("@")
+        ),
+        ""
+      );
+      let groupName = (await sock.groupMetadata(chatId)).subject;
+      DbOperation.updateData(
+        chatId,
+        senderId,
+        tempMsg[0],
+        tempMsg[1],
+        groupName
+      );
+    }
+  }, 1000);
+
   setInterval(() => {
     Crypto.getNews(sock, "120363040241737423@g.us", { msgText: "" });
     //Crypto.getNnews(sock, "918329198682-1612849199@g.us", { msgText: "" });
@@ -154,13 +182,29 @@ const startSock = async () => {
         const isMe = m.messages[0].key.fromMe;
         const senderName = m.messages[0].pushName;
         const chatId = m.messages[0].key.remoteJid;
-        const msgKey = m.messages[0].message;
-        const msgData = Helper.getMessageData(msgKey, pre);
+        const msgContent = m.messages[0].message;
+        const msgData = Helper.getMessageData(msgContent, pre);
         //console.log(JSON.stringify(msg, undefined, 2));
+        //allMsgArray.push([msg,msgData,chatId,senderId])
         if (msgData.isCmd) {
           console.log(msgData);
           console.log(JSON.stringify(msg, undefined, 2));
           switch (msgData.cmd) {
+            case "data":
+              let p = await sock.groupMetadata(chatId);
+              console.log("GroupMetadat: ", p);
+              let q = await sock.groupFetchAllParticipating();
+              console.log("Fetch all participating", q);
+              let w = await sock.groupSettingUpdate(chatId, "locked");
+              console.log("seeting update: ", w);
+              let r = await sock.groupParticipantsUpdate(
+                chatId,
+                [senderId],
+                "add"
+              );
+              console.log("groupupdate upper", r);
+
+              break;
             case "add":
             case "kick":
             case "promote":
@@ -614,14 +658,14 @@ const startSock = async () => {
 
   sock.ev.on("groups.upsert", (m) => {
     chatList.push(m[0].id);
-    //console.log(m[0]);
+    console.log("group update: ", m);
     sock.sendMessage(m[0].id, { text: "Hello there!" });
     console.log(chatList);
   });
 
   sock.ev.on("group-participants.update", (m) => {
     const data = m;
-    console.log(m);
+    console.log("Groupparticipant.update : ", m);
     if (data.participants[0] === "17207416585@s.whatsapp.net") {
       const id = data.id;
       const index = chatList.indexOf(id);
@@ -629,7 +673,7 @@ const startSock = async () => {
       console.log(chatList);
     }
   });
-  //sock.ev.on('group-participants.update',m=>console.log(m))
+
   //sock.ev.on('messages.update', m => console.log(m))
   //sock.ev.on('message-receipt.update', m => console.log(m))
   //sock.ev.on('presence.update', m => console.log(m))
