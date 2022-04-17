@@ -1,4 +1,5 @@
 import { writeFile } from "fs/promises";
+const fs = require("fs");
 import { downloadContentFromMessage } from "@adiwajshing/baileys";
 const {
   Sticker,
@@ -80,6 +81,7 @@ class sticker {
         },
         { quoted: msg }
       );
+      fs.unlinkSync(`Media/stickers/${randomName}.jpeg`);
     } else {
       await sock.sendMessage(
         chatId,
