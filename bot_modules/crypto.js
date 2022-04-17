@@ -11,7 +11,7 @@ class Crypto {
     _newsApiKey = process.env.NEWS_API;
 
     constructor() {
-        console.log("1111111111111", this._newsApiKey);
+        //console.log("1111111111111", this._newsApiKey);
         this._baseUrl = "https://api.coingecko.com/api/v3/";
         fetch("https://api.coingecko.com/api/v3/coins/list").then((res) =>
             res
@@ -69,7 +69,7 @@ class Crypto {
         let flag = 0;
         let ids;
         //  console.log(this._coinsData.get(coinName));
-        console.log(this._coinsDataName);
+        // console.log(this._coinsDataName);
         if (this._coinsDataName.has(coinName)) {
             ids = this._coinsDataName.get(coinName);
         } else if (this._coinsData.has(coinName)) {
@@ -85,7 +85,7 @@ class Crypto {
                     `${this._baseUrl}simple/price/?ids=${ids[i]}&vs_currencies=usd,inr,btc`
                 );
                 let coinDataJson = await coinData.json();
-                console.log(coinDataJson);
+                //console.log(coinDataJson);
 
                 let coinPricesObj = coinDataJson[ids[i]];
                 let usdPrice = new INTL.NumberFormat("hi", {

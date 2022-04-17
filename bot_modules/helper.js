@@ -56,7 +56,7 @@ class Helper {
             }
         } else if (msg.hasOwnProperty("reactionMessage")) {
             this._msgType = "reactionMessage";
-            const reactionMsg = m.messages[0].message.reactionMessage.text;
+            const reactionMsg = msg.reactionMessage.text;
         } else if (msg.hasOwnProperty("extendedTextMessage")) {
             if (
                 msg.extendedTextMessage.hasOwnProperty("contextInfo") ?
