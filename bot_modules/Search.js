@@ -172,14 +172,24 @@ class Search {
         ques = ques.split("?")[0];
         console.log(ques);
         let randomName = (Math.random() + 1).toString(36).substring(7);
-        let url = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=${ques}&key=${ytApi}`;
         try {
-            const q = await fetch(url, {
-                method: "GET",
-            });
-            const data = await q.json();
-            console.log("dattttttttttttt", data);
-            const vurl = data.items[0].id.videoId;
+            let vurl = ""
+            if (ques.includes("http")) {
+                if (ques.includes("=")) {
+                    vurl temp = ques.split("=")[ques.split("=").length - 1]
+                } else {
+                    vurl = ques.split("/")[ques.split("/").length - 1]
+                }
+            } else {
+                let url = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=${ques}&key=${ytApi}`;
+
+                const q = await fetch(url, {
+                    method: "GET",
+                });
+                const data = await q.json();
+                console.log("dattttttttttttt", data);
+                vurl = data.items[0].id.videoId;
+            }
             console.log(vurl);
             let finalVideoUrl = `https://www.youtube.com/watch?v=${vurl}`;
             let info = await ytdl.getInfo(vurl);
