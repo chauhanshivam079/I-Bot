@@ -45,51 +45,51 @@ const store = makeInMemoryStore({
   logger: P().child({ level: "debug", stream: "store" }),
 });
 
-try {
-  mdClient.connect((err) => {
-    let collection2 = mdClient
-      .db("whatsappSession")
-      .collection("whatsappSessionAuth");
-
-    collection2.find({ _id: 1 }).toArray(function (err, result) {
-      if (err) throw err;
-      let sessionAuth = result[0]["sessionAuth"];
-      sessionAuth = JSON.parse(sessionAuth);
-      sessionAuth = JSON.stringify(sessionAuth);
-      //console.log(session);
-      fs.writeFileSync("./auth_info_multi.json", sessionAuth);
-    });
-  });
-  console.log("Local file written");
-} catch (err) {
-  console.error("Local file writing error :", err);
-}
-
-store.readFromFile("./baileys_store_multi.json");
-// save every 10s
-setInterval(() => {
-  store.writeToFile("./baileys_store_multi.json");
-  try {
-    let sessionDataAuth = fs.readFileSync("./auth_info_multi.json");
-    sessionDataAuth = JSON.parse(sessionDataAuth);
-    sessionDataAuth = JSON.stringify(sessionDataAuth);
-    //console.log(sessionData);
-    let collection2 = mdClient
-      .db("whatsappSession")
-      .collection("whatsappSessionAuth");
-    //(chatid,{})
-    collection2.updateOne(
-      { _id: 1 },
-      { $set: { sessionAuth: sessionDataAuth } }
-    );
-    //console.log("db updated");
-  } catch (err) {
-    console.log("Db updation error : ", err);
-  }
-}, 20_000);
-
 // start a connection
 const startSock = async () => {
+  try {
+    mdClient.connect((err) => {
+      let collection2 = mdClient
+        .db("whatsappSession")
+        .collection("whatsappSessionAuth");
+
+      collection2.find({ _id: 1 }).toArray(function (err, result) {
+        if (err) throw err;
+        let sessionAuth = result[0]["sessionAuth"];
+        sessionAuth = JSON.parse(sessionAuth);
+        sessionAuth = JSON.stringify(sessionAuth);
+        //console.log(session);
+        //fs.writeFileSync("./auth_info_multi.json", sessionAuth);
+      });
+    });
+    console.log("Local file written");
+  } catch (err) {
+    console.error("Local file writing error :", err);
+  }
+
+  store.readFromFile("./baileys_store_multi.json");
+  // save every 10s
+  setInterval(() => {
+    store.writeToFile("./baileys_store_multi.json");
+    try {
+      let sessionDataAuth = fs.readFileSync("./auth_info_multi.json");
+      sessionDataAuth = JSON.parse(sessionDataAuth);
+      sessionDataAuth = JSON.stringify(sessionDataAuth);
+      //console.log(sessionData);
+      let collection2 = mdClient
+        .db("whatsappSession")
+        .collection("whatsappSessionAuth");
+      //(chatid,{})
+      collection2.updateOne(
+        { _id: 1 },
+        { $set: { sessionAuth: sessionDataAuth } }
+      );
+      //console.log("db updated");
+    } catch (err) {
+      console.log("Db updation error : ", err);
+    }
+  }, 20_000);
+
   // fetch latest version of WA Web
   const { version, isLatest } = await fetchLatestBaileysVersion();
   //console.log(`using WA v${version.join(".")}, isLatest: ${isLatest}`);
@@ -714,6 +714,7 @@ const startSock = async () => {
         startSock();
       } else {
         console.log("Connection closed. You are logged out.");
+        startSock();
       }
     }
 
