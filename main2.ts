@@ -1,8 +1,6 @@
 require("dotenv").config({ path: "./Keys.env" });
 import { Boom } from "@hapi/boom";
-import { is } from "cheerio/lib/api/traversing";
 import P from "pino";
-import { WAMessage } from "./src";
 import makeWASocket, {
   AnyMessageContent,
   delay,
@@ -11,7 +9,6 @@ import makeWASocket, {
   makeInMemoryStore,
   useSingleFileAuthState,
 } from "./src";
-import { Db } from "mongodb";
 const groupManage = require("./bot_modules/groupManage.js");
 const textToHand = require("./bot_modules/textToHandwriting.js");
 const ProductSearch = require("./bot_modules/ProductSearch.js");
@@ -25,6 +22,7 @@ const { MongoClient, ServerApiVersion } = require("mongodb");
 const mdClient = require("./Db/dbConnection.js");
 const DbOperation = require("./Db/dbOperation.js");
 const MsgDetails = require("./bot_modules/msgDetails.js");
+const Compiler = require("./bot_modules/compiler.js");
 let ownerIdsString = process.env.OWNER_IDS;
 const ownerIds = ownerIdsString.split(" ").map((id) => id + "@s.whatsapp.net");
 // const mdbUsername = process.env.MDB_USERNAME;
@@ -59,7 +57,7 @@ const startSock = async () => {
         sessionAuth = JSON.parse(sessionAuth);
         sessionAuth = JSON.stringify(sessionAuth);
         //console.log(session);
-        fs.writeFileSync("./auth_info_multi.json", sessionAuth);
+        //fs.writeFileSync("./auth_info_multi.json", sessionAuth);
       });
     });
     console.log("Local file written");
@@ -424,25 +422,8 @@ const startSock = async () => {
             case "msgcount":
               MsgDetails.msgCount(sock, chatId, senderId, msg);
               break;
-            case "..":
-              const collection = mdClient.db("Users").collection("userProfile");
-              try {
-                const a = await collection.find().toArray();
-
-                a.forEach(async (el) => {
-                  console.log(el["data"]);
-                  if (el["_id"] === 3434) {
-                    let obj: WAMessage = JSON.parse(el["data"]);
-                    await sock.sendMessage(
-                      chatId,
-                      { text: "Asdas" },
-                      { quoted: obj }
-                    );
-                  }
-                });
-              } catch (err) {
-                console.log(err);
-              }
+            case "run":
+              Compiler.run(sock, chatId, msg, msgData);
               break;
             case ".":
               const collectio = mdClient.db("Users").collection("userProfile");
@@ -453,6 +434,7 @@ const startSock = async () => {
               console.log(JSON.stringify(msg, undefined, 2));
               break;
             case "a":
+              console.log("Hello");
               await sock.sendMessage(
                 chatId,
                 { text: "Yup! I am active" },

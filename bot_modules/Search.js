@@ -216,6 +216,7 @@ class Search {
                 let stats = fs.statSync(`Media/Video/${randomName}.mp4`);
                 console.log(stats.size);
                 if (stats.size / 1048576 < 40) {
+                    console.log("Sending video....");
                     await sock.sendMessage(
                         chatId, {
                             video: fs.readFileSync(`Media/Video/${randomName}.mp4`),

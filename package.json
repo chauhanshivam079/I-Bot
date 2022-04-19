@@ -53,6 +53,7 @@
         "pretty": "^2.0.0",
         "protobufjs": "^6.10.1",
         "puppeteer": "^13.5.1",
+        "request": "^2.88.2",
         "ts-node": "^10.7.0",
         "wa-sticker-formatter": "^4.3.2",
         "ws": "^8.0.0",
