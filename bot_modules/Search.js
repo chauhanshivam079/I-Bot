@@ -178,6 +178,7 @@ class Search {
                 method: "GET",
             });
             const data = await q.json();
+            console.log("dattttttttttttt", data);
             const vurl = data.items[0].id.videoId;
             console.log(vurl);
             let finalVideoUrl = `https://www.youtube.com/watch?v=${vurl}`;
