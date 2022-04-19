@@ -173,12 +173,12 @@ class Search {
         console.log(ques);
         let randomName = (Math.random() + 1).toString(36).substring(7);
         try {
-            let vurl = ""
+            let vurl = "";
             if (ques.includes("http")) {
                 if (ques.includes("=")) {
-                    vurl temp = ques.split("=")[ques.split("=").length - 1]
+                    vurl = ques.split("=")[ques.split("=").length - 1];
                 } else {
-                    vurl = ques.split("/")[ques.split("/").length - 1]
+                    vurl = ques.split("/")[ques.split("/").length - 1];
                 }
             } else {
                 let url = `https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=${ques}&key=${ytApi}`;
