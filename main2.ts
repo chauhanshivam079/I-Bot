@@ -57,7 +57,7 @@ const startSock = async () => {
         sessionAuth = JSON.parse(sessionAuth);
         sessionAuth = JSON.stringify(sessionAuth);
         //console.log(session);
-        //fs.writeFileSync("./auth_info_multi.json", sessionAuth);
+        fs.writeFileSync("./auth_info_multi.json", sessionAuth);
       });
     });
     console.log("Local file written");
