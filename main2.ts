@@ -59,7 +59,7 @@ const startSock = async () => {
         sessionAuth = JSON.parse(sessionAuth);
         sessionAuth = JSON.stringify(sessionAuth);
         //console.log(session);
-        //fs.writeFileSync("./auth_info_multi.json", sessionAuth);
+        fs.writeFileSync("./auth_info_multi.json", sessionAuth);
       });
     });
     console.log("Local file written");
@@ -147,26 +147,31 @@ const startSock = async () => {
   //to update the dababase constantly
   setInterval(async () => {
     while (allMsgArray.length > 0) {
-      let tempMsg = allMsgArray.shift();
-      let chatId = tempMsg[2];
-      let senderId = tempMsg[3];
-      senderId = senderId.replace(
-        senderId.substring(
-          senderId.indexOf(":") === -1
-            ? senderId.indexOf("@")
-            : senderId.indexOf(":"),
-          senderId.indexOf("@")
-        ),
-        ""
-      );
-      let groupName = (await sock.groupMetadata(chatId)).subject;
-      DbOperation.updateData(
-        chatId,
-        senderId,
-        tempMsg[0],
-        tempMsg[1],
-        groupName
-      );
+      try {
+        let tempMsg = allMsgArray[0];
+        let chatId = tempMsg[2];
+        let senderId = tempMsg[3];
+        senderId = senderId.replace(
+          senderId.substring(
+            senderId.indexOf(":") === -1
+              ? senderId.indexOf("@")
+              : senderId.indexOf(":"),
+            senderId.indexOf("@")
+          ),
+          ""
+        );
+        let groupName = (await sock.groupMetadata(chatId)).subject;
+        DbOperation.updateData(
+          chatId,
+          senderId,
+          tempMsg[0],
+          tempMsg[1],
+          groupName
+        );
+        allMsgArray.shift();
+      } catch (err) {
+        console.log("Error in updating each msg to db", err);
+      }
     }
   }, 1000);
 
