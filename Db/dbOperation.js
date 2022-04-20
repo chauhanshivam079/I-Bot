@@ -379,10 +379,10 @@ class DbOperation {
                     { $match: { "data.groupId": chatId } },
                 ])
                 .toArray();
-            console.log(data[0]);
-            console.log(data[0].data.disableCmds.find((cmds) => cmds === cmd));
+            //console.log(data[0]);
+            //console.log(data[0].data.disableCmds.find((cmds) => cmds === cmd));
             if (data[0].data.disableCmds.find((cmds) => cmds === cmd)) {
-                console.log("true");
+                //console.log("true");
                 return true;
             } else {
                 return false;
