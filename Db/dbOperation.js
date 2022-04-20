@@ -311,5 +311,86 @@ class DbOperation {
             console.log("getMsgCount", err);
         }
     }
+    static async enableCmd(chatId, msgData) {
+        try {
+            let cmdsArr = msgData.msgText.split(" ");
+            for (let i = 0; i < cmdsArr.length; i++) {
+                let cmd = cmdsArr[i];
+
+                //console.log("all:", msgData);
+                await collection1.updateOne({ _id: 0 }, {
+                    $pull: {
+                        "data.$[updateGroup].disableCmds": cmd,
+                    },
+                }, {
+                    arrayFilters: [{ "updateGroup.groupId": chatId }],
+                });
+            }
+            let data = await collection1
+                .aggregate([
+                    { $match: { _id: 0 } },
+                    { $unwind: "$data" },
+                    { $match: { "data.groupId": chatId } },
+                ])
+                .toArray();
+            console.log(data[0].data.disableCmds);
+
+            return true;
+        } catch (err) {
+            console.log("enable cmd error: ", err);
+            return false;
+        }
+    }
+    static async disableCmd(chatId, msgData) {
+        try {
+            const cmdsArr = msgData.msgText.split(" ");
+            for (let i = 0; i < cmdsArr.length; i++) {
+                console.log("all:", msgData);
+                await collection1.updateOne({ _id: 0 }, {
+                    $addToSet: {
+                        "data.$[updateGroup].disableCmds": cmdsArr[i],
+                    },
+                }, {
+                    arrayFilters: [{ "updateGroup.groupId": chatId }],
+                });
+            }
+
+            let data = await collection1
+                .aggregate([
+                    { $match: { _id: 0 } },
+                    { $unwind: "$data" },
+                    { $match: { "data.groupId": chatId } },
+                ])
+                .toArray();
+            console.log(data[0].data.disableCmds);
+
+            return true;
+        } catch (err) {
+            console.log("disable cmd error: ", err);
+            return false;
+        }
+    }
+    static async checkCmd(chatId, cmd) {
+        try {
+            let data = await collection1
+                .aggregate([
+                    { $match: { _id: 0 } },
+                    { $unwind: "$data" },
+                    { $match: { "data.groupId": chatId } },
+                ])
+                .toArray();
+            console.log(data[0]);
+            console.log(data[0].data.disableCmds.find((cmds) => cmds === cmd));
+            if (data[0].data.disableCmds.find((cmds) => cmds === cmd)) {
+                console.log("true");
+                return true;
+            } else {
+                return false;
+            }
+        } catch (err) {
+            return false;
+            console.log("get Cmd: ", err);
+        }
+    }
 }
 module.exports = DbOperation;
