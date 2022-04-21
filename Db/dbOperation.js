@@ -424,7 +424,7 @@ class DbOperation {
             return true;
         } catch (err) {
             console.log("Turning bot on off to db error : ", err);
-            return true;
+            return false;
         }
     }
 
@@ -437,6 +437,7 @@ class DbOperation {
                     { $match: { "data.groupId": chatId } },
                 ])
                 .toArray();
+            if (!data[0]) return true;
             console.log(data[0].data.botEnable);
             if (data[0].data.botEnable) {
                 return true;
