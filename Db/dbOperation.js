@@ -122,6 +122,16 @@ class DbOperation {
                 console.log("member added in Members array");
             } else {
                 console.log("member present in Members array");
+                collection1.updateOne({ _id: 0 }, {
+                    $set: {
+                        "data.$[updateGroup].Members.$[updateMember].warnCount": 0,
+                    },
+                }, {
+                    arrayFilters: [
+                        { "updateGroup.groupId": chatId },
+                        { "updateMember.memberId": senderId },
+                    ],
+                });
             }
             //console.log("Temporary Members obj:", tempObj);
             if (!(
