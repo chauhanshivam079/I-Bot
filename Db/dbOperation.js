@@ -424,7 +424,7 @@ class DbOperation {
             return true;
         } catch (err) {
             console.log("Turning bot on off to db error : ", err);
-            return false;
+            return true;
         }
     }
 
