@@ -1,5 +1,6 @@
 require("dotenv").config({ path: "./Keys.env" });
 import { Boom } from "@hapi/boom";
+import { Db } from "mongodb";
 import P from "pino";
 import makeWASocket, {
   AnyMessageContent,
@@ -25,16 +26,7 @@ const MsgDetails = require("./bot_modules/msgDetails.js");
 const Compiler = require("./bot_modules/compiler.js");
 let ownerIdsString = process.env.OWNER_IDS;
 const ownerIds = ownerIdsString.split(" ").map((id) => id + "@s.whatsapp.net");
-// const mdbUsername = process.env.MDB_USERNAME;
-// const mdbPassword = process.env.MDB_PASSWORD;
-// const uri = `mongodb+srv://${mdbUsername}:${mdbPassword}@cluster0.br8pm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
-// console.log(uri);
 
-// const mdClient = new MongoClient(uri, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-//   serverApi: ServerApiVersion.v1,
-// });
 mdClient.connect();
 
 // the store maintains the data of the WA connection in memory
@@ -57,6 +49,8 @@ const startSock = async () => {
         sessionAuth = JSON.parse(sessionAuth);
         sessionAuth = JSON.stringify(sessionAuth);
         //console.log(session);
+        //
+
         fs.writeFileSync("./auth_info_multi.json", sessionAuth);
       });
     });
@@ -205,7 +199,7 @@ const startSock = async () => {
         console.log("Error in updating each msg to db", err);
       }
     }
-  }, 1000);
+  }, 5000);
 
   setInterval(() => {
     Crypto.getNews(sock, "120363040241737423@g.us", { msgText: "" });
@@ -227,7 +221,10 @@ const startSock = async () => {
         if (chatId.includes("@g")) {
           allMsgArray.push([msg, msgData, chatId, senderId]);
         }
-        if (msgData.isCmd) {
+        if (
+          msgData.isCmd &&
+          ((await DbOperation.checkOn(chatId)) || msgData.cmd === "on")
+        ) {
           if (!(await DbOperation.checkCmd(chatId, msgData.cmd))) {
             console.log(msgData);
             console.log(JSON.stringify(msg, undefined, 2));
@@ -510,6 +507,34 @@ const startSock = async () => {
                   await sock.sendMessage(
                     chatId,
                     { text: "Admin/Bot Owner Only Command!" },
+                    { quoted: msg }
+                  );
+                }
+                break;
+              case "on":
+                if (
+                  (await isAdminOrMember(chatId, botId, "isAdmin")) ||
+                  ownerIds.find((id) => id === senderId)
+                ) {
+                  groupManage.botOnOff(sock, chatId, msg, 1);
+                } else {
+                  await sock.sendMessage(
+                    chatId,
+                    { text: "Admin/Bot Owner Only Command" },
+                    { quoted: msg }
+                  );
+                }
+                break;
+              case "off":
+                if (
+                  (await isAdminOrMember(chatId, botId, "isAdmin")) ||
+                  ownerIds.find((id) => id === senderId)
+                ) {
+                  groupManage.botOnOff(sock, chatId, msg, 0);
+                } else {
+                  await sock.sendMessage(
+                    chatId,
+                    { text: "Admin/Bot Owner Only Command" },
                     { quoted: msg }
                   );
                 }

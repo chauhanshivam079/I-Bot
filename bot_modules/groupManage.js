@@ -1,5 +1,5 @@
 const { getMessageData } = require("./helper");
-
+const DbOperation = require("../Db/dbOperation.js");
 class groupManage {
     static async tagAll(sock, chatId, messageData, msg, isAdmins) {
         const grpMembers = await sock.groupMetadata(chatId);
@@ -200,14 +200,14 @@ class groupManage {
         await sock.sendMessage(chatId, { text: reply }, { quoted: msg });
     }
     static async groupSetting(sock, chatId, msg) {
-        // only allow admins to send messages
-        await sock.groupSettingUpdate(chatId, "announcement");
-        // allow everyone to send messages
-        await sock.groupSettingUpdate(chatId, "not_announcement");
-        // allow everyone to modify the group's settings -- like display picture etc.
-        await sock.groupSettingUpdate(chatId, "unlocked");
-        // only allow admins to modify the group's settings
-        await sock.groupSettingUpdate(chatId, "locked");
+        // // only allow admins to send messages
+        // await sock.groupSettingUpdate(chatId, "announcement");
+        // // allow everyone to send messages
+        // await sock.groupSettingUpdate(chatId, "not_announcement");
+        // // allow everyone to modify the group's settings -- like display picture etc.
+        // await sock.groupSettingUpdate(chatId, "unlocked");
+        // // only allow admins to modify the group's settings
+        // await sock.groupSettingUpdate(chatId, "locked");
     }
     static async getLink(sock, chatId, senderId, msg) {
         let reply = "";
@@ -233,6 +233,46 @@ class groupManage {
         };
 
         await sock.sendMessage(chatId, templateMessage);
+    }
+
+    static async botOnOff(sock, chatId, msg, on) {
+        try {
+            if (on) {
+                if (await DbOperation.checkOn(chatId)) {
+                    await sock.sendMessage(
+                        chatId, { text: "I am already active sir/mam!\nUse #help for menu" }, { quoted: msg }
+                    );
+                } else {
+                    if (await DbOperation.turnOnOff(chatId, 1)) {
+                        await sock.sendMessage(
+                            chatId, { text: "Bot is now active!" }, { quoted: msg }
+                        );
+                    } else {
+                        await sock.sendMessage(
+                            chatId, { text: "Some Error Occured! Try again later" }, { quoted: msg }
+                        );
+                    }
+                }
+            } else {
+                if (await DbOperation.checkOn(chatId)) {
+                    if (await DbOperation.turnOnOff(chatId, 0)) {
+                        await sock.sendMessage(
+                            chatId, { text: "Bot is now inactive!" }, { quoted: msg }
+                        );
+                    } else {
+                        await sock.sendMessage(
+                            chatId, { text: "Some Error Occured! Try again later" }, { quoted: msg }
+                        );
+                    }
+                } else {
+                    await sock.sendMessage(
+                        chatId, { text: "I am already inactive sir/mam!" }, { quoted: msg }
+                    );
+                }
+            }
+        } catch (err) {
+            console.log("Error turning bot on/off", err);
+        }
     }
 }
 module.exports = groupManage;

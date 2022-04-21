@@ -91,7 +91,7 @@ class DbOperation {
             msgCount: 0,
             tagCount: 0,
             taggedMsg: [],
-            joinDate: "",
+            joinDate: new Date().toISOString().slice(0, 10),
             warnCount: 0,
         };
         try {
@@ -392,5 +392,51 @@ class DbOperation {
             console.log("get Cmd: ", err);
         }
     }
+
+    static async turnOnOff(chatId, flag) {
+        try {
+            let botEnable;
+            if (flag) {
+                botEnable = 1;
+            } else {
+                botEnable = 0;
+            }
+            await collection1.updateOne({ _id: 0 }, {
+                $set: {
+                    "data.$[updateGroup].botEnable": botEnable,
+                },
+            }, {
+                arrayFilters: [{ "updateGroup.groupId": chatId }],
+            });
+            // DbOperation.checkOn(chatId);
+            // console.log("Bot on");
+
+            return true;
+        } catch (err) {
+            console.log("Turning bot on off to db error : ", err);
+            return false;
+        }
+    }
+
+    static async checkOn(chatId) {
+        try {
+            let data = await collection1
+                .aggregate([
+                    { $match: { _id: 0 } },
+                    { $unwind: "$data" },
+                    { $match: { "data.groupId": chatId } },
+                ])
+                .toArray();
+            console.log(data[0].data.botEnable);
+            if (data[0].data.botEnable) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (err) {
+            console.log("Error checking if bot is on or not in db: ", err);
+        }
+    }
 }
+
 module.exports = DbOperation;
