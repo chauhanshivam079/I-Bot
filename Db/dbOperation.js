@@ -448,6 +448,11 @@ class DbOperation {
             console.log("Error checking if bot is on or not in db: ", err);
         }
     }
+
+    static async getBotActiveGroups() {
+        let d = await collection1.find({ _id: 0 }).toArray();
+        console.log("grps data:", d[0].data);
+    }
 }
 
 module.exports = DbOperation;
