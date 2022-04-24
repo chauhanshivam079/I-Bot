@@ -52,7 +52,7 @@ const startSock = async () => {
         //console.log(session);
         //
 
-        //fs.writeFileSync("./auth_info_multi.json", sessionAuth);
+        fs.writeFileSync("./auth_info_multi.json", sessionAuth);
       });
     });
     console.log("Local file written");
@@ -81,13 +81,13 @@ const startSock = async () => {
     } catch (err) {
       console.log("Db updation error : ", err);
     }
-  }, 20_000);
+  }, 25_000);
 
   // fetch latest version of WA Web
   const { version, isLatest } = await fetchLatestBaileysVersion();
   //console.log(`using WA v${version.join(".")}, isLatest: ${isLatest}`);
   console.log("Waiting for session file to write to form");
-  await delay(5_000);
+  await delay(20_000);
   const { state, saveState } = useSingleFileAuthState("./auth_info_multi.json");
 
   const sock = makeWASocket({
