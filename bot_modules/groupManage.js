@@ -58,6 +58,8 @@ class groupManage {
         }
         console.log(grpMemberList);
         console.log(grpAdminList);
+        console.log("yyyyyyyyyyyyyyyyyyy", grpAdminList, senderId);
+
         console.log(grpAdminList.find((id) => id === senderId));
         if (grpAdminList.find((id) => id === senderId)) {
             if (!grpMemberList.find((id) => id === list[0])) {
@@ -102,7 +104,7 @@ class groupManage {
             }
             grpMemberList.push(grpMembers.participants[i].id);
         }
-
+        console.log(grpAdminList, senderId);
         if (grpAdminList.find((id) => id === senderId)) {
             if (grpMemberList.find((id) => id === list[0])) {
                 const response = await sock.groupParticipantsUpdate(

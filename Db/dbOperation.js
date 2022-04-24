@@ -1,7 +1,7 @@
-const { data } = require("cheerio/lib/api/attributes");
 const mdClient = require("./dbConnection.js");
 const collection1 = mdClient.db("userData").collection("groupData");
 const collection2 = mdClient.db("userData").collection("memberData");
+const collection3 = mdClient.db("extraData").collection("profanityData");
 class DbOperation {
     static async updateData(chatId, senderId, msg, msgData, grpName) {
         //console.log("Texttttttttttttttttt: ", msgData.msgText);
@@ -450,8 +450,102 @@ class DbOperation {
     }
 
     static async getBotActiveGroups() {
-        let d = await collection1.find({ _id: 0 }).toArray();
-        console.log("grps data:", d[0].data);
+        try {
+            let d = await collection1.find({ _id: 0 }).toArray();
+            console.log("grps data:", d[0].data);
+        } catch (err) {
+            console.log("get active group error:", err);
+        }
+    }
+    static async resetWarn(chatId, senderId) {
+        try {
+            await collection1.updateOne({ _id: 0 }, {
+                $set: {
+                    "data.$[updateGroup].Members.$[updateMember].warnCount": 0,
+                },
+            }, {
+                arrayFilters: [
+                    { "updateGroup.groupId": chatId },
+                    { "updateMember.memberId": senderId },
+                ],
+            });
+            return true;
+        } catch (err) {
+            console.log("Reset warn:", err);
+            return false;
+        }
+    }
+    static async addWarn(chatId, senderId) {
+        try {
+            await collection1.updateOne({ _id: 0 }, {
+                $inc: {
+                    "data.$[updateGroup].Members.$[updateMember].warnCount": 1,
+                },
+            }, {
+                arrayFilters: [
+                    { "updateGroup.groupId": chatId },
+                    { "updateMember.memberId": senderId },
+                ],
+            });
+            return true;
+        } catch (err) {
+            console.log("Add warn error:", err);
+            return false;
+        }
+    }
+    static async addProfWord(word) {
+        try {
+            await collection3.updateOne({ _id: 0 }, {
+                $addToSet: {
+                    data: word,
+                },
+            });
+            return true;
+        } catch (err) {
+            console.log("AddProfWord error:", word);
+            return false;
+        }
+    }
+    static async removeProfWord(word) {
+        try {
+            await collection3.updateOne({ _id: 0 }, {
+                $pull: {
+                    data: word,
+                },
+            });
+            return true;
+        } catch (err) {
+            console.log("Removing prof word error:", err);
+            return false;
+        }
+    }
+    static async getProfList() {
+        try {
+            const res = await collection3.findOne({ _id: 0 });
+            console.log("getprof", res);
+            //    console.log(res[0].data);
+            return res.data;
+        } catch (err) {
+            console.log("Getting Prof list error", err);
+            return "";
+        }
+    }
+    static async getWarnCount(chatId, senderId) {
+        try {
+            let data = await collection1
+                .aggregate([
+                    { $match: { _id: 0 } },
+                    { $unwind: "$data" },
+                    { $match: { "data.groupId": chatId } },
+                    { $unwind: "$data.Members" },
+                    { $match: { "data.Members.memberId": senderId } },
+                ])
+                .toArray();
+            return data[0].data.Members.warnCount;
+        } catch (err) {
+            console.log("warn count:", err);
+            return false;
+        }
     }
 }
 
