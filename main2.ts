@@ -2,6 +2,7 @@ require("dotenv").config({ path: "./Keys.env" });
 import { Boom } from "@hapi/boom";
 import { Db } from "mongodb";
 import P from "pino";
+import { PassThrough } from "stream";
 import makeWASocket, {
   AnyMessageContent,
   delay,
@@ -51,7 +52,7 @@ const startSock = async () => {
         //console.log(session);
         //
 
-        fs.writeFileSync("./auth_info_multi.json", sessionAuth);
+        //fs.writeFileSync("./auth_info_multi.json", sessionAuth);
       });
     });
     console.log("Local file written");
@@ -86,7 +87,7 @@ const startSock = async () => {
   const { version, isLatest } = await fetchLatestBaileysVersion();
   //console.log(`using WA v${version.join(".")}, isLatest: ${isLatest}`);
   console.log("Waiting for session file to write to form");
-  await delay(15_000);
+  await delay(5_000);
   const { state, saveState } = useSingleFileAuthState("./auth_info_multi.json");
 
   const sock = makeWASocket({
@@ -173,10 +174,10 @@ const startSock = async () => {
 
   //to update the dababase constantly
   setInterval(async () => {
-    while (allMsgArray.length > 0) {
-      await delay(300);
+    if (allMsgArray.length > 0) {
       try {
         let tempMsg = allMsgArray[0];
+        //console.log("tempMsg", tempMsg);
         let chatId = tempMsg[2];
         let senderId = tempMsg[3];
         senderId = senderId.replace(
@@ -188,9 +189,7 @@ const startSock = async () => {
           ),
           ""
         );
-        if (!sock) {
-          continue;
-        }
+
         let groupName;
         try {
           groupName = (await sock.groupMetadata(chatId)).subject;
@@ -209,7 +208,7 @@ const startSock = async () => {
         console.log("Error in updating each msg to db", err);
       }
     }
-  }, 5000);
+  }, 500);
 
   setInterval(() => {
     Crypto.getNews(sock, "120363040241737423@g.us", { msgText: "" });
@@ -484,7 +483,7 @@ const startSock = async () => {
                 break;
               case "enable":
                 if (
-                  (await isAdminOrMember(chatId, botId, "isAdmin")) ||
+                  (await isAdminOrMember(chatId, senderId, "isAdmin")) ||
                   ownerIds.find((id) => id === senderId)
                 ) {
                   if (
@@ -523,7 +522,7 @@ const startSock = async () => {
                 break;
               case "on":
                 if (
-                  (await isAdminOrMember(chatId, botId, "isAdmin")) ||
+                  (await isAdminOrMember(chatId, senderId, "isAdmin")) ||
                   ownerIds.find((id) => id === senderId)
                 ) {
                   groupManage.botOnOff(sock, chatId, msg, 1);
@@ -538,7 +537,7 @@ const startSock = async () => {
                 break;
               case "off":
                 if (
-                  (await isAdminOrMember(chatId, botId, "isAdmin")) ||
+                  (await isAdminOrMember(chatId, senderId, "isAdmin")) ||
                   ownerIds.find((id) => id === senderId)
                 ) {
                   groupManage.botOnOff(sock, chatId, msg, 0);
@@ -552,7 +551,7 @@ const startSock = async () => {
                 break;
               case "disable":
                 if (
-                  (await isAdminOrMember(chatId, botId, "isAdmin")) ||
+                  (await isAdminOrMember(chatId, senderId, "isAdmin")) ||
                   ownerIds.find((id) => id === senderId)
                 ) {
                   if (
