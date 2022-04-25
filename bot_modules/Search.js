@@ -352,7 +352,7 @@ class Search {
             const data = await q.json();
             const vurl = data.items[0].id.videoId;
             let finalVideoUrl = `https://www.youtube.com/watch?v=${vurl}`;
-            let info = await ytdl.getInfo(vurl);
+            let info = await ytdl.getInfo(finalVideoUrl);
             if (info.videoDetails.lengthSeconds >= 1800) {
                 await sock.sendMessage(
                     chatId, {
