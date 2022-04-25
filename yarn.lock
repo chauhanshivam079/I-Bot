@@ -394,6 +394,13 @@
   dependencies:
     "@hapi/hoek" "9.x.x"
 
+"@hapi/boom@^9.1.4":
+  version "9.1.4"
+  resolved "https://registry.yarnpkg.com/@hapi/boom/-/boom-9.1.4.tgz#1f9dad367c6a7da9f8def24b4a986fc5a7bd9db6"
+  integrity sha512-Ls1oH8jaN1vNsqcaHVYJrKmgMcKsC1wcp8bujvXrHaAqD2iDYq3HoOwsxwo09Cuda5R5nC0o0IxlrlTuvPuzSw==
+  dependencies:
+    "@hapi/hoek" "9.x.x"
+
 "@hapi/hoek@9.x.x":
   version "9.2.0"
   resolved "https://registry.yarnpkg.com/@hapi/hoek/-/hoek-9.2.0.tgz#f3933a44e365864f4dad5db94158106d511e8131"
@@ -3973,13 +3980,6 @@ levn@~0.3.0:
 "libsignal@git+https://github.com/adiwajshing/libsignal-node":
   version "2.0.1"
   resolved "git+https://github.com/adiwajshing/libsignal-node#4ffc1f3d6147ffdec88f62e70f41e7de2e08cd42"
-  dependencies:
-    curve25519-js "^0.0.4"
-    protobufjs "6.8.8"
-
-"libsignal@git+https://github.com/adiwajshing/libsignal-node.git":
-  version "2.0.1"
-  resolved "git+https://github.com/adiwajshing/libsignal-node.git#11dbd962ea108187c79a7c46fe4d6f790e23da97"
   dependencies:
     curve25519-js "^0.0.4"
     protobufjs "6.8.8"
