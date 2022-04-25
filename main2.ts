@@ -256,7 +256,10 @@ const startSock = async () => {
             msgData.cmd === "on" ||
             !chatId.includes("@g"))
         ) {
-          if (!(await DbOperation.checkCmd(chatId, msgData.cmd))) {
+          if (
+            !(await DbOperation.checkCmd(chatId, msgData.cmd)) ||
+            !chatId.includes("@g")
+          ) {
             console.log(msgData);
             console.log(JSON.stringify(msg, undefined, 2));
             switch (msgData.cmd) {
