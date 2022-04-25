@@ -233,7 +233,11 @@ const startSock = async () => {
         //console.log(JSON.stringify(msg, undefined, 2));
         if (chatId.includes("@g")) {
           allMsgArray.push([msg, msgData, chatId, senderId]);
-          if (await DbOperation.checkCmd(chatId, "profanity")) {
+          if (
+            (await DbOperation.checkCmd(chatId, "profanity")) &&
+            msgData.msgText &&
+            !msgData.msgText.includes("rem_ab")
+          ) {
             console.log("in profanity check");
             Profanity.checkWord(
               sock,
