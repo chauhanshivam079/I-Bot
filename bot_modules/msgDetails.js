@@ -1,5 +1,5 @@
 const DbOperation = require("../Db/dbOperation.js");
-const WAMessage = require("../src");
+const WAMessage = require("@adiwajshing/baileys/lib");
 class MsgDetails {
     static async sendLastTag(sock, chatId, senderId, msg) {
         try {

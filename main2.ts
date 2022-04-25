@@ -1,8 +1,6 @@
 require("dotenv").config({ path: "./Keys.env" });
 import { Boom } from "@hapi/boom";
-import { Db } from "mongodb";
 import P from "pino";
-import { PassThrough } from "stream";
 import makeWASocket, {
   AnyMessageContent,
   delay,
@@ -10,7 +8,7 @@ import makeWASocket, {
   fetchLatestBaileysVersion,
   makeInMemoryStore,
   useSingleFileAuthState,
-} from "./src";
+} from "@adiwajshing/baileys/lib";
 const groupManage = require("./bot_modules/groupManage.js");
 const textToHand = require("./bot_modules/textToHandwriting.js");
 const ProductSearch = require("./bot_modules/ProductSearch.js");
@@ -898,7 +896,6 @@ const startSock = async () => {
         ""
       );
     } catch (err) {
-      console.log("Formatting senderId error", err);
       return "";
     }
   };

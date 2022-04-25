@@ -14,6 +14,6 @@
     "declaration": true,
     "lib": ["es2020", "esnext.array", "DOM", "ES2021.String"]
   },
-  "include": ["./src/**/*.ts"],
+
   "exclude": ["node_modules", "src/Tests/*", "src/Binary/GenerateStatics.ts"]
 }
