@@ -234,7 +234,7 @@ const startSock = async () => {
         if (chatId.includes("@g")) {
           allMsgArray.push([msg, msgData, chatId, senderId]);
           if (
-            (await DbOperation.checkCmd(chatId, "profanity")) &&
+            !(await DbOperation.checkCmd(chatId, "profanity")) &&
             msgData.msgText &&
             !msgData.msgText.includes("rem_ab")
           ) {
