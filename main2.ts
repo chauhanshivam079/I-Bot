@@ -887,15 +887,20 @@ const startSock = async () => {
   });
 
   const formatSenderId = (senderId) => {
-    return senderId.replace(
-      senderId.substring(
-        senderId.indexOf(":") === -1
-          ? senderId.indexOf("@")
-          : senderId.indexOf(":"),
-        senderId.indexOf("@")
-      ),
-      ""
-    );
+    try {
+      return senderId.replace(
+        senderId.substring(
+          senderId.indexOf(":") === -1
+            ? senderId.indexOf("@")
+            : senderId.indexOf(":"),
+          senderId.indexOf("@")
+        ),
+        ""
+      );
+    } catch (err) {
+      console.log("Formatting senderId error", err);
+      return "";
+    }
   };
   //to check whether given id is admin or member or not
   const isAdminOrMember = async (chatId, senderId, check) => {
