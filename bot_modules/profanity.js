@@ -36,13 +36,13 @@ class Profanity {
                         if (warnCount == 0) {
                             await sock.sendMessage(
                                 chatId, {
-                                    text: `${name} have being warned for bad language/behaviour!!`,
+                                    text: `${name} have been warned for bad language/behaviour!!`,
                                 }, { quoted: msg }
                             );
                         } else {
                             await sock.sendMessage(
                                 chatId, {
-                                    text: `${name} have being warned again for bad language/behaviour!!`,
+                                    text: `${name} have been warned again for bad language/behaviour!!`,
                                 }, { quoted: msg }
                             );
                         }
