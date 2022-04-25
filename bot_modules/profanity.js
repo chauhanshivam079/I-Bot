@@ -4,12 +4,8 @@ class Profanity {
         try {
             let words = msgText.split(" ");
             let name = await DbOperation.getPushName(senderId);
-            console.log("in checkProf ");
             for (let word in words) {
-                console.log("checking");
-
                 if (sett.has(words[word].toLowerCase())) {
-                    console.log("prof word found");
                     let warnCount = await DbOperation.getWarnCount(chatId, senderId);
                     if (warnCount >= 2) {
                         const grpMembers = await sock.groupMetadata(chatId);

@@ -229,7 +229,7 @@ class DbOperation {
                         .slice(0, 10),
                     botJoin: new Date().toISOString().slice(0, 10),
                     botEnable: 1,
-                    disableCmds: [],
+                    disableCmds: ["profanity"],
                     Members: members,
                 };
                 //console.log("temperoray Group obj: ", groupObj);

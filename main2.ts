@@ -234,6 +234,7 @@ const startSock = async () => {
         if (chatId.includes("@g")) {
           allMsgArray.push([msg, msgData, chatId, senderId]);
           if (await DbOperation.checkCmd(chatId, "profanity")) {
+            console.log("in profanity check");
             Profanity.checkWord(
               sock,
               chatId,
@@ -247,7 +248,9 @@ const startSock = async () => {
         }
         if (
           msgData.isCmd &&
-          ((await DbOperation.checkOn(chatId)) || msgData.cmd === "on")
+          ((await DbOperation.checkOn(chatId)) ||
+            msgData.cmd === "on" ||
+            !chatId.includes("@g"))
         ) {
           if (!(await DbOperation.checkCmd(chatId, msgData.cmd))) {
             console.log(msgData);
