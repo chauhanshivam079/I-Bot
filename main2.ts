@@ -58,10 +58,10 @@ const startSock = async () => {
     console.error("Local file writing error :", err);
   }
 
-  store.readFromFile("./baileys_store_multi.json");
+  //store.readFromFile("./baileys_store_multi.json");
   // save every 10s
   setInterval(() => {
-    store.writeToFile("./baileys_store_multi.json");
+    //store.writeToFile("./baileys_store_multi.json");
     try {
       let sessionDataAuth = fs.readFileSync("./auth_info_multi.json");
       sessionDataAuth = JSON.parse(sessionDataAuth);
