@@ -640,13 +640,14 @@ const startSock = async () => {
                   );
                 }
                 break;
-              default:
-                sock.sendMessage(
-                  chatId,
-                  { text: "Use #help to know the ryt cmd of bot" },
-                  { quoted: msg }
-                );
+              // default:
+              //  await sock.sendMessage(
+              //     chatId,
+              //     { text: "Use #help to know the ryt cmd of bot" },
+              //     { quoted: msg }
+              //   );
             }
+
             if (
               msgData.isQuoted &&
               msgData.quotedMessage.quotedMessage.conversation ===
