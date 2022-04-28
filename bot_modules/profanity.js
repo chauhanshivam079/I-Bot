@@ -19,10 +19,13 @@ class Profanity {
                         if (grpAdminList.find((id) => id === botId)) {
                             await sock.sendMessage(
                                 chatId, {
-                                    text: `#kick @${senderId.replace("@s.whatsapp.net", "")}`,
-                                    mentions: [senderId],
+                                    text: `You have been warned 3 times.Its time to kick you`,
                                 }, { quoted: msg }
                             );
+                            await sock.sendMessage(chatId, {
+                                text: `#kick @${senderId.replace("@s.whatsapp.net", "")}`,
+                                mentions: [senderId],
+                            });
                             DbOperation.resetWarn(chatId, senderId);
                         } else {
                             await sock.sendMessage(
