@@ -23,9 +23,9 @@ const mdClient = require("./Db/dbConnection.js");
 const DbOperation = require("./Db/dbOperation.js");
 const MsgDetails = require("./bot_modules/msgDetails.js");
 const Compiler = require("./bot_modules/compiler.js");
+const Profanity = require("./bot_modules/profanity.js");
 let ownerIdsString = process.env.OWNER_IDS;
 const ownerIds = ownerIdsString.split(" ").map((id) => id + "@s.whatsapp.net");
-
 mdClient.connect();
 
 // the store maintains the data of the WA connection in memory
@@ -134,6 +134,7 @@ const startSock = async () => {
   const cmdList = `*Use # as a prefix in all commands*\n\n​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​add -to add a number to the grp\n\nkick -to remove a number from the group\n\npromote -to promote a group member\n\ndemote -to demote a group member\n\nlink -to get the link of the group\n\nis -to search an image \n\ngs -to search anything on google \n\nvs -to download a video\n\nps -to search for a product\n\nmp3s -to download mp3song\n\nmp3c -to convert a yt video to mp3\n\ns -to make sticker\n\ntoimg -to convert sticker to image\n\niprof -to get the profile picture of a user\n\nigd -to download insta video\n\ntagall -to tag all members of a group\n\ntagadmins -to tag admins of the group\n\ncp -to get the price of a crypto coin\n\ncn -to get news for a specific crypto name\n\nsp -to get the price for the stock\n\na -to check the status of the bot\n\nlt -to get the last tagged msg`;
   const allMsgArray = [];
   const tthUserDetail = new Map();
+  let profanitySet = new Set(await DbOperation.getProfList());
   //const botEnableGroups = await DbOperation.getBotActiveGroups();
   const cmdArr = [
     "create",
@@ -219,7 +220,9 @@ const startSock = async () => {
       //console.log(JSON.stringify(m, undefined, 2));
       const msg = m.messages[0];
       if (msg.hasOwnProperty("message")) {
-        const senderId = m.messages[0].key.participant;
+        const senderId = m.messages[0].key.participant
+          ? formatSenderId(m.messages[0].key.participant)
+          : formatSenderId(m.messages[0].participant);
         const isMe = m.messages[0].key.fromMe;
         const senderName = m.messages[0].pushName;
         const chatId = m.messages[0].key.remoteJid;
@@ -228,12 +231,33 @@ const startSock = async () => {
         //console.log(JSON.stringify(msg, undefined, 2));
         if (chatId.includes("@g")) {
           allMsgArray.push([msg, msgData, chatId, senderId]);
+          if (
+            !(await DbOperation.checkCmd(chatId, "profanity")) &&
+            msgData.msgText &&
+            !msgData.msgText.includes("rem_ab")
+          ) {
+            console.log("in profanity check");
+            Profanity.checkWord(
+              sock,
+              chatId,
+              senderId,
+              msgData.msgText,
+              profanitySet,
+              msg,
+              botId
+            );
+          }
         }
         if (
           msgData.isCmd &&
-          ((await DbOperation.checkOn(chatId)) || msgData.cmd === "on")
+          ((await DbOperation.checkOn(chatId)) ||
+            msgData.cmd === "on" ||
+            !chatId.includes("@g"))
         ) {
-          if (!(await DbOperation.checkCmd(chatId, msgData.cmd))) {
+          if (
+            !(await DbOperation.checkCmd(chatId, msgData.cmd)) ||
+            !chatId.includes("@g")
+          ) {
             console.log(msgData);
             console.log(JSON.stringify(msg, undefined, 2));
             switch (msgData.cmd) {
@@ -264,6 +288,7 @@ const startSock = async () => {
               case "kick":
               case "promote":
               case "demote":
+                console.log("Bot id", botId);
                 if (await isAdminOrMember(chatId, botId, "isAdmin")) {
                   const tempId =
                     msgData.msgText.length === 0
@@ -415,11 +440,7 @@ const startSock = async () => {
                 }
                 break;
               case "help":
-                await sock.sendMessage(
-                  chatId,
-                  { text: cmdList },
-                  { quoted: msg }
-                );
+                sock.sendMessage(chatId, { text: cmdList }, { quoted: msg });
                 break;
               case "toimg":
                 if (msgData.isQuoted) {
@@ -591,7 +612,80 @@ const startSock = async () => {
                   );
                 }
                 break;
+              case "add_ab":
+                await DbOperation.addProfWord(msgData.msgText);
+                let d = await DbOperation.getProfList();
+                if (d) {
+                  profanitySet = new Set(d);
+                  await sock.sendMessage(
+                    chatId,
+                    { text: "Word added!" },
+                    { quoted: msg }
+                  );
+                } else {
+                  await sock.sendMessage(
+                    chatId,
+                    { text: "Some Error Occured" },
+                    { quoted: msg }
+                  );
+                }
+                break;
 
+              case "rem_ab":
+                await DbOperation.removeProfWord(msgData.msgText);
+                let dd = await DbOperation.getProfList();
+                if (dd) {
+                  profanitySet = new Set(dd);
+                  await sock.sendMessage(
+                    chatId,
+                    { text: "Word removed!" },
+                    { quoted: msg }
+                  );
+                } else {
+                  await sock.sendMessage(
+                    chatId,
+                    { text: "Some Error Occured" },
+                    { quoted: msg }
+                  );
+                }
+                break;
+              case "warn":
+                if (
+                  isAdminOrMember(chatId, senderId, "isAdmin") ||
+                  ownerIds.find((id) => id === senderId)
+                ) {
+                  const tempId =
+                    msgData.msgText.length === 0
+                      ? msgData.quotedMessage.participant
+                        ? msgData.quotedMessage.participant
+                        : ""
+                      : getWhatsappId(m, msgData.msgText);
+                  let [word] = profanitySet;
+                  if (tempId) {
+                    await Profanity.checkWord(
+                      sock,
+                      chatId,
+                      tempId,
+                      word,
+                      profanitySet,
+                      msg,
+                      botId
+                    );
+                  } else {
+                    await sock.sendMessage(
+                      chatId,
+                      { text: "No one tagged!" },
+                      { quoted: msg }
+                    );
+                  }
+                } else {
+                  await sock.sendMessage(
+                    chatId,
+                    { text: `Admin Only Command Cutie!` },
+                    { quoted: msg }
+                  );
+                }
+                break;
               case ".":
                 const collectio = mdClient
                   .db("Users")
@@ -645,14 +739,7 @@ const startSock = async () => {
                   );
                 }
                 break;
-              // default:
-              //  await sock.sendMessage(
-              //     chatId,
-              //     { text: "Use #help to know the ryt cmd of bot" },
-              //     { quoted: msg }
-              //   );
             }
-
             if (
               msgData.isQuoted &&
               msgData.quotedMessage.quotedMessage.conversation ===
@@ -790,6 +877,22 @@ const startSock = async () => {
       console.log("Errorrrrrrrrrrrrrrrrrrrr", err);
     }
   });
+
+  const formatSenderId = (senderId) => {
+    try {
+      return senderId.replace(
+        senderId.substring(
+          senderId.indexOf(":") === -1
+            ? senderId.indexOf("@")
+            : senderId.indexOf(":"),
+          senderId.indexOf("@")
+        ),
+        ""
+      );
+    } catch (err) {
+      return "";
+    }
+  };
   //to check whether given id is admin or member or not
   const isAdminOrMember = async (chatId, senderId, check) => {
     senderId = senderId.replace(
