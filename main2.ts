@@ -440,13 +440,17 @@ const startSock = async () => {
                 }
                 break;
               case "help":
-                sock.sendMessage(chatId, { text: cmdList }, { quoted: msg });
+                await sock.sendMessage(
+                  chatId,
+                  { text: cmdList },
+                  { quoted: msg }
+                );
                 break;
               case "toimg":
                 if (msgData.isQuoted) {
                   Sticker.stickerToImg(sock, chatId, msg, msgData);
                 } else {
-                  sock.sendMessage(
+                  await sock.sendMessage(
                     chatId,
                     { text: "Tag a sticker!" },
                     { quoted: msg }
