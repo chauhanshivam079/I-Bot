@@ -50,7 +50,7 @@ const startSock = async () => {
         //console.log(session);
         //
 
-        fs.writeFileSync("./auth_info_multi.json", sessionAuth);
+        //fs.writeFileSync("./auth_info_multi.json", sessionAuth);
       });
     });
     console.log("Local file written");
@@ -85,7 +85,7 @@ const startSock = async () => {
   const { version, isLatest } = await fetchLatestBaileysVersion();
   //console.log(`using WA v${version.join(".")}, isLatest: ${isLatest}`);
   console.log("Waiting for session file to write to form");
-  await delay(20_000);
+  await delay(5_000);
   const { state, saveState } = useSingleFileAuthState("./auth_info_multi.json");
 
   const sock = makeWASocket({
@@ -168,6 +168,7 @@ const startSock = async () => {
     "msgcount",
     "run",
     "makehimgay",
+    "profanity",
   ];
 
   //to update the dababase constantly

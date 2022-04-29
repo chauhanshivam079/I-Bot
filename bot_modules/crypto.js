@@ -55,7 +55,7 @@ class Crypto {
                     ]);
                 }
             }
-        }, 10000);
+        }, 20000);
     }
     async getPrices(sock, chatId, msgData, msg) {
         if (msgData.msgText === "") {
