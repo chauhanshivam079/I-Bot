@@ -132,7 +132,7 @@ class groupManage {
             reply = "Command only for admins";
         }
 
-        await sock.sendMessage(chatId, { text: reply }, { quoted: msg });
+        await sock.sendMessage(chatId, { text: reply });
     }
 
     static editGroupDesc() {}
