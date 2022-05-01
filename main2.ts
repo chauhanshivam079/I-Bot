@@ -33,7 +33,6 @@ mdClient.connect();
 const store = makeInMemoryStore({
   logger: P().child({ level: "debug", stream: "store" }),
 });
-
 // start a connection
 const startSock = async () => {
   try {
@@ -58,10 +57,10 @@ const startSock = async () => {
     console.error("Local file writing error :", err);
   }
 
-  store.readFromFile("./baileys_store_multi.json");
+  //store.readFromFile("./baileys_store_multi.json");
   // save every 10s
   setInterval(() => {
-    store.writeToFile("./baileys_store_multi.json");
+    // store.writeToFile("./baileys_store_multi.json");
     try {
       let sessionDataAuth = fs.readFileSync("./auth_info_multi.json");
       sessionDataAuth = JSON.parse(sessionDataAuth);
@@ -79,7 +78,7 @@ const startSock = async () => {
     } catch (err) {
       console.log("Db updation error : ", err);
     }
-  }, 25_000);
+  }, 30_000);
 
   // fetch latest version of WA Web
   const { version, isLatest } = await fetchLatestBaileysVersion();
