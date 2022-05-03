@@ -522,7 +522,7 @@ class DbOperation {
     static async getProfList() {
         try {
             const res = await collection3.findOne({ _id: 0 });
-            console.log("getprof", res);
+            //console.log("getprof", res);
             //    console.log(res[0].data);
             return res.data;
         } catch (err) {
