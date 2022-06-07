@@ -27,7 +27,7 @@ class DbOperation {
                         .toArray()
                     )[0].data.Members.taggedMsg;
                     //console.log("tagged msgggggg :", taggedMsgs);
-                    if (taggedMsgs.length === 6) {
+                    if (taggedMsgs.length === 2) {
                         taggedMsgs.shift();
                     }
 
