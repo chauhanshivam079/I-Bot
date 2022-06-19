@@ -33,6 +33,8 @@ mdClient.connect();
 const store = makeInMemoryStore({
   logger: P().child({ level: "debug", stream: "store" }),
 });
+
+var sessionThere = 1;
 // start a connection
 const startSock = async () => {
   try {
@@ -48,8 +50,9 @@ const startSock = async () => {
         sessionAuth = JSON.stringify(sessionAuth);
         //console.log(session);
         //
-
-        fs.writeFileSync("./auth_info_multi.json", sessionAuth);
+        if (sessionThere == 1) {
+          fs.writeFileSync("./auth_info_multi.json", sessionAuth);
+        }
       });
     });
     console.log("Local file written");
@@ -101,7 +104,7 @@ const startSock = async () => {
   });
 
   store.bind(sock.ev);
-
+  sessionThere = 1;
   const sendMessageWTyping = async (msg: AnyMessageContent, jid: string) => {
     await sock.presenceSubscribe(jid);
     await delay(500);
@@ -989,6 +992,8 @@ const startSock = async () => {
         DisconnectReason.loggedOut
       ) {
         console.log("Connection closed. You are logged out.");
+        sessionThere = 0;
+        startSock();
       } else {
         startSock();
       }
