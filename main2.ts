@@ -84,13 +84,13 @@ const startSock = async () => {
     } catch (err) {
       console.log("Db updation error : ", err);
     }
-  }, 30_000);
+  }, 35_000);
 
   // fetch latest version of WA Web
   const { version, isLatest } = await fetchLatestBaileysVersion();
   //console.log(`using WA v${version.join(".")}, isLatest: ${isLatest}`);
   console.log("Waiting for session file to write to form");
-  await delay(15_000);
+  await delay(25_000);
   const { state, saveState } = useSingleFileAuthState("./auth_info_multi.json");
 
   const sock = makeWASocket({
