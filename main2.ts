@@ -52,7 +52,7 @@ const startSock = async () => {
         //
         if (sessionThere == 1) {
           fs.writeFileSync("./auth_info_multi.json", sessionAuth);
-        } else {
+        } else if (sessionThere == 0) {
           //fs.writeFileSync("./auth_info_multi.json", "");
           fs.unlinkSync("./auth_info_multi.json");
         }
@@ -62,7 +62,7 @@ const startSock = async () => {
   } catch (err) {
     console.error("Local file writing error :", err);
   }
-
+  await delay(5_000);
   //store.readFromFile("./baileys_store_multi.json");
   // save every 10s
   setInterval(() => {
@@ -81,16 +81,17 @@ const startSock = async () => {
         { $set: { sessionAuth: sessionDataAuth } }
       );
       //console.log("db updated");
+      sessionThere = 1;
     } catch (err) {
       console.log("Db updation error : ", err);
     }
-  }, 35_000);
+  }, 50_000);
 
   // fetch latest version of WA Web
   const { version, isLatest } = await fetchLatestBaileysVersion();
   //console.log(`using WA v${version.join(".")}, isLatest: ${isLatest}`);
   console.log("Waiting for session file to write to form");
-  await delay(25_000);
+  await delay(20_000);
   const { state, saveState } = useSingleFileAuthState("./auth_info_multi.json");
 
   const sock = makeWASocket({
@@ -107,7 +108,8 @@ const startSock = async () => {
   });
 
   store.bind(sock.ev);
-  sessionThere = 1;
+
+  sessionThere = 2;
   const sendMessageWTyping = async (msg: AnyMessageContent, jid: string) => {
     await sock.presenceSubscribe(jid);
     await delay(500);
@@ -119,7 +121,7 @@ const startSock = async () => {
 
     await sock.sendMessage(jid, msg);
   };
-
+  //await delay(20_000);
   sock.ev.on("chats.set", (item) =>
     console.log(`recv ${item.chats.length} chats (is latest: ${item.isLatest})`)
   );
