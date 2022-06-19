@@ -84,7 +84,7 @@ const startSock = async () => {
   const { version, isLatest } = await fetchLatestBaileysVersion();
   //console.log(`using WA v${version.join(".")}, isLatest: ${isLatest}`);
   console.log("Waiting for session file to write to form");
-  await delay(20_000);
+  await delay(15_000);
   const { state, saveState } = useSingleFileAuthState("./auth_info_multi.json");
 
   const sock = makeWASocket({
@@ -984,8 +984,12 @@ const startSock = async () => {
         DisconnectReason.loggedOut
       ) {
         startSock();
-      } else {
+      } else if (
+        (lastDisconnect.error as Boom)?.output?.statusCode ==
+        DisconnectReason.loggedOut
+      ) {
         console.log("Connection closed. You are logged out.");
+      } else {
         startSock();
       }
     }
