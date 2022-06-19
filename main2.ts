@@ -52,6 +52,9 @@ const startSock = async () => {
         //
         if (sessionThere == 1) {
           fs.writeFileSync("./auth_info_multi.json", sessionAuth);
+        } else {
+          //fs.writeFileSync("./auth_info_multi.json", "");
+          fs.unlinkSync("./auth_info_multi.json");
         }
       });
     });
@@ -991,8 +994,9 @@ const startSock = async () => {
         (lastDisconnect.error as Boom)?.output?.statusCode ==
         DisconnectReason.loggedOut
       ) {
-        console.log("Connection closed. You are logged out.");
+        console.log("Connection closed. You are logged out.", sessionThere);
         sessionThere = 0;
+
         startSock();
       } else {
         startSock();
