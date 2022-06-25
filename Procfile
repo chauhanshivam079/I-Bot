@@ -1,1 +1,1 @@
-worker: yarn main
+worker: bash start.sh
