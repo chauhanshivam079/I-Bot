@@ -62,7 +62,7 @@ const startSock = async () => {
   } catch (err) {
     console.error("Local file writing error :", err);
   }
-  await delay(5_000);
+  await delay(10_000);
   //store.readFromFile("./baileys_store_multi.json");
   // save every 10s
   setInterval(() => {
@@ -85,12 +85,11 @@ const startSock = async () => {
     } catch (err) {
       console.log("Db updation error : ", err);
     }
-  }, 50_000);
+  }, 20_000);
 
   // fetch latest version of WA Web
   const { version, isLatest } = await fetchLatestBaileysVersion();
   //console.log(`using WA v${version.join(".")}, isLatest: ${isLatest}`);
-  console.log("Waiting for session file to write to form");
   await delay(20_000);
   const { state, saveState } = useSingleFileAuthState("./auth_info_multi.json");
 
@@ -178,6 +177,10 @@ const startSock = async () => {
     "makehimgay",
     "profanity",
   ];
+
+  setInterval(async () => {
+    throw "sd";
+  }, 7200000);
 
   //to update the dababase constantly
   setInterval(async () => {
