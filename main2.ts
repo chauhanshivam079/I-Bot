@@ -1021,7 +1021,7 @@ let r = "On";
 const main = async () => {
   await startSock();
   console.log(r);
-  while (r == "restart") {
+  while (true) {
     console.log("Restarting.....(Through main2.ts)");
     await startSock();
   }
