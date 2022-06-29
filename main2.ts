@@ -994,7 +994,7 @@ const startSock = async () => {
         (lastDisconnect.error as Boom)?.output?.statusCode !==
         DisconnectReason.loggedOut
       ) {
-        startSock();
+        let r = "restart";
       } else if (
         (lastDisconnect.error as Boom)?.output?.statusCode ==
         DisconnectReason.loggedOut
@@ -1002,9 +1002,9 @@ const startSock = async () => {
         console.log("Connection closed. You are logged out.", sessionThere);
         sessionThere = 0;
         console.log("sessionThere logout time", sessionThere);
-        startSock();
+        let r = "restart";
       } else {
-        startSock();
+        let r = "restart";
       }
     }
 
@@ -1015,5 +1015,5 @@ const startSock = async () => {
 
   return sock;
 };
-
+console.log("Restarting.....(Through main2.ts)");
 startSock();
