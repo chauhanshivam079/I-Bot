@@ -65,7 +65,7 @@ const startSock = async () => {
   await delay(10_000);
   //store.readFromFile("./baileys_store_multi.json");
   // save every 10s
-  setInterval(() => {
+  let interval1 = setInterval(() => {
     // store.writeToFile("./baileys_store_multi.json");
     try {
       let sessionDataAuth = fs.readFileSync("./auth_info_multi.json");
@@ -81,7 +81,6 @@ const startSock = async () => {
         { $set: { sessionAuth: sessionDataAuth } }
       );
       //console.log("db updated");
-      sessionThere = 1;
     } catch (err) {
       console.log("Db updation error : ", err);
     }
@@ -183,7 +182,7 @@ const startSock = async () => {
   }, 7200000);
 
   //to update the dababase constantly
-  setInterval(async () => {
+  let interval2 = setInterval(async () => {
     if (allMsgArray.length > 0) {
       try {
         let tempMsg = allMsgArray[0];
@@ -1013,7 +1012,8 @@ const startSock = async () => {
   });
   // listen for when the auth credentials is updated
   sock.ev.on("creds.update", saveState);
-
+  clearInterval(interval1);
+  clearInterval(interval2);
   return sock;
 };
 
