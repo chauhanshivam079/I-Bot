@@ -49,7 +49,7 @@ const startSock = async () => {
         sessionAuth = JSON.parse(sessionAuth);
         sessionAuth = JSON.stringify(sessionAuth);
         //console.log(session);
-        //
+        console.log("sessionThere=", sessionThere);
         if (sessionThere == 1) {
           fs.writeFileSync("./auth_info_multi.json", sessionAuth);
         } else if (sessionThere == 0) {
