@@ -34,7 +34,7 @@ const store = makeInMemoryStore({
   logger: P().child({ level: "debug", stream: "store" }),
 });
 
-var sessionThere = 1;
+let sessionThere = 1;
 // start a connection
 const startSock = async () => {
   try {
@@ -1001,7 +1001,7 @@ const startSock = async () => {
       ) {
         console.log("Connection closed. You are logged out.", sessionThere);
         sessionThere = 0;
-
+        console.log("sessionThere logout time", sessionThere);
         startSock();
       } else {
         startSock();
