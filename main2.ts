@@ -1018,8 +1018,12 @@ const startSock = async () => {
 };
 
 let r = "On";
-startSock();
-while (r == "restart") {
-  console.log("Restarting.....(Through main2.ts)");
-  startSock();
-}
+const main = async () => {
+  await startSock();
+  console.log(r);
+  while (r == "restart") {
+    console.log("Restarting.....(Through main2.ts)");
+    await startSock();
+  }
+};
+main();
