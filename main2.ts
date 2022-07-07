@@ -993,7 +993,7 @@ const startSock = async () => {
         (lastDisconnect.error as Boom)?.output?.statusCode !==
         DisconnectReason.loggedOut
       ) {
-        r = "restart";
+        startSock();
       } else if (
         (lastDisconnect.error as Boom)?.output?.statusCode ==
         DisconnectReason.loggedOut
@@ -1002,9 +1002,9 @@ const startSock = async () => {
         sessionThere = 0;
 
         console.log("sessionThere logout time", sessionThere);
-        r = "restart";
+        startSock();
       } else {
-        r = "restart";
+        startSock();
       }
     }
 
@@ -1017,13 +1017,15 @@ const startSock = async () => {
   return sock;
 };
 
-let r = "On";
-const main = async () => {
-  await startSock();
-  console.log(r);
-  while (true) {
-    console.log("Restarting.....(Through main2.ts)");
-    await startSock();
-  }
-};
-main();
+// let r = "On";
+// const main = async () => {
+//   await startSock();
+//   console.log(r);
+//   while (true) {
+//     if (r === "restart") {
+//       console.log("Restarting.....(Through main2.ts)");
+//       await startSock();
+//     }
+//   }
+// };
+startSock();
