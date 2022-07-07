@@ -35,7 +35,7 @@
         "url": "git@github.com:adiwajshing/baileys.git"
     },
     "dependencies": {
-        "@adiwajshing/baileys": "^4.1.0",
+        "@adiwajshing/baileys": "^4.2.0",
         "@hapi/boom": "^9.1.4",
         "@juliendu11/instagram-downloader": "^0.2.0",
         "axios": "^0.26.1",
