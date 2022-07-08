@@ -15,5 +15,10 @@
     "lib": ["es2020", "esnext.array", "DOM", "ES2021.String"]
   },
 
-  "exclude": ["node_modules", "src/Tests/*", "src/Binary/GenerateStatics.ts"]
+  "exclude": [
+    "node_modules",
+    "src/Tests/*",
+    "src/Binary/GenerateStatics.ts",
+    "lib"
+  ]
 }
