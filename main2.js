@@ -31,6 +31,8 @@ const ownerIds = ownerIdsString.split(" ").map((id) => id + "@s.whatsapp.net");
 mdClient.connect();
 
 const MAIN_LOGGER = require("@adiwajshing/baileys/lib/Utils/logger");
+const { del } = require("request");
+const { group } = require("console");
 
 // const logger = MAIN_LOGGER.child({});
 // logger.level = "trace";
@@ -62,10 +64,10 @@ const startSock = async() => {
                 //console.log(session);
                 console.log("sessionThere=", sessionThere);
                 if (sessionThere == 1) {
-                    fs.writeFileSync("./auth_info_multi/creds.json", sessionAuth);
+                    fs.writeFileSync("auth_info_multi/creds.json", sessionAuth);
                 } else if (sessionThere == 0) {
                     //fs.writeFileSync("./auth_info_multi.json", "");
-                    fs.unlinkSync("./auth_info_multi/creds.json");
+                    fs.rmSync("auth_info_multi", { recursive: true, force: true });
                 }
             });
         });
@@ -73,13 +75,13 @@ const startSock = async() => {
     } catch (err) {
         console.error("Local file writing errors :", err);
     }
-    await delay(10000);
+    await delay(20000);
     //store.readFromFile("./baileys_store_multi.json");
     // save every 10s
     let interval1 = setInterval(() => {
         // store.writeToFile("./baileys_store_multi.json");
         try {
-            let sessionDataAuth = fs.readFileSync("./auth_info_multi/creds.json");
+            let sessionDataAuth = fs.readFileSync("auth_info_multi/creds.json");
             sessionDataAuth = JSON.parse(sessionDataAuth);
             sessionDataAuth = JSON.stringify(sessionDataAuth);
             //console.log(sessionData);
@@ -92,14 +94,14 @@ const startSock = async() => {
         } catch (err) {
             console.log("Db updation error : ", err);
         }
-    }, 20000);
+    }, 30000);
 
     // fetch latest version of WA Web
     const { version, isLatest } = await fetchLatestBaileysVersion();
     //console.log(`using WA v${version.join(".")}, isLatest: ${isLatest}`);
-    await delay(20000);
-    const { state, saveCreds } = await useMultiFileAuthState("auth_info_multi");
 
+    const { state, saveCreds } = await useMultiFileAuthState("auth_info_multi");
+    await delay(20000);
     const sock = makeWASocket({
         version,
         // logger,
@@ -113,7 +115,7 @@ const startSock = async() => {
             };
         },
     });
-
+    await delay(20000);
     store.bind(sock.ev);
 
     sessionThere = 2;
@@ -248,8 +250,10 @@ const startSock = async() => {
                     // reconnect if not logged out
                     if (
                         lastDisconnect.error.output.statusCode !==
-                        DisconnectReason.loggedOut
+                        DisconnectReason.connectionClosed
                     ) {
+                        clearInterval(interval1);
+                        clearInterval(interval2);
                         startSock();
                     } else if (
                         lastDisconnect.error.output.statusCode == DisconnectReason.loggedOut
@@ -258,8 +262,12 @@ const startSock = async() => {
                         sessionThere = 0;
 
                         console.log("sessionThere logout time", sessionThere);
+                        clearInterval(interval1);
+                        clearInterval(interval2);
                         startSock();
                     } else {
+                        clearInterval(interval1);
+                        clearInterval(interval2);
                         startSock();
                     }
                 }
@@ -871,6 +879,31 @@ const startSock = async() => {
                     console.log("Errorrrrrrrrrrrrrrrrrrrr", err);
                 }
             }
+
+            if (events["creds.update"]) {
+                await saveCreds();
+            }
+
+            if (events["groups.upsert"]) {
+                const m = events[groups.upsert];
+
+                //chatList.push(m[0].id);
+                console.log("group update: ", m);
+                console.log("Creating Group");
+                DbOperation.createGroup(m[0]);
+                //sock.sendMessage(m[0].id, { text: "Hello there!" });
+                //console.log(chatList);
+            }
+            if (events["group-participants.update"]) {
+                const m = events["group-participants.update"];
+
+                console.log("Groupparticipant.update : ", m);
+                if (m.action === "add") {
+                    DbOperation.addMember(m.id, m.participants[0]);
+                } else if (m.action === "remove") {
+                    DbOperation.updateGroupsIn(m.id, m.participants[0]);
+                }
+            }
         }
     );
 
@@ -941,36 +974,15 @@ const startSock = async() => {
         return whatsappId;
     };
 
-    sock.ev.on("groups.upsert", (m) => {
-        //chatList.push(m[0].id);
-        console.log("group update: ", m);
-        console.log("Creating Group");
-        DbOperation.createGroup(m[0]);
-        //sock.sendMessage(m[0].id, { text: "Hello there!" });
-        //console.log(chatList);
-    });
-
-    sock.ev.on("group-participants.update", (m) => {
-        const data = m;
-        console.log("Groupparticipant.update : ", m);
-        if (m.action === "add") {
-            DbOperation.addMember(m.id, m.participants[0]);
-        } else if (m.action === "remove") {
-            DbOperation.updateGroupsIn(m.id, m.participants[0]);
-        }
-    });
-
     //sock.ev.on('messages.update', m => console.log(m))
     //sock.ev.on('message-receipt.update', m => console.log(m))
     //sock.ev.on('presence.update', m => console.log(m))
     //sock.ev.on('chats.update', m => console.log(m))
     //sock.ev.on('contacts.upsert', m => console.log(m))
 
-    sock.ev.on("connection.update", (update) => {});
     // listen for when the auth credentials is updated
-    sock.ev.on("creds.update", saveCreds);
-    clearInterval(interval1);
-    clearInterval(interval2);
+    // credentials updated -- save them
+
     return sock;
 };
 
