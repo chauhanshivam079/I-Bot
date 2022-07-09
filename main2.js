@@ -67,7 +67,10 @@ const startSock = async() => {
                     fs.writeFileSync("auth_info_multi/creds.json", sessionAuth);
                 } else if (sessionThere == 0) {
                     //fs.writeFileSync("./auth_info_multi.json", "");
-                    fs.rmSync("auth_info_multi", { recursive: true, force: true });
+                    fs.rmSync("auth_info_multi/creds.json", {
+                        recursive: true,
+                        force: true,
+                    });
                 }
             });
         });
