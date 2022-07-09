@@ -3,8 +3,10 @@
     "version": "4.0.1",
     "description": "WhatsApp API",
     "homepage": "https://github.com/adiwajshing/Baileys",
-    "main": "lib/index.js",
-    "types": "lib/index.d.ts",
+    "main": "main2.ts",
+    "directories": {
+        "lib": "lib"
+    },
     "keywords": [
         "whatsapp",
         "js-whatsapp",
@@ -17,25 +19,14 @@
         "multi-device"
     ],
     "scripts": {
-        "test": "jest",
-        "prepare": "tsc",
-        "build:all": "tsc && typedoc",
-        "build:docs": "typedoc",
-        "build:tsc": "tsc",
-        "main": "node --inspect -r ts-node/register main2.ts",
-        "example:legacy": "node --inspect -r ts-node/register Example/example-legacy.ts",
-        "gen-protobuf": "sh WAProto/GenerateStatics.sh",
-        "browser-decode": "yarn ts-node src/BrowserMessageDecoding.ts",
-        "lint": "eslint ./src --ext .js,.ts,.jsx,.tsx",
-        "lint:fix": "eslint ./src --fix --ext .js,.ts,.jsx,.tsx"
+        "main": "node main2.js"
     },
-    "author": "Adhiraj Singh",
-    "license": "MIT",
+    "author": "I-Bot",
     "repository": {
         "url": "git@github.com:adiwajshing/baileys.git"
     },
     "dependencies": {
-        "@adiwajshing/baileys": "^4.2.0",
+        "@adiwajshing/baileys": "github:adiwajshing/baileys",
         "@hapi/boom": "^10.0.0",
         "@juliendu11/instagram-downloader": "^0.2.0",
         "axios": "^0.27.2",
@@ -79,12 +70,6 @@
             "optional": true
         }
     },
-    "files": [
-        "lib/*",
-        "WAProto/*",
-        "WASignalGroup/*.js",
-        "WABinary/*.js"
-    ],
     "devDependencies": {
         "@adiwajshing/eslint-config": "git+https://github.com/adiwajshing/eslint-config",
         "@adiwajshing/keyed-db": "^0.2.4",
@@ -95,13 +80,9 @@
         "@types/sharp": "^0.30.4",
         "@types/ws": "^8.5.3",
         "eslint": "^8.19.0",
-        "jest": "^28.1.2",
         "jimp": "^0.16.1",
         "qrcode-terminal": "^0.12.0",
         "sharp": "^0.30.7",
-        "ts-jest": "^28.0.5",
-        "ts-node": "^10.8.2",
-        "typedoc": "^0.23.5",
-        "typescript": "^4.7.4"
+        "typedoc": "^0.23.5"
     }
 }

@@ -17,7 +17,7 @@ class InstaDownloader {
             instaId = instaId.replace("?utm_medium=copy_link", "");
             console.log("Insta id to search: ", instaId);
             const res = await axios({
-                url: `https://www.instagram.com/${instaId}/?__a=1`,
+                url: `https://www.instagram.com/${instaId}/?__a=1&__d=dis`,
                 headers: {
                     accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9",
                     "accept-language": "en-IN,en-GB;q=0.9,en-US;q=0.8,en;q=0.7",
@@ -89,7 +89,7 @@ class InstaDownloader {
             if (finalLink.slice(-1) != "/") {
                 finalLink += "/";
             }
-            finalLink = finalLink + "?__a=1";
+            finalLink = finalLink + "?__a=1&__d=dis";
             let metaData;
             console.log(finalLink);
             metaData = await axios({

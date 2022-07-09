@@ -1,5 +1,5 @@
 while true
 do
 echo "Restarting..."
-yarn main
+node main2.js
 done
