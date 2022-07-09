@@ -11,50 +11,55 @@ class Crypto {
     _newsApiKey = process.env.NEWS_API;
 
     constructor() {
-        //console.log("1111111111111", this._newsApiKey);
-        this._baseUrl = "https://api.coingecko.com/api/v3/";
-        fetch("https://api.coingecko.com/api/v3/coins/list").then((res) =>
-            res
-            .json()
-            .then((result) => ({
-                data: result,
-            }))
-            .then((ress) => {
-                this._coinsDetails = ress.data;
-            })
-        );
         setTimeout(() => {
+            //console.log("1111111111111", this._newsApiKey);
+            this._baseUrl = "https://api.coingecko.com/api/v3/";
+            fetch("https://api.coingecko.com/api/v3/coins/list").then((res) =>
+                res
+                .json()
+                .then((result) => ({
+                    data: result,
+                }))
+                .then((ress) => {
+                    this._coinsDetails = ress.data;
+                })
+            );
+
             this._coinsData = new Map();
             this._coinsDataName = new Map();
             //console.log(this._coinsDetails);
-            let count = 0;
-            for (let i = 0; i < this._coinsDetails.length; i++) {
-                count++;
-                if (this._coinsData.has(this._coinsDetails[i].symbol)) {
-                    let tempArr = this._coinsData.get(this._coinsDetails[i].symbol);
-                    tempArr.push(this._coinsDetails[i].id);
-                    this._coinsData.set(this._coinsDetails[i].symbol, tempArr);
-                } else {
-                    this._coinsData.set(this._coinsDetails[i].symbol, [
-                        this._coinsDetails[i].id,
-                    ]);
+            setTimeout(() => {
+                let count = 0;
+                for (let i = 0; i < this._coinsDetails.length; i++) {
+                    count++;
+                    if (this._coinsData.has(this._coinsDetails[i].symbol)) {
+                        let tempArr = this._coinsData.get(this._coinsDetails[i].symbol);
+                        tempArr.push(this._coinsDetails[i].id);
+                        this._coinsData.set(this._coinsDetails[i].symbol, tempArr);
+                    } else {
+                        this._coinsData.set(this._coinsDetails[i].symbol, [
+                            this._coinsDetails[i].id,
+                        ]);
+                    }
                 }
-            }
 
-            for (let i = 0; i < this._coinsDetails.length; i++) {
-                if (this._coinsDataName.has(this._coinsDetails[i].name.toLowerCase())) {
-                    let tempArr = this._coinsDataName.get(this._coinsDetails[i].name);
-                    tempArr.push(this._coinsDetails[i].id);
-                    this._coinsDataName.set(
-                        this._coinsDetails[i].name.toLowerCase(),
-                        tempArr
-                    );
-                } else {
-                    this._coinsDataName.set(this._coinsDetails[i].name.toLowerCase(), [
-                        this._coinsDetails[i].id,
-                    ]);
+                for (let i = 0; i < this._coinsDetails.length; i++) {
+                    if (
+                        this._coinsDataName.has(this._coinsDetails[i].name.toLowerCase())
+                    ) {
+                        let tempArr = this._coinsDataName.get(this._coinsDetails[i].name);
+                        tempArr.push(this._coinsDetails[i].id);
+                        this._coinsDataName.set(
+                            this._coinsDetails[i].name.toLowerCase(),
+                            tempArr
+                        );
+                    } else {
+                        this._coinsDataName.set(this._coinsDetails[i].name.toLowerCase(), [
+                            this._coinsDetails[i].id,
+                        ]);
+                    }
                 }
-            }
+            }, 10000);
         }, 25000);
     }
     async getPrices(sock, chatId, msgData, msg) {
