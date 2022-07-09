@@ -71,7 +71,7 @@ const startSock = async() => {
         });
         console.log("Local file written");
     } catch (err) {
-        console.error("Local file writing error :", err);
+        console.error("Local file writing errors :", err);
     }
     await delay(10000);
     //store.readFromFile("./baileys_store_multi.json");
