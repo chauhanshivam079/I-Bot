@@ -295,27 +295,26 @@ const startSock = async() => {
                         //console.log(JSON.stringify(msg, undefined, 2));
                         if (chatId.includes("@g")) {
                             allMsgArray.push([msg, msgData, chatId, senderId]);
-                            if (!(await DbOperation.checkCmd(chatId, "profanity")) &&
-                                msgData.msgText &&
-                                !msgData.msgText.includes("rem_ab")
-                            ) {
-                                console.log("in profanity check");
-                                Profanity.checkWord(
-                                    sock,
-                                    chatId,
-                                    senderId,
-                                    msgData.msgText,
-                                    profanitySet,
-                                    msg,
-                                    botId
-                                );
-                            }
+                            // if (!(await DbOperation.checkCmd(chatId, "profanity")) &&
+                            //     msgData.msgText &&
+                            //     !msgData.msgText.includes("rem_ab")
+                            // ) {
+                            //     console.log("in profanity check");
+                            //     Profanity.checkWord(
+                            //         sock,
+                            //         chatId,
+                            //         senderId,
+                            //         msgData.msgText,
+                            //         profanitySet,
+                            //         msg,
+                            //         botId
+                            //     );
+                            // }
                         }
                         if (
                             msgData.isCmd &&
-                            ((await DbOperation.checkOn(chatId)) ||
-                                msgData.cmd === "on" ||
-                                !chatId.includes("@g"))
+                            //(await DbOperation.checkOn(chatId)) ||
+                            (msgData.cmd === "on" || !chatId.includes("@g"))
                         ) {
                             if (!(await DbOperation.checkCmd(chatId, msgData.cmd)) ||
                                 !chatId.includes("@g")
