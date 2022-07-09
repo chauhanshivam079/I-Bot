@@ -34,6 +34,7 @@ const store = makeInMemoryStore({
   logger: P().child({ level: "debug", stream: "store" }),
 });
 
+var sessionThere = 1;
 // start a connection
 const startSock = async () => {
   try {
@@ -49,19 +50,23 @@ const startSock = async () => {
         sessionAuth = JSON.stringify(sessionAuth);
         //console.log(session);
         //
-
-        //fs.writeFileSync("./auth_info_multi.json", sessionAuth);
+        if (sessionThere == 1) {
+          fs.writeFileSync("./auth_info_multi.json", sessionAuth);
+        } else if (sessionThere == 0) {
+          //fs.writeFileSync("./auth_info_multi.json", "");
+          fs.unlinkSync("./auth_info_multi.json");
+        }
       });
     });
     console.log("Local file written");
   } catch (err) {
     console.error("Local file writing error :", err);
   }
-
-  store.readFromFile("./baileys_store_multi.json");
+  await delay(5_000);
+  //store.readFromFile("./baileys_store_multi.json");
   // save every 10s
   setInterval(() => {
-    store.writeToFile("./baileys_store_multi.json");
+    // store.writeToFile("./baileys_store_multi.json");
     try {
       let sessionDataAuth = fs.readFileSync("./auth_info_multi.json");
       sessionDataAuth = JSON.parse(sessionDataAuth);
@@ -76,16 +81,17 @@ const startSock = async () => {
         { $set: { sessionAuth: sessionDataAuth } }
       );
       //console.log("db updated");
+      sessionThere = 1;
     } catch (err) {
       console.log("Db updation error : ", err);
     }
-  }, 25_000);
+  }, 50_000);
 
   // fetch latest version of WA Web
   const { version, isLatest } = await fetchLatestBaileysVersion();
   //console.log(`using WA v${version.join(".")}, isLatest: ${isLatest}`);
   console.log("Waiting for session file to write to form");
-  await delay(5_000);
+  await delay(20_000);
   const { state, saveState } = useSingleFileAuthState("./auth_info_multi.json");
 
   const sock = makeWASocket({
@@ -103,6 +109,7 @@ const startSock = async () => {
 
   store.bind(sock.ev);
 
+  sessionThere = 2;
   const sendMessageWTyping = async (msg: AnyMessageContent, jid: string) => {
     await sock.presenceSubscribe(jid);
     await delay(500);
@@ -114,7 +121,7 @@ const startSock = async () => {
 
     await sock.sendMessage(jid, msg);
   };
-
+  //await delay(20_000);
   sock.ev.on("chats.set", (item) =>
     console.log(`recv ${item.chats.length} chats (is latest: ${item.isLatest})`)
   );
@@ -172,6 +179,10 @@ const startSock = async () => {
     "profanity",
   ];
 
+  setInterval(async () => {
+    throw "sd";
+  }, 7200);
+
   //to update the dababase constantly
   setInterval(async () => {
     if (allMsgArray.length > 0) {
@@ -211,7 +222,9 @@ const startSock = async () => {
   }, 500);
 
   setInterval(() => {
-    Crypto.getNews(sock, "120363040241737423@g.us", { msgText: "" });
+    Crypto.getNews(sock, "918329198682-1614096949@g.us", { msgText: "" });
+    Crypto.getNews(sock, "918329198682-1612849199@g.us", { msgText: "" });
+
     //Crypto.getNnews(sock, "918329198682-1612849199@g.us", { msgText: "" });
     //Crypto.news(driver, "918329198682-1614096949@g.us", CRYPTOPANIC_API, "")
   }, 43200000 / 2);
@@ -440,13 +453,17 @@ const startSock = async () => {
                 }
                 break;
               case "help":
-                sock.sendMessage(chatId, { text: cmdList }, { quoted: msg });
+                await sock.sendMessage(
+                  chatId,
+                  { text: cmdList },
+                  { quoted: msg }
+                );
                 break;
               case "toimg":
                 if (msgData.isQuoted) {
                   Sticker.stickerToImg(sock, chatId, msg, msgData);
                 } else {
-                  sock.sendMessage(
+                  await sock.sendMessage(
                     chatId,
                     { text: "Tag a sticker!" },
                     { quoted: msg }
@@ -739,12 +756,6 @@ const startSock = async () => {
                   );
                 }
                 break;
-              default:
-                sock.sendMessage(
-                  chatId,
-                  { text: "Use #help to know the ryt cmd of bot" },
-                  { quoted: msg }
-                );
             }
             if (
               msgData.isQuoted &&
@@ -985,8 +996,15 @@ const startSock = async () => {
         DisconnectReason.loggedOut
       ) {
         startSock();
+      } else if (
+        (lastDisconnect.error as Boom)?.output?.statusCode ==
+        DisconnectReason.loggedOut
+      ) {
+        console.log("Connection closed. You are logged out.", sessionThere);
+        sessionThere = 0;
+
+        startSock();
       } else {
-        console.log("Connection closed. You are logged out.");
         startSock();
       }
     }
