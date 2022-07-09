@@ -313,8 +313,11 @@ const startSock = async() => {
                         }
                         if (
                             msgData.isCmd &&
+                            true
+
                             //(await DbOperation.checkOn(chatId)) ||
-                            (msgData.cmd === "on" || !chatId.includes("@g"))
+                            //msgData.cmd === "on" ||
+                            // !chatId.includes("@g")
                         ) {
                             if (!(await DbOperation.checkCmd(chatId, msgData.cmd)) ||
                                 !chatId.includes("@g")
