@@ -31,8 +31,6 @@ const ownerIds = ownerIdsString.split(" ").map((id) => id + "@s.whatsapp.net");
 mdClient.connect();
 
 const MAIN_LOGGER = require("@adiwajshing/baileys/lib/Utils/logger");
-const { del } = require("request");
-const { group } = require("console");
 
 // const logger = MAIN_LOGGER.child({});
 // logger.level = "trace";
@@ -71,6 +69,8 @@ const startSock = async() => {
                         recursive: true,
                         force: true,
                     });
+                } else {
+                    console.log("Creds Already there.");
                 }
             });
         });
@@ -104,7 +104,7 @@ const startSock = async() => {
     //console.log(`using WA v${version.join(".")}, isLatest: ${isLatest}`);
 
     const { state, saveCreds } = await useMultiFileAuthState("auth_info_multi");
-    await delay(20000);
+    //await delay(20000);
     const sock = makeWASocket({
         version,
         // logger,
@@ -118,9 +118,10 @@ const startSock = async() => {
             };
         },
     });
-    await delay(20000);
-    store.bind(sock.ev);
 
+    //await delay(20000);
+
+    store.bind(sock.ev);
     sessionThere = 2;
     // const sendMessageWTyping = async(msg: AnyMessageContent, jid: string) => {
     //     await sock.presenceSubscribe(jid);
@@ -134,17 +135,17 @@ const startSock = async() => {
     //     await sock.sendMessage(jid, msg);
     // };
     //await delay(20_000);
-    sock.ev.on("chats.set", (item) =>
-        console.log(`recv ${item.chats.length} chats (is latest: ${item.isLatest})`)
-    );
-    sock.ev.on("messages.set", (item) =>
-        console.log(
-            `recv ${item.messages.length} messages (is latest: ${item.isLatest})`
-        )
-    );
-    sock.ev.on("contacts.set", (item) =>
-        console.log(`recv ${item.contacts.length} contacts`)
-    );
+    // sock.ev.on("chats.set", (item) =>
+    //     console.log(`recv ${item.chats.length} chats (is latest: ${item.isLatest})`)
+    // );
+    // sock.ev.on("messages.set", (item) =>
+    //     console.log(
+    //         `recv ${item.messages.length} messages (is latest: ${item.isLatest})`
+    //     )
+    // );
+    // sock.ev.on("contacts.set", (item) =>
+    //     console.log(`recv ${item.contacts.length} contacts`)
+    // );
 
     const chatList = [];
     const pre = "#";
@@ -240,25 +241,22 @@ const startSock = async() => {
         //Crypto.getNnews(sock, "918329198682-1612849199@g.us", { msgText: "" });
         //Crypto.news(driver, "918329198682-1614096949@g.us", CRYPTOPANIC_API, "")
     }, 43200000 / 2);
-
+    console.log("Sock", sock.ev.process);
     sock.ev.process(
         // events is a map for event name => event data
         async(events) => {
+            console.log("inside process");
             // something about the connection changed
             // maybe it closed, or we received all offline message or connection opened
             if (events["connection.update"]) {
+                console.log("Inside Connecion UPDATE");
                 const update = events["connection.update"];
+                console.log("connection update", update);
                 const { connection, lastDisconnect } = update;
                 if (connection === "close") {
+                    console.log("Inside Connection Close");
                     // reconnect if not logged out
                     if (
-                        lastDisconnect.error.output.statusCode !==
-                        DisconnectReason.connectionClosed
-                    ) {
-                        clearInterval(interval1);
-                        clearInterval(interval2);
-                        startSock();
-                    } else if (
                         lastDisconnect.error.output.statusCode == DisconnectReason.loggedOut
                     ) {
                         console.log("Connection closed. You are logged out.", sessionThere);
@@ -269,13 +267,11 @@ const startSock = async() => {
                         clearInterval(interval2);
                         startSock();
                     } else {
-                        clearInterval(interval1);
-                        clearInterval(interval2);
+                        console.log("Connection closed.", sessionThere);
+
                         startSock();
                     }
                 }
-
-                console.log("connection update", update);
             }
             if (events["messages.upsert"]) {
                 //console.log('recv messages ', JSON.stringify(upsert, undefined, 2))
