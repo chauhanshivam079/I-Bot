@@ -19,7 +19,7 @@
         "multi-device"
     ],
     "scripts": {
-        "main": "node main2.js"
+        "main": "node main.js"
     },
     "author": "I-Bot",
     "repository": {
