@@ -57,20 +57,25 @@ const startSock = async() => {
             collection2.find({ _id: 1 }).toArray(function(err, result) {
                 if (err) throw err;
                 let sessionAuth = result[0]["sessionAuth"];
-                sessionAuth = JSON.parse(sessionAuth);
-                sessionAuth = JSON.stringify(sessionAuth);
-                //console.log(session);
-                console.log("sessionThere=", sessionThere);
-                if (sessionThere == 1) {
-                    fs.writeFileSync("auth_info_multi/creds.json", sessionAuth);
-                } else if (sessionThere == 0) {
-                    //fs.writeFileSync("./auth_info_multi.json", "");
-                    fs.rmSync("auth_info_multi/creds.json", {
-                        recursive: true,
-                        force: true,
-                    });
+                console.log(sessionAuth, "asdadasdasdasdas");
+                if (sessionAuth != "") {
+                    sessionAuth = JSON.parse(sessionAuth);
+                    sessionAuth = JSON.stringify(sessionAuth);
+                    //console.log(session);
+                    console.log("sessionThere=", sessionThere);
+                    if (sessionThere == 1) {
+                        fs.writeFileSync("auth_info_multi/creds.json", sessionAuth);
+                    } else if (sessionThere == 0) {
+                        //fs.writeFileSync("./auth_info_multi.json", "");
+                        fs.rmSync("auth_info_multi/creds.json", {
+                            recursive: true,
+                            force: true,
+                        });
+                    } else {
+                        console.log("Creds Already there.");
+                    }
                 } else {
-                    console.log("Creds Already there.");
+                    console.log("Session Auth Empty");
                 }
             });
         });
