@@ -33,5 +33,17 @@ class MsgDetails {
             console.log("msg count", err);
         }
     }
+    static async taggedMsgCount(sock,chatId,msg,msgData){
+        try{
+            const id=msgData.quotedMessage.participant;
+            const msgCount=await DbOperation.getMsgCount(chatId,id);
+            let name=await DbOperation.getPushName(id);
+            if(name==="You")
+                name=id.split("@")[0];;
+            await sock.sendMessage(chatId,{text:`${name} has ${msgCount} messages`},{quoted:msg});
+        }catch(err){
+            console.log("Tagged msg count",err);
+        }
+    }
 }
 module.exports = MsgDetails;
