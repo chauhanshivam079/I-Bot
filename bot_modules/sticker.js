@@ -6,6 +6,7 @@ const {
     createSticker,
     StickerTypes,
 } = require("wa-sticker-formatter");
+const { off } = require("process");
 class sticker {
     static async imgToSticker(sock, chatId, msg, msgData) {
         let fileName;
@@ -84,6 +85,35 @@ class sticker {
             await sock.sendMessage(
                 chatId, { text: "Can only convert sticker to image" }, { quoted: msg }
             );
+        }
+    }
+    static async stealSticker(sock,chatId,msg,msgData){
+        if(msgData.quotedMessage.quotedMessage.hasOwnProperty("stickerMessage")){
+            let author="I-Bot Stickers";
+            if(msgData.msgText!=""){
+                author=msgData.msgText
+            }
+            const stream = await downloadContentFromMessage(
+                msgData.quotedMessage.quotedMessage.stickerMessage,
+                "image"
+            );
+            let buffer = Buffer.from([]);
+            for await (const chunk of stream) {
+                buffer = Buffer.concat([buffer, chunk]);
+            }
+            const sticker = new Sticker(buffer, {
+                pack: author, // The pack name
+                author: "", // The author name
+                type: "full", // The sticker type
+                categories: ["🤩", "🎉"], // The sticker category
+                id: "12345", // The sticker id
+                quality: 50, // The quality of the output file
+            });
+            await sock.sendMessage(chatId, await sticker.toMessage(), { quoted: msg });
+
+        }
+        else{
+            await sock.sendMessage(chatId,{text:"Can change the author of sticker only"},{quoted:msg});
         }
     }
 }
