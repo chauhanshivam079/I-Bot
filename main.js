@@ -514,6 +514,14 @@ const startSock = async () => {
                       Sticker.imgToSticker(sock, chatId, msg, msgData);
                     }
                     break;
+                  case "steal":
+                    if(msgData.isQuoted){
+                      Sticker.stealSticker(sock,chatId,msg,msgData);
+                    }
+                    else{
+                      await sock.sendMessage(chatId,{text:"Tag a Sticker"},{quoted:msg});
+                    }
+                    break;
                   case "help":
                     await sock.sendMessage(
                       chatId,
@@ -589,7 +597,12 @@ const startSock = async () => {
                     break;
                   case "mc":
                   case "msgcount":
-                    MsgDetails.msgCount(sock, chatId, senderId, msg);
+                    if(msgData.isQuoted){
+                      MsgDetails.taggedMsgCount(sock,chatId,msg,msgData);
+                    }
+                    else{
+                      MsgDetails.msgCount(sock, chatId, senderId, msg);
+                    }
                     break;
                   case "run":
                     Compiler.run(sock, chatId, msg, msgData);
