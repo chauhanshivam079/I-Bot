@@ -76,6 +76,8 @@ Now Bot will start working!! Work even if the device is offline!!
 |    `#last_tag`  |        to get the last tagged message             |   `#lt`  |
 |    `#last_tag`  |        to get the last tagged message             |   `#lt`  |
 |    `#run`       |        to compile and run code in various lang    |          |
+|    `#w`         |        to get a random word with its meaning      |          |
+
 
 <hr>
 
