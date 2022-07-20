@@ -1,6 +1,5 @@
 const axios = require("axios");
 
-
 class RandomWord{
     static async getRandomWord(sock,chatId,msg){
         try{
