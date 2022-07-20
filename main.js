@@ -183,6 +183,7 @@ const startSock = async () => {
     "toimg",
     "iprof",
     "igd",
+    "i",
     "tagall",
     "tagadmins",
     "cp",
@@ -550,6 +551,7 @@ const startSock = async () => {
                       msgData.msgText
                     );
                     break;
+                  case "i"  :
                   case "igd":
                     InstaDownloader.igDownload(
                       sock,
