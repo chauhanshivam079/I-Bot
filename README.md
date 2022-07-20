@@ -63,7 +63,7 @@ Now Bot will start working!! Work even if the device is offline!!
 |    `#toimg`     |        Create image from sticker                  |          |
 |    `#mp3s`      |        Get any song in good quality               |          |
 |    `#iprof`     |        Get insta user profile details including dp|          |
-|    `#igd`       |        Get insta reels or post videos             |          |
+|    `#igd`       |        Get insta reels or post videos             |   `#i`   |
 |    `#vs`        |        Download youtube videos                    |          |
 |    `#mp3c`      |        Download youtube audio                     |          |
 |    `#tagall`    |        tag all members in group                   |          |
