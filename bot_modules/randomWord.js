@@ -4,7 +4,7 @@ class RandomWord{
     static async getRandomWord(sock,chatId,msg){
         try{
         const result=await axios({url:"https://random-words-api.vercel.app/word/",mode:"cors",method:"GET"});
-        const ans=`Word :- ${result.data[0].word}\n\nMeaning:- ${result.data[0].definition}`;
+        const ans=`Word :- ${result.data[0].word}\n\nMeaning:- ${result.data[0].definition}\n\nPronunciation:- ${result.data[0].pronunciation}`;
         await sock.sendMessage(chatId,{text:ans},{quoted:msg});
         }
         catch(err){
