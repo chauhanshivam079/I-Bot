@@ -8,7 +8,7 @@ class Horoscope{
         this.#url=`https://aztro.sameerkumar.website/?sign=${msgData.msgText}&day=today`;
         this.#horoArray=["aries","taurus","gemini","cancer","Leo","Virgo","libra","scorpio","sagittarius","capricorn","aquarius","pisces"];
     }
-        async getHoroscope(sock,chatId,msg){
+        async getHoroscope(sock,chatId,msg,msgData){
         try{
             let index=this.#horoArray.indexOf(msgData.msgText);
             if(index===-1){
