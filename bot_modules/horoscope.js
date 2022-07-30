@@ -14,7 +14,7 @@ class Horoscope{
             await sock.sendMessage(chatId,{text:result},{quoted:msg});
         }  
         catch(err){
-            await sock.sendMessage(chatId,{text:`{err.message}`},{quoted:msg});
+            await sock.sendMessage(chatId,{text:`${err.message}`},{quoted:msg});
         }
     }
 
