@@ -1,4 +1,5 @@
 ## New Multi Device Whatsapp Bot
+Try it out by sending #help on +916268727514 this number.
 
 Easy deploy your bot, steps in the bottom.
 
