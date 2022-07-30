@@ -10,7 +10,7 @@ class Horoscope{
     }
         async getHoroscope(sock,chatId,msg,msgData){
         try{
-            let index=this.#horoArray.indexOf(msgData.msgText);
+            let index=this.#horoArray.indexOf(msgData.msgText.toLowerCase());
             if(index===-1){
                 await sock.sendMessage(chatId,{text:"Enter the right spelling"},{quoted:msg});
             }
