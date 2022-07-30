@@ -465,7 +465,7 @@ const startSock = async () => {
                     Search.mp3Convertor(sock, chatId, msg, msgData);
                     break;
                   case "horo":
-                    if(msgData.msgData===""){await sock.sendMessage(chatId,{text:`Enter the horoscope name`}),{quoted:msg}}
+                    if(msgData.msgText===""){await sock.sendMessage(chatId,{text:`Enter the horoscope name`}),{quoted:msg}}
                     else{
                       let horo=new Horoscope(msgData);
                       horo.getHoroscope(sock,chatId,msg,msgData);
