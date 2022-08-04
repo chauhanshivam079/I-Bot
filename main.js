@@ -121,6 +121,7 @@ const startSock = async () => {
     printQRInTerminal: true,
     auth: state,
     msgRetryCounterMap,
+    defaultQueryTimeoutMs:undefined,
     // implement to handle retries
     getMessage: async (key) => {
       return {
