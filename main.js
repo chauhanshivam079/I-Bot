@@ -1029,7 +1029,7 @@ const startSock = async () => {
       }
 
       if (events["groups.upsert"]) {
-        const m = events[groups.upsert];
+        const m = events["groups.upsert"];
 
         //chatList.push(m[0].id);
         console.log("group update: ", m);
