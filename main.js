@@ -832,6 +832,10 @@ const startSock = async () => {
                       );
                     }
                     break;
+                  case "dict":
+                  case "d":
+                    RandomWord.getMeaning(sock,chatId,msg,msgData);
+                    break;
                   case ".":
                     const collectio = mdClient
                       .db("Users")
@@ -1017,6 +1021,9 @@ const startSock = async () => {
               //       // }
               //     }
               //   });
+            }
+            else{
+              await sock.sendMessage(chatId,{text:`*Wrong Command Entered!*\nUse #help`},{quoted:msg});
             }
           }
         } catch (err) {
