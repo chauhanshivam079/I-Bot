@@ -102,30 +102,30 @@ class RandomWord{
     static async getMeaning(sock,chatId,msg,msgData){
         try{
             let ans=await dict.search(msgData.msgText)
-            let finalAns=`*Word:-*${ans[0].word}\n`;
+            let finalAns=`*Word:-* ${ans[0].word}\n`;
             ans =ans[0].meaning;
             if(ans.exclamation){
                 const def=ans.exclamation[0].definition;
-                finalAns=finalAns+`*Meaning:-*${def}`;
+                finalAns=finalAns+`*Meaning:-* ${def}`;
                 await sock.sendMessage(chatId,{text:finalAns},{quoted:msg});
                 return;
             }
             if(ans["transitive verb"]){
                 const def =ans["transitive verb"][0].definition;
-                finalAns=finalAns+`*Meaning:-*${def}`;
+                finalAns=finalAns+`*Meaning:-* ${def}`;
                 await sock.sendMessage(chatId,{text:finalAns},{quoted:msg});
                 return;
             }
             if(ans.noun){
                 const def =ans.noun[0].definition;
-                finalAns=finalAns+`*Meaning:-*${def}`;
+                finalAns=finalAns+`*Meaning:-* ${def}`;
                 await sock.sendMessage(chatId,{text:finalAns},{quoted:msg});
                 return;
             }
 
         }catch(err){
-            console.log("in catch",err.message);
-            await sock.sendMessage(chatId,{text:`to know meaning first learn to write Word\n${err.message}`},{quoted:msg});
+            console.log("in catch",err);
+            await sock.sendMessage(chatId,{text:`To know meaning first learn to write Word\n${err}`},{quoted:msg});
         }
     }
 }
