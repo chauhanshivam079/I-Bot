@@ -1,6 +1,6 @@
 const axios = require("axios");
 const dict=require("google-dictionary-api")
-const jsonWords=require('../words.json');
+//const jsonWords=require('../words.json');
 class RandomWord{
     _gameState;
     _word;
@@ -125,7 +125,7 @@ class RandomWord{
 
         }catch(err){
             console.log("in catch",err.message);
-            sock.sendMessage(chatId,{text:`to know meaning first learn to write Word\n${err.message}`},{quoted:msg})
+            await sock.sendMessage(chatId,{text:`to know meaning first learn to write Word\n${err.message}`},{quoted:msg});
         }
     }
 }
