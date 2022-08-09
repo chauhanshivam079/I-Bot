@@ -1022,9 +1022,6 @@ const startSock = async () => {
               //     }
               //   });
             }
-            else{
-              await sock.sendMessage(chatId,{text:`*Wrong Command Entered!*\nUse #help`},{quoted:msg});
-            }
           }
         } catch (err) {
           console.log("Errorrrrrrrrrrrrrrrrrrrr", err);
