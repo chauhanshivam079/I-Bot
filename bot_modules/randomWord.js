@@ -116,6 +116,12 @@ class RandomWord{
                 await sock.sendMessage(chatId,{text:finalAns},{quoted:msg});
                 return;
             }
+            if(ans.adjective){
+                const def =ans.adjective[0].definition;
+                finalAns=finalAns+`*Meaning:-* ${def}`;
+                await sock.sendMessage(chatId,{text:finalAns},{quoted:msg});
+                return;                
+            }
             if(ans.noun){
                 const def =ans.noun[0].definition;
                 finalAns=finalAns+`*Meaning:-* ${def}`;
