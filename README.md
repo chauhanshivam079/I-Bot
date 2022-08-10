@@ -75,10 +75,10 @@ Now Bot will start working!! Work even if the device is offline!!
 |    `#cnews`     |        to get the news for specific crypto coin   |   `#cn`  |
 |    `#sprice`    |        to get the price of a stock                |   `#sp`  |
 |    `#last_tag`  |        to get the last tagged message             |   `#lt`  |
-|    `#last_tag`  |        to get the last tagged message             |   `#lt`  |
 |    `#run`       |        to compile and run code in various lang    |          |
 |    `#w`         |        to get a random word with its meaning      |          |
 |    `#horo`      |        to know the horoscope of current date      |          |
+|    `#dict`      |        to know the meaning of a word              |   `#d`   |
 
 
 <hr>
