@@ -602,13 +602,13 @@ const startSock = async () => {
                         const ID=m.messages[0].message.extendedTextMessage.contextInfo.stanzaId;
                         const parti=m.messages[0].message.extendedTextMessage.contextInfo.participant
                         const options={
-                          remoteJid:chatId,
-                          fromMe:false,
-                          id:ID,
-                          participant:parti,
+                          "remoteJid":chatId,
+                          "fromMe":false,
+                          "id":ID,
+                          "participant":parti,
                         };
                       //  console.log("inside dd",key);
-                        await sock.sendMessage(chatId,{delete:m.messages[0].key});
+                        await sock.sendMessage(chatId,{delete:options});
                       }
                       else{
                         await sock.sendMessage(chatId,{text:`Tag msg of member to be deleted`},{quoted:msg});
