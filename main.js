@@ -647,6 +647,25 @@ const startSock = async () => {
                   case "source":
                     await sock.sendMessage(chatId,{text:`*I-Bot*\n\n${"https://github.com/chauhanshivam079/I-Bot"}\n\n${"https://github.com/Shyguy99/I-BOT-Baileys"}\n\nDon't forget to give a like if you liked it or using it. New helpful command will keep on adding.`},{quoted:msg})
                     break;
+                  case "dd":
+                    if (!(await isAdminOrMember(chatId, botId, "isAdmin"))){
+                      await sock.sendMessage(chatId,{text:`Bot not admin yet`},{quoted:msg});
+                    }
+                    else{
+                    if(m.messages[0].message.extendedTextMessage){
+                    const key={
+                      remoteJid:chatId,
+                      fromMe:false,
+                      id:m.messages[0].message.extendedTextMessage.contextInfo.stanzaId,
+                      participant:m.messages[0].message.extendedTextMessage.contextInfo.participant,
+                    };
+                    console.log("inisde dd",key);
+                    await sock.sendMessage(chatId,{delete:key});
+                    }
+                    else
+                      await sock.sendMessage(chatId,{text:'Tag a message to be deleted'},{quoted:msg});
+                  }
+                    break;
                   case "enable":
                     if (
                       (await isAdminOrMember(chatId, senderId, "isAdmin")) ||
