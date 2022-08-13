@@ -44,7 +44,6 @@
         "pino": "^8.1.0",
         "pretty": "^2.0.0",
         "protobufjs": "^6.11.3",
-        "puppeteer": "^13.5.1",
         "request": "^2.88.2",
         "ts-node": "^10.8.2",
         "wa-sticker-formatter": "^4.3.2",
