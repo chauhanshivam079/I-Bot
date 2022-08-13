@@ -6,7 +6,7 @@ class Horoscope{
     #horoArray;
     constructor(msgData){
         this.#url=`https://aztro.sameerkumar.website/?sign=${msgData.msgText}&day=today`;
-        this.#horoArray=["aries","taurus","gemini","cancer","Leo","Virgo","libra","scorpio","sagittarius","capricorn","aquarius","pisces"];
+        this.#horoArray=["aries","taurus","gemini","cancer","leo","virgo","libra","scorpio","sagittarius","capricorn","aquarius","pisces"];
     }
         async getHoroscope(sock,chatId,msg,msgData){
         try{
