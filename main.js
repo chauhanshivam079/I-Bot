@@ -593,6 +593,7 @@ const startSock = async () => {
                     break;
                   case "dd":
                   case "delete":
+                    try{
                     if(!(await isAdminOrMember(chatId, botId, "isAdmin"))){
                       await sock.sendMessage(chatId,{text:`Make bot admin to delete member message`},{quoted:msg});
                     }
@@ -618,6 +619,11 @@ const startSock = async () => {
                       await sock.sendMessage(chatId,{text:`First become admin noob`},{quoted:msg});
                     }
                     }
+                  }
+                  catch(err){
+                    console.log("delete msg error",err);
+                    await sock.sendMessage(chatId,{text:`${err.message}`},{quoted:msg});
+                  }
                     break;
                   case "tagall":
                     if (await isAdminOrMember(chatId, senderId, "isAdmin")) {
