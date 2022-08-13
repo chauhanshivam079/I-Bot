@@ -12,7 +12,7 @@ const {
   useMultiFileAuthState,
 } = require("@adiwajshing/baileys");
 const groupManage = require("./bot_modules/groupManage.js");
-const textToHand = require("./bot_modules/textToHandwriting.js");
+// const textToHand = require("./bot_modules/textToHandwriting.js");
 const ProductSearch = require("./bot_modules/ProductSearch.js");
 const Search = require("./bot_modules/Search.js");
 const fs = require("fs");
