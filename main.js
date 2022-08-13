@@ -598,12 +598,15 @@ const startSock = async () => {
                     else{
                       if(isAdminOrMember(chatId,senderId,"isAdmin")){
                       if(m.messages[0].message.extendedTextMessage){
+                        const ID=m.messages[0].message.extendedTextMessage.contextInfo.stanzaId;
+                        const parti=m.messages[0].message.extendedTextMessage.contextInfo.participant
                         const key={
                           remoteJid:chatId,
                           fromMe:false,
-                          id:m.messages[0].message.extendedTextMessage.contextInfo.stanzaId,
-                          participant:m.messages[0].message.extendedTextMessage.contextInfo.participant,
-                        }
+                          id:ID,
+                          participant:parti,
+                        };
+                        console.log("inside dd",key);
                         await sock.sendMessage(chatId,{delete:key});
                       }
                       else{
