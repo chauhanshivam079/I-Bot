@@ -12,7 +12,7 @@ const {
   useMultiFileAuthState,
 } = require("@adiwajshing/baileys");
 const groupManage = require("./bot_modules/groupManage.js");
-// const textToHand = require("./bot_modules/textToHandwriting.js");
+const textToHand = require("./bot_modules/textToHandwriting.js");
 const ProductSearch = require("./bot_modules/ProductSearch.js");
 const Search = require("./bot_modules/Search.js");
 const fs = require("fs");
@@ -590,6 +590,31 @@ const startSock = async () => {
                       msgData.msgText
                     );
                     break;
+                  case "dd":
+                  case "delete":
+                    if(!(await isAdminOrMember(chatId, botId, "isAdmin"))){
+                      await sock.sendMessage(chatId,{text:`Make bot admin to delete member message`},{quoted:msg});
+                    }
+                    else{
+                      if(isAdminOrMember(chatId,senderId,"isAdmin")){
+                      if(m.messages[0].message.extendedTextMessage){
+                        const key={
+                          remoteJid:chatId,
+                          fromMe:false,
+                          id:m.messages[0].message.extendedTextMessage.contextInfo.stanzaId,
+                          participant:m.messages[0].message.extendedTextMessage.contextInfo.participant,
+                        }
+                        await sock.sendMessage(chatId,{delete:key});
+                      }
+                      else{
+                        await sock.sendMessage(chatId,{text:`Tag msg of member to be deleted`},{quoted:msg});
+                      }
+                    }
+                    else{
+                      await sock.sendMessage(chatId,{text:`First become admin noob`},{quoted:msg});
+                    }
+                    }
+                    break;
                   case "tagall":
                     if (await isAdminOrMember(chatId, senderId, "isAdmin")) {
                       groupManage.tagAll(sock, chatId, msgData, msg, false);
@@ -646,25 +671,6 @@ const startSock = async () => {
                     break;
                   case "source":
                     await sock.sendMessage(chatId,{text:`*I-Bot*\n\n${"https://github.com/chauhanshivam079/I-Bot"}\n\n${"https://github.com/Shyguy99/I-BOT-Baileys"}\n\nDon't forget to give a like if you liked it or using it. New helpful command will keep on adding.`},{quoted:msg})
-                    break;
-                  case "dd":
-                    if (!(await isAdminOrMember(chatId, botId, "isAdmin"))){
-                      await sock.sendMessage(chatId,{text:`Bot not admin yet`},{quoted:msg});
-                    }
-                    else{
-                    if(m.messages[0].message.extendedTextMessage){
-                    const key={
-                      remoteJid:chatId,
-                      fromMe:false,
-                      id:m.messages[0].message.extendedTextMessage.contextInfo.stanzaId,
-                      participant:m.messages[0].message.extendedTextMessage.contextInfo.participant,
-                    };
-                    console.log("inisde dd",key);
-                    await sock.sendMessage(chatId,{delete:key});
-                    }
-                    else
-                      await sock.sendMessage(chatId,{text:'Tag a message to be deleted'},{quoted:msg});
-                  }
                     break;
                   case "enable":
                     if (
