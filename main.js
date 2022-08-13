@@ -296,6 +296,7 @@ const startSock = async () => {
         try {
           const m = events["messages.upsert"];
           //console.log(JSON.stringify(m, undefined, 2));
+          console.log(m.messages[0]);
           const msg = m.messages[0];
           if (msg.hasOwnProperty("message")) {
             const senderId = m.messages[0].key.participant
@@ -600,14 +601,14 @@ const startSock = async () => {
                       if(m.messages[0].message.extendedTextMessage){
                         const ID=m.messages[0].message.extendedTextMessage.contextInfo.stanzaId;
                         const parti=m.messages[0].message.extendedTextMessage.contextInfo.participant
-                        const key={
+                        const options={
                           remoteJid:chatId,
                           fromMe:false,
                           id:ID,
                           participant:parti,
                         };
-                        console.log("inside dd",key);
-                        await sock.sendMessage(chatId,{delete:key});
+                      //  console.log("inside dd",key);
+                        await sock.sendMessage(chatId,{delete:m.messages[0].key});
                       }
                       else{
                         await sock.sendMessage(chatId,{text:`Tag msg of member to be deleted`},{quoted:msg});
