@@ -12,16 +12,24 @@ class TwitterDownloader{
                 {quoted:msg});
             }
             else{
-            await sock.sendMessage(chatId,{
-                video:response.download[0].url,
-                caption:"",
-                gifPlayback: false,
-            },{quoted:msg});
+                let link="";
+                for(let i=0;i<response.download.length;i++){
+                    if(response.download[i].url.includes("video.twimg")){
+                    link=response.download[i].url;
+                    break;
+                    }
+                }
+                await sock.sendMessage(chatId,{
+                                                video:link,
+                                                caption:"",
+                                                gifPlayback: false,
+                                              },
+                                              {quoted:msg});
+            }
         }
-        }
-        else{
-            await sock.sendMessage(chatId,{text:`Give correct link`},{quoted:msg});
-        }
+            else{
+                await sock.sendMessage(chatId,{text:`Give correct link`},{quoted:msg});
+            }
         }
         catch(err){
             console.log(err);
