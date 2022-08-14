@@ -610,6 +610,7 @@ const startSock = async () => {
                         };
                       //  console.log("inside dd",key);
                         await sock.sendMessage(chatId,{delete:options});
+                        await sock.sendMessage(chatId,{delete:m.messages[0].key});
                       }
                       else{
                         await sock.sendMessage(chatId,{text:`Tag msg of member to be deleted`},{quoted:msg});
