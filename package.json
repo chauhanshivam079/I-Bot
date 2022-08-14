@@ -1,8 +1,8 @@
 {
-    "name": "@adiwajshing/baileys",
+    "name": "whatsapp-bot-md",
     "version": "4.0.1",
     "description": "WhatsApp API",
-    "homepage": "https://github.com/adiwajshing/Baileys",
+    "homepage": "https://github.com/chauhanshivam079/I-Bot/blob/main/README.md",
     "main": "main2.ts",
     "directories": {
         "lib": "lib"
@@ -23,7 +23,7 @@
     },
     "author": "I-Bot",
     "repository": {
-        "url": "git@github.com:adiwajshing/baileys.git"
+        "url": "git+https://github.com/chauhanshivam079/I-Bot.git"
     },
     "dependencies": {
         "@adiwajshing/baileys": "github:adiwajshing/baileys",
@@ -38,6 +38,7 @@
         "images-to-pdf": "^1.0.3",
         "intl": "^1.2.5",
         "libsignal": "git+https://github.com/adiwajshing/libsignal-node",
+        "link-preview-js": "^2.1.19",
         "mongodb": "^4.7.0",
         "music-metadata": "^7.12.4",
         "node-cache": "^5.1.2",
@@ -47,6 +48,7 @@
         "puppeteer": "^13.5.1",
         "request": "^2.88.2",
         "ts-node": "^10.8.2",
+        "twitter-url-direct": "^1.0.4",
         "wa-sticker-formatter": "^4.3.2",
         "ws": "^8.8.0",
         "ytdl-core": "^4.11.0"
