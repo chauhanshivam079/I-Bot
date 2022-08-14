@@ -124,11 +124,6 @@ const startSock = async () => {
     msgRetryCounterMap,
     defaultQueryTimeoutMs:undefined,
     // implement to handle retries
-    getMessage: async (key) => {
-      return {
-        conversation: "",
-      };
-    },
   });
 
   //await delay(20000);
