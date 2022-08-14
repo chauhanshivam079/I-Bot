@@ -598,10 +598,10 @@ const startSock = async () => {
                       await sock.sendMessage(chatId,{text:`Make bot admin to delete member message`},{quoted:msg});
                     }
                     else{
-                      if(isAdminOrMember(chatId,senderId,"isAdmin")){
+                      if(await isAdminOrMember(chatId,senderId,"isAdmin")){
                       if(m.messages[0].message.extendedTextMessage){
                         const ID=m.messages[0].message.extendedTextMessage.contextInfo.stanzaId;
-                        const parti=m.messages[0].message.extendedTextMessage.contextInfo.participant
+                        const parti=m.messages[0].message.extendedTextMessage.contextInfo.participant;
                         const options={
                           "remoteJid":chatId,
                           "fromMe":false,
