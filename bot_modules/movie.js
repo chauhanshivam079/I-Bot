@@ -30,7 +30,7 @@ static async getLinks(sock,chatId,msg,msgData){
             }   
         }
     });
-    let finalList=`${msgData.msgText} Links\n ${movieList}`;
+    let finalList=`${msgData.msgText} Links\n`;
     console.log(finalList);
     await sock.sendMessage(chatId,{text:finalList},{quoted:msg});
 }
