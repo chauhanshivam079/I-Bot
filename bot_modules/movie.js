@@ -25,12 +25,14 @@ static async getLinks(sock,chatId,msg,msgData){
                 movieList=movieList+prefix+temp+"\n";
             }
             else if(!(idx&1))  {
+                if(idx<20){
                 let temp=$(el).attr("href");
                 movieList=movieList+prefix+temp+"\n";
+                }
             }   
         }
     });
-    let finalList=`${msgData.msgText} Links\n ${movieList}`;
+    let finalList=`${movieList}`;
     console.log(finalList);
     await sock.sendMessage(chatId,{text:finalList},{quoted:msg});
 }
