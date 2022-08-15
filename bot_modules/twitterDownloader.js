@@ -19,9 +19,8 @@ class TwitterDownloader{
                     break;
                     }
                 }
-                link=link.split("?tag")[0];
                 await sock.sendMessage(chatId,{
-                                                video:link,
+                                                video:{url:link},
                                                 caption:"",
                                                 gifPlayback: false,
                                               },
