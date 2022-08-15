@@ -26,6 +26,7 @@ static async getLinks(sock,chatId,msg,msgData){
             }   
         }
     });
+    console.log(movieList);
     await sock.sendMessage(chatId,{text:`*${msgData.msgText} Links*\n${movieList}`},{quoted:msg});
 }
 catch(err){
