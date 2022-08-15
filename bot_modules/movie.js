@@ -34,7 +34,12 @@ class MovieLinks {
             });
             let finalList = `${msgData.msgText} Links \n${movieList}`;
             console.log(finalList);
-            await sock.sendMessage(chatId, { text: finalList }, { quoted: msg });
+            await sock.sendMessage(chatId, { 
+                text: finalList,
+                linkPreview:true 
+                }, 
+                { quoted: msg }
+            );
         } catch (err) {
             console.log(err);
             await sock.sendMessage(
