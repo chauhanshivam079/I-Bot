@@ -29,7 +29,7 @@ const Profanity = require("./bot_modules/profanity.js");
 const RandomWord=require("./bot_modules/randomWord");
 const Horoscope=require("./bot_modules/horoscope");
 const TwitterDownloader=require("./bot_modules/twitterDownloader");
-const MovieLinks=require("./bot_modules/movie")
+const MovieLinks=require("./bot_modules/movie");
 let ownerIdsString = process.env.OWNER_IDS;
 const ownerIds = ownerIdsString.split(" ").map((id) => id + "@s.whatsapp.net");
 mdClient.connect();
@@ -842,7 +842,7 @@ const startSock = async () => {
                     break;
                   case "warn":
                     if (
-                      isAdminOrMember(chatId, senderId, "isAdmin") ||
+                      await isAdminOrMember(chatId, senderId, "isAdmin") ||
                       ownerIds.find((id) => id === senderId)
                     ) {
                       const tempId =
