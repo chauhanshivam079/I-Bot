@@ -12,7 +12,7 @@ static async getLinks(sock,chatId,msg,msgData){
     const $ = cheerio.load(data);
     const list=$(".m-2 div[title] span a");
     let prefix="https://pronoob-aio-drive.cf/";
-    let movieList="🍿👀📽";
+    let movieList="";
     if(list.length===0){
         await sock.sendMessage(chatId,{text:`Movie not found! Give correct name dumbo`},{quoted:msg});
         return;
@@ -22,15 +22,15 @@ static async getLinks(sock,chatId,msg,msgData){
         if(idx%2==0){
             if(idx===list.length-2){
                 let temp=$(el).attr("href");
-                movieList=movieList+"\n"+prefix+temp+"\n\n";
+                movieList=movieList+prefix+temp+"\n";
             }
             else if(!(idx&1))  {
                 let temp=$(el).attr("href");
-                movieList=movieList+"\n"+prefix+temp+"\n\n"+"🍿👀📽";
+                movieList=movieList+prefix+temp+"\n";
             }   
         }
     });
-    let finalList=`${msgData.msgText} Links\n`;
+    let finalList=`${msgData.msgText} Links\n ${movieList}`;
     console.log(finalList);
     await sock.sendMessage(chatId,{text:finalList},{quoted:msg});
 }
