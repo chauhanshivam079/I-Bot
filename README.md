@@ -79,6 +79,7 @@ Now Bot will start working!! Work even if the device is offline!!
 |    `#w`         |        to get a random word with its meaning      |          |
 |    `#horo`      |        to know the horoscope of current date      |          |
 |    `#dict`      |        to know the meaning of a word              |   `#d`   |
+|    `#td`        |        to download twitter post                   |          |
 
 
 <hr>
@@ -92,6 +93,7 @@ Now Bot will start working!! Work even if the device is offline!!
 |      `#tagadmins`  |                  Tag all admins of group                |         |
 |      `#warning`    |                  Give warning to user                   |         |
 |      `#tagall`     |                  Tag all members in group               |         |
+|      `#delte`      |                  to delete message of anyone in a group |  `#dd`  |
 
 <hr>
 
