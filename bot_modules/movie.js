@@ -21,6 +21,7 @@ static async getLinks(sock,chatId,msg,msgData){
     list.each((idx,el)=>{
         if(idx%2==0){
             if(idx===list.length-2){
+                let temp=$(el).attr("href");
                 movieList=movieList+"\n"+prefix+temp+"\n\n";
             }
             else if(!(idx&1))  {
