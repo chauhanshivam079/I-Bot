@@ -38,7 +38,6 @@
         "images-to-pdf": "^1.0.3",
         "intl": "^1.2.5",
         "libsignal": "git+https://github.com/adiwajshing/libsignal-node",
-        "link-preview-js": "^2.1.19",
         "mongodb": "^4.7.0",
         "music-metadata": "^7.12.4",
         "node-cache": "^5.1.2",
