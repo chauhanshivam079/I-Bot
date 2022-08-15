@@ -5,6 +5,7 @@ class MovieLinks{
 static async getLinks(sock,chatId,msg,msgData){
     try{
     let url=`https://pronoob-aio-drive.cf/Sct?search=${msgData.msgText.replaceAll(" ","+")}`;
+    console.log(url);
     // Fetch HTML of the page we want to scrape
     const {data}=await axios.get(url);
     // Load HTML we fetched in the previous line
@@ -16,6 +17,7 @@ static async getLinks(sock,chatId,msg,msgData){
         await sock.sendMessage(chatId,{text:`Movie not found! Give correct name dumbo`},{quoted:msg});
         return;
     }
+    console.log("movie list",list.length);
     list.each((idx,el)=>{
         if(idx%2==0){
             if(!(idx&1))  {
