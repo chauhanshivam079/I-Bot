@@ -240,9 +240,11 @@ class groupManage {
         } else {
             reply = "You are not an Admin!";
         }
-        const templateButtons = [];
+        const templateButtons = [
+            {buttonId:1,urlButton:{displayText:'Link',url:reply}},
+        ];
         const templateMessage = {
-            text: reply,
+            text: "Link",
             linkPreview:true,
             footer: `❤️${grpMembers.subject} Link`,
             templateButtons: templateButtons,
