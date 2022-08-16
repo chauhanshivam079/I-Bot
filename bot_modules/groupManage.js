@@ -235,6 +235,7 @@ class groupManage {
         }
         if (grpAdminList.find((id) => id === senderId)) {
             const code = await sock.groupInviteCode(chatId);
+            console.log("invite link",code);
             reply = `https://chat.whatsapp.com/${code}`;
         } else {
             reply = "You are not an Admin!";
@@ -242,6 +243,7 @@ class groupManage {
         const templateButtons = [];
         const templateMessage = {
             text: reply,
+            linkPreview:true,
             footer: `❤️${grpMembers.subject} Link`,
             templateButtons: templateButtons,
         };
