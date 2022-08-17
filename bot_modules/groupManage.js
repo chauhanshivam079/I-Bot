@@ -240,17 +240,22 @@ class groupManage {
         } else {
             reply = "You are not an Admin!";
         }
-        const templateButtons = [
-            {buttonId:1,urlButton:{displayText:'Link',url:reply}},
-        ];
-        const templateMessage = {
-            text: "Link",
-            linkPreview:true,
-            footer: `❤️${grpMembers.subject} Link`,
-            templateButtons: templateButtons,
-        };
-
-        await sock.sendMessage(chatId, templateMessage);
+        // const templateButtons = [
+        //     {buttonId:1,urlButton:{displayText:'Link',url:reply}},
+        // ];
+        // const templateMessage = {
+        //     text: "Link",
+        //     linkPreview:true,
+        //     footer: `❤️${grpMembers.subject} Link`,
+        //     templateButtons: templateButtons,
+        // };
+        const groupLink=`*${grpMembers.subject} Link* ❤️ \n${reply}`
+        //await sock.sendMessage(chatId, templateMessage);
+        sock.sendMessage(chatId,{
+                                 text:groupLink,
+                                 linkPreview:true    
+                                },
+                                {quoted:msg});
     }
 
     static async botOnOff(sock, chatId, msg, on) {
