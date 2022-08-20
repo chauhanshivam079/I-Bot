@@ -114,28 +114,32 @@ class InstaDownloader {
                 });
                 res=await res.json();
                 let arr=[];
-                for (let i=0;i<res.graphql.shortcode_media.edge_sidecar_to_children.edges.length;i++){
-                    if(res.graphql.shortcode_media.edge_sidecar_to_children.edges[i].node.__typename==="GraphImage"){
-                        arr.push(res.graphql.shortcode_media.edge_sidecar_to_children.edges[i].node.display_url);
+                for (let i=0;i<res.items[0].carousel_media.length;i++){
+                    if(res.items[0].carousel_media[i].video_versions)
+                    {
+                        arr.push(res.items[0].carousel_media[i].video_versions[0].url);
                     }
                     else{
-                        arr.push(res.graphql.shortcode_media.edge_sidecar_to_children.edges[i].node.video_url);
+                        if(res.items[0].carousel_media[i].image_versions2){
+                            arr.push(res.items[0].carousel_media[i].image_versions2.candidates[0].url);
+                        }
                     }
                 }
+
                 for(let i=0;i<arr.length;i++){
-                    if(arr[i].indexOf(".webp")!==-1){
-                        await sock.sendMessage(chatId,{
-                            image:{url:arr[i]}
-                        },
-                        {quoted:msg});
-                    }
-                    else{
+                    if(arr[i].indexOf(".mp4")!==-1){
                         await sock.sendMessage(chatId,{
                             video:{url:arr[i]},
                             caption:"",
                             gifPlayback: false,
                           },
                           {quoted:msg});
+                    }
+                    else{
+                        await sock.sendMessage(chatId,{
+                            image:{url:arr[i]}
+                        },
+                        {quoted:msg});
                     }
                 }
             }
