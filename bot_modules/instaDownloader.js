@@ -114,6 +114,7 @@ class InstaDownloader {
                 });
                 res=await res.json();
                 let arr=[];
+                if(res.items[0].carousel_media){
                 for (let i=0;i<res.items[0].carousel_media.length;i++){
                     if(res.items[0].carousel_media[i].video_versions)
                     {
@@ -142,6 +143,13 @@ class InstaDownloader {
                         {quoted:msg});
                     }
                 }
+            }
+            else{
+                await sock.sendMessage(chatId,{
+                    image:{url:res.items[0].image_versions2.candidates[0].url}
+                },
+                {quoted:msg});
+            }
             }
             else{
                 let metaData;
