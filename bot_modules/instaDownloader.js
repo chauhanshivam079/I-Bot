@@ -145,10 +145,20 @@ class InstaDownloader {
                 }
             }
             else{
-                await sock.sendMessage(chatId,{
-                    image:{url:res.items[0].image_versions2.candidates[0].url}
-                },
-                {quoted:msg});
+                if(res.items[0].video_versions){
+                    await sock.sendMessage(chatId,{
+                        video:{url:res.items[0].video_versions[0].url},
+                        caption:"",
+                        gifPlayback: false,
+                      },
+                      {quoted:msg});
+                }
+                else{
+                    await sock.sendMessage(chatId,{
+                        image:{url:res.items[0].image_versions2.candidates[0].url}
+                    },
+                    {quoted:msg});
+                }
             }
             }
             else{
