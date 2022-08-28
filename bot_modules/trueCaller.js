@@ -6,8 +6,8 @@ class TrueCaller{
     static async getDetails(sock,chatId,msg,msgData){
         try{
             let number;
-            if (msgData.isQuoted &&     msgData.quotedMessage.  quotedMessage.conversation) {
-                number = msgData. quotedMessage.       quotedMessage.conversation;
+            if (msgData.isQuoted) {
+                number = msg.message.extendedTextMessage.contextInfo.participant
             } else {
                 number = msgData.msgText;
             }
@@ -43,7 +43,7 @@ class TrueCaller{
         if(res.data[0].internetAddresses[0]){
             result["Email:"]=res.data[0].internetAddresses[0].id;
         }
-        const details=`*Name:-* ${result["Name:"]}\n*Ph No.:-* ${result["Ph No.:-"]}\n*Country Code:-* ${result["Country Code:"]}\n*City:-* ${result["City:"]}\n*Time Zone:-* ${result["Time Zone:"]}\n*Carrier:-* ${result["Time Zone:"]}\n*Email:-* ${result["Email:"]}`;
+        const details=`*Name:-* ${result["Name:"]}\n*Ph No.:-* ${result["Ph No.:-"]}\n*Country Code:-* ${result["Country Code:"]}\n*City:-* ${result["City:"]}\n*Time Zone:-* ${result["Time Zone:"]}\n*Carrier:-* ${result["Carrier:"]}\n*Email:-* ${result["Email:"]}`;
         await sock.sendMessage(chatId,{text:details},{quoted:msg});
     }
     catch(err){
