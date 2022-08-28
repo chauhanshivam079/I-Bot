@@ -8,6 +8,7 @@ class TrueCaller{
             let number;
             if (msgData.isQuoted) {
                 number = msg.message.extendedTextMessage.contextInfo.participant
+                number=number.split("@")[0];
             } else {
                 number = msgData.msgText;
             }
