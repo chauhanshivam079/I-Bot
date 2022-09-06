@@ -34,6 +34,7 @@
         "curve25519-js": "^0.0.4",
         "dotenv": "^16.0.1",
         "fluent-ffmpeg": "^2.1.2",
+        "g-i-s": "^2.1.6",
         "google-dictionary-api": "^1.0.8",
         "images-to-pdf": "^1.0.3",
         "intl": "^1.2.5",
