@@ -8,7 +8,7 @@ class StickerSearch{
     static async stickerSearch(sock,chatId,msg,msgData){
         try{
             gis(msgData.msgText,result);
-            function result(error, results) {
+            async function result(error, results) {
             if (error) {
                 console.log(error);
                 await sock.sendMessage(chatId,{text:`${error}`},{quoted:msg});
