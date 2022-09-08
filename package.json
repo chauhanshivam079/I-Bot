@@ -35,7 +35,6 @@
         "dotenv": "^16.0.1",
         "fluent-ffmpeg": "^2.1.2",
         "g-i-s": "^2.1.6",
-        "google-dictionary-api": "^1.0.8",
         "images-to-pdf": "^1.0.3",
         "intl": "^1.2.5",
         "libsignal": "git+https://github.com/adiwajshing/libsignal-node",
@@ -50,6 +49,7 @@
         "truecallerjs": "^1.1.1",
         "ts-node": "^10.8.2",
         "twitter-url-direct": "^1.0.4",
+        "urban-dictionary": "^3.0.2",
         "wa-sticker-formatter": "^4.3.2",
         "ws": "^8.8.0",
         "ytdl-core": "github:jacktheboss220/node-ytdl-core"
