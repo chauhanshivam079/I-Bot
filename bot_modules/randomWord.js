@@ -1,5 +1,5 @@
 const axios = require("axios");
-const dict=require("google-dictionary-api")
+const dict=require("urban-dictionary");
 //const jsonWords=require('../words.json');
 class RandomWord{
     _gameState;
@@ -101,34 +101,16 @@ class RandomWord{
     }
     static async getMeaning(sock,chatId,msg,msgData){
         try{
-            let ans=await dict.search(msgData.msgText)
-            let finalAns=`*Word:-* ${ans[0].word}\n`;
-            ans =ans[0].meaning;
-            if(ans.exclamation){
-                const def=ans.exclamation[0].definition;
-                finalAns=finalAns+`*Meaning:-* ${def}`;
-                await sock.sendMessage(chatId,{text:finalAns},{quoted:msg});
-                return;
+            if(!(msgData.msgText.length)){
+                await sock.sendMessage(chatId,{text:"Write word to be searched"},{quoted:msg});
+            } 
+            else{
+                let res=await dict.define(`${msgData.msgText}`);
+                let word=res[0].word;
+                let meaning=res[0].definition;
+                let example=res[0].example;
+                await sock.sendMessage(chatId,{text:`*Word:- ${word}\n*Meaning*:- ${meaning}\n*Example*:- ${example}`},{quoted:msg});
             }
-            if(ans["transitive verb"]){
-                const def =ans["transitive verb"][0].definition;
-                finalAns=finalAns+`*Meaning:-* ${def}`;
-                await sock.sendMessage(chatId,{text:finalAns},{quoted:msg});
-                return;
-            }
-            if(ans.adjective){
-                const def =ans.adjective[0].definition;
-                finalAns=finalAns+`*Meaning:-* ${def}`;
-                await sock.sendMessage(chatId,{text:finalAns},{quoted:msg});
-                return;                
-            }
-            if(ans.noun){
-                const def =ans.noun[0].definition;
-                finalAns=finalAns+`*Meaning:-* ${def}`;
-                await sock.sendMessage(chatId,{text:finalAns},{quoted:msg});
-                return;
-            }
-
         }catch(err){
             console.log("in catch",err);
             await sock.sendMessage(chatId,{text:`To know meaning first learn to write Word\n${err}`},{quoted:msg});
