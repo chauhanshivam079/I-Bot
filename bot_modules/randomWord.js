@@ -109,7 +109,7 @@ class RandomWord{
                 let word=res[0].word;
                 let meaning=res[0].definition;
                 let example=res[0].example;
-                await sock.sendMessage(chatId,{text:`*Word:- ${word}\n*Meaning*:- ${meaning}\n*Example*:- ${example}`},{quoted:msg});
+                await sock.sendMessage(chatId,{text:`*Word*:- ${word}\n*Meaning*:- ${meaning}\n*Example*:- ${example}`},{quoted:msg});
             }
         }catch(err){
             console.log("in catch",err);
