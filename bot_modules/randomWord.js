@@ -113,7 +113,7 @@ class RandomWord{
             }
         }catch(err){
             console.log("in catch",err);
-            await sock.sendMessage(chatId,{text:`To know meaning first learn to write Word\n${err}`},{quoted:msg});
+            await sock.sendMessage(chatId,{text:`${err}`},{quoted:msg});
         }
     }
 }
