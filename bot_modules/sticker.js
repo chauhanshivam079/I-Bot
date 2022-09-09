@@ -6,6 +6,7 @@ const {
     createSticker,
     StickerTypes,
 } = require("wa-sticker-formatter");
+const axios=require("axios");
 const { off } = require("process");
 class sticker {
     static async imgToSticker(sock, chatId, msg, msgData) {
@@ -114,6 +115,16 @@ class sticker {
         }
         else{
             await sock.sendMessage(chatId,{text:"Can change the author of sticker only"},{quoted:msg});
+        }
+    }
+    static async textToSticker(sock,chatId,msg,msgData){
+        try{
+            let text=encodeURI(msgData.msgText);
+            let res=await axios.get(`https://api.xteam.xyz/attp?file&text=${text}`,{response:ArrayBuffer});
+            await sock.sendMessage(chatId,{sticker:Buffer.from(res.data)},{quoted:msg});
+        }catch(err){
+            console.log(err);
+            await sock.sendMessage(chatId,{text:`${err.message}`},{quoted:msg});
         }
     }
 }
