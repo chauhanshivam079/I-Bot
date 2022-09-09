@@ -120,7 +120,7 @@ class sticker {
     static async textToSticker(sock,chatId,msg,msgData){
         try{
             let text=encodeURI(msgData.msgText);
-            let res=await axios.get(`https://api.xteam.xyz/attp?file&text=${text}`,{response:ArrayBuffer});
+            let res=await axios.get(`https://api.xteam.xyz/attp?file&text=${text}`,{responseType:"arraybuffer"});
             await sock.sendMessage(chatId,{sticker:Buffer.from(res.data)},{quoted:msg});
         }catch(err){
             console.log(err);
