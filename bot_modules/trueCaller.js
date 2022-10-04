@@ -12,6 +12,8 @@ class TrueCaller{
             } else {
                 number = msgData.msgText;
             }
+            if(number.length===0)
+            return;
             const res=await tc.searchNumber({"number":number,"countryCode":"IN","installationId":trueCallerId
         });
         let result={
