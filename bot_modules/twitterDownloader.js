@@ -1,3 +1,4 @@
+const { url } = require("inspector");
 const twitterPostDownloader=require("twitter-url-direct");
 
 class TwitterDownloader{
@@ -12,12 +13,10 @@ class TwitterDownloader{
                 {quoted:msg});
             }
             else{
-                let link="";
-                for(let i=0;i<response.download.length;i++){
-                    if(response.download[i].url.includes("video.twimg")){
-                    link=response.download[i].url;
-                    break;
-                    }
+                let link=response.download[response.download.length-1].url;
+                const check="https://ssstwitter.com";
+                if(link.includes(check)){
+                    link=link.split(check)[1];
                 }
                 await sock.sendMessage(chatId,{
                                                 video:{url:link},
