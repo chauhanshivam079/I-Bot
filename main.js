@@ -725,7 +725,11 @@ const startSock = async () => {
                     Compiler.run(sock, chatId, msg, msgData);
                     break;
                   case "source":
-                    await sock.sendMessage(chatId,{text:`*I-Bot*\n\n${"https://github.com/chauhanshivam079/I-Bot"}\n\n${"https://github.com/Shyguy99/I-BOT-Baileys"}\n\nDon't forget to give a like if you liked it or using it. New helpful command will keep on adding.`},{quoted:msg})
+                    if(chatId==="120363042653750912@g.us"){
+                        await sock.sendMessage(chatId,{text:`*I-Bot*\n\n${"https://github.com/Kumaraman6723/i-bot"}`},{quoted:msg});
+                    }
+                    else
+                      await sock.sendMessage(chatId,{text:`*I-Bot*\n\n${"https://github.com/chauhanshivam079/I-Bot"}\n\n${"https://github.com/Shyguy99/I-BOT-Baileys"}\n\nDon't forget to give a like if you liked it or using it. New helpful command will keep on adding.`},{quoted:msg})
                     break;
                   case "enable":
                     if (
