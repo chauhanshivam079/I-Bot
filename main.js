@@ -128,6 +128,10 @@ const startSock = async () => {
     msgRetryCounterMap,
     defaultQueryTimeoutMs:undefined,
     // implement to handle retries
+    getMessage: async (key)=>{
+      return {conversation: "Bot on pause retrying!"
+    };
+  },
   });
 
   //await delay(20000);
