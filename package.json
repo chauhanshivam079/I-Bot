@@ -53,7 +53,6 @@
         "request": "^2.88.2",
         "truecallerjs": "^1.1.1",
         "ts-node": "^10.8.2",
-        "twitter-url-direct": "^1.0.2",
         "urban-dictionary": "^3.0.2",
         "url-regex": "^5.0.0",
         "wa-sticker-formatter": "^4.3.2",
