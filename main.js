@@ -10,7 +10,6 @@ const {
   makeInMemoryStore,
   MessageRetryMap,
   useMultiFileAuthState,
-  makeCacheableSignalKeyStore,
 } = require("@adiwajshing/baileys");
 const groupManage = require("./bot_modules/groupManage.js");
 const textToHand = require("./bot_modules/textToHandwriting.js");
@@ -39,8 +38,9 @@ const ownerIds = ownerIdsString.split(" ").map((id) => id + "@s.whatsapp.net");
 mdClient.connect();
 
 const MAIN_LOGGER = require("@adiwajshing/baileys/lib/Utils/logger");
- //const logger = MAIN_LOGGER.child({});
- //logger.level = "trace";
+
+// const logger = MAIN_LOGGER.child({});
+// logger.level = "trace";
 
 const useStore = !process.argv.includes("--no-store");
 const doReplies = !process.argv.includes("--no-reply");
@@ -124,15 +124,10 @@ const startSock = async () => {
     version,
     // logger,
     printQRInTerminal: true,
-    auth:{creds: state.creds,
-  },
+    auth: state,
     msgRetryCounterMap,
     defaultQueryTimeoutMs:undefined,
     // implement to handle retries
-    getMessage: async (key)=>{
-      return {conversation: "Bot on pause retrying!"
-    };
-  },
   });
 
   //await delay(20000);
