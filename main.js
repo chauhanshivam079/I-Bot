@@ -39,9 +39,8 @@ const ownerIds = ownerIdsString.split(" ").map((id) => id + "@s.whatsapp.net");
 mdClient.connect();
 
 const MAIN_LOGGER = require("@adiwajshing/baileys/lib/Utils/logger");
-
- const logger = MAIN_LOGGER.child({});
- logger.level = "trace";
+ //const logger = MAIN_LOGGER.child({});
+ //logger.level = "trace";
 
 const useStore = !process.argv.includes("--no-store");
 const doReplies = !process.argv.includes("--no-reply");
@@ -126,7 +125,7 @@ const startSock = async () => {
     // logger,
     printQRInTerminal: true,
     auth:{creds: state.creds,
-    keys:makeCacheableSignalKeyStore(state.keys,logger),
+    keys:makeCacheableSignalKeyStore(state.keys),
   },
     msgRetryCounterMap,
     defaultQueryTimeoutMs:undefined,
