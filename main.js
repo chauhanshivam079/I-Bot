@@ -125,7 +125,6 @@ const startSock = async () => {
     // logger,
     printQRInTerminal: true,
     auth:{creds: state.creds,
-    keys:makeCacheableSignalKeyStore(state.keys),
   },
     msgRetryCounterMap,
     defaultQueryTimeoutMs:undefined,
