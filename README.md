@@ -21,9 +21,7 @@ Easy deploy your bot, steps in the bottom.
 
 2. After login on heroku dashboard create an app on heroku (https://dashboard.heroku.com/apps)
 
-3. In the 'Resources' tab search for 'Heroku Postgres' in Add-ons and add it to your heroku app.
-
-4. In the 'Deploy' section download Heroku CLI or from (https://devcenter.heroku.com/articles/heroku-cli#download-and-install)
+3. In the 'Deploy' section download Heroku CLI or from (https://devcenter.heroku.com/articles/heroku-cli#download-and-install)
 
 ## Heroku CLI
 
