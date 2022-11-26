@@ -4,6 +4,10 @@ const cheerio = require("cheerio");
 class MovieLinks {
     static async getLinks(sock, chatId, msg, msgData) {
         try {
+            if(msgData.msgText.length===0){
+                await sock.sendMessage(chatId,{text:`*Abe Saale*Send movie name to be searched!!`},{quoted:msg});
+                return;
+            }
             let url = `https://pronoob-aio-drive.cf/Sct?search=${msgData.msgText.replaceAll(
         " ",
         "+"
