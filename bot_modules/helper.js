@@ -79,10 +79,10 @@ class Helper {
             this._isCmd = true;
             this._msgText = this._msgText.slice(1);
             if (this._msgText.split(" ").length === 1) {
-                this._cmd = this._msgText;
+                this._cmd = this._msgText.toLowerCase();
                 this._msgText = "";
             } else {
-                this._cmd = this._msgText.substring(0, this._msgText.indexOf(" "));
+                this._cmd = this._msgText.substring(0, this._msgText.indexOf(" ")).toLowerCase();
                 this._msgText = this._msgText.substring(this._msgText.indexOf(" ") + 1);
             }
         }
