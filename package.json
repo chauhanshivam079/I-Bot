@@ -4,10 +4,6 @@
     "description": "WhatsApp API",
     "homepage": "https://github.com/chauhanshivam079/I-Bot/blob/main/README.md",
     "main": "main2.js",
-    "engines": {
-        "node": "16.14.2",
-        "npm": "8.19.2"
-    },
     "directories": {
         "lib": "lib"
     },
