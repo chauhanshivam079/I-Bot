@@ -3,7 +3,7 @@ const puppeteer = require("puppeteer");
 const path = require("path");
 const downloadPath = path.resolve("./media");
 const fs = require("fs");
-const pdfConverter = require("images-to-pdf");
+//const pdfConverter = require("images-to-pdf");
 
 class textToHand {
     static checkForLeftOverDetails(tthUserDetail, senderId, sock, chatId) {
@@ -135,7 +135,7 @@ class textToHand {
             for (i = 0; i < countOfImages; i++) {
                 allImages.push(`media/download${i}.jpg`);
             }
-            pdfConverter(allImages, `media/${_name}.pdf`);
+            //pdfConverter(allImages, `media/${_name}.pdf`);
 
             await sock.sendMessage(
                 chatId, {
