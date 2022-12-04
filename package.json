@@ -3,9 +3,13 @@
     "version": "4.0.1",
     "description": "WhatsApp API",
     "homepage": "https://github.com/chauhanshivam079/I-Bot/blob/main/README.md",
-    "main": "main2.js",
+    "main": "main2.ts",
     "directories": {
         "lib": "lib"
+    },
+    "engines": {
+        "node": "16.14.2",
+        "npm": "8.9.2"
     },
     "keywords": [
         "whatsapp",
@@ -59,7 +63,7 @@
         "@adiwajshing/keyed-db": "^0.2.4",
         "jimp": "^0.16.2",
         "qrcode-terminal": "^0.12.0",
-        "sharp": "^0.30.5"
+        "sharp": "^0.30.7"
     },
     "peerDependenciesMeta": {
         "@adiwajshing/keyed-db": {
@@ -82,12 +86,12 @@
         "@types/jest": "^29.2.3",
         "@types/node": "^18.11.10",
         "@types/pino": "^7.0.5",
-        "@types/sharp": "^0.29.4",
+        "@types/sharp": "^0.30.4",
         "@types/ws": "^8.5.3",
         "eslint": "^8.29.0",
         "jimp": "^0.16.2",
         "qrcode-terminal": "^0.12.0",
-        "sharp": "^0.30.5",
+        "sharp": "^0.30.7",
         "typedoc": "^0.23.21"
     }
 }
