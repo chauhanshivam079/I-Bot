@@ -40,7 +40,6 @@
         "fluent-ffmpeg": "^2.1.2",
         "g-i-s": "^2.1.6",
         "genius-lyrics": "^4.4.0",
-        "images-to-pdf": "^1.0.3",
         "intl": "^1.2.5",
         "libsignal": "git+https://github.com/adiwajshing/libsignal-node",
         "mongodb": "^4.12.1",
