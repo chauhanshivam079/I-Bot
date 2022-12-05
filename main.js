@@ -1,4 +1,13 @@
 require("dotenv").config({ path: "./Keys.env" });
+const port=process.env.PORT || 3000;
+const http =require("http");
+http.createServer((req,res)=>{
+  res.writeHead(200,{"Content-Type":"text/plain"});
+  res.write("Hello Visitor!");
+  res.end();
+}).listen(port,()=>{
+  console.log(`listening on port ${port}`);
+});
 const { Boom } = require("@hapi/boom");
 const P = require("pino");
 const {
@@ -261,13 +270,14 @@ const startSock = async () => {
     }
   }, 500);
 
-  setInterval(() => {
-    Crypto.getNews(sock, "918329198682-1614096949@g.us", { msgText: "" });
-    Crypto.getNews(sock, "918329198682-1612849199@g.us", { msgText: "" });
+  setInterval(async () => {
+    console.log("printing news");
+    await Crypto.getNews(sock, "918329198682-1614096949@g.us", { msgText: "" });
+    //Crypto.getNews(sock, "918329198682-1612849199@g.us", { msgText: "" });
 
     //Crypto.getNnews(sock, "918329198682-1612849199@g.us", { msgText: "" });
     //Crypto.news(driver, "918329198682-1614096949@g.us", CRYPTOPANIC_API, "")
-  }, 43200000 / 2);
+  }, 21600000);
   console.log("Sock", sock.ev.process);
   sock.ev.process(
     // events is a map for event name => event data
