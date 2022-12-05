@@ -5,8 +5,8 @@ Easy deploy your bot, steps in the bottom.
 
 **_Requirements :_**
 
-- Heroku account
-- Heroku cli
+- Heroku account or Koyeb
+- Heroku cli(If using Heroku)
 - Git
 
 # Instructions:- :rocket:
@@ -36,6 +36,16 @@ Easy deploy your bot, steps in the bottom.
 9. In real time logs it will automatically ask you for login using qr code just simple scan the qr code using your whatsapp web section, and you are done.
 
 Now Bot will start working!! Work even if the device is offline!!
+
+## Koyeb Setup
+
+1. Create account on Koyeb. (https://app.koyeb.com/auth/signup)
+
+2. After login on Koyeb dashboard create an app on Koyeb (https://app.koyeb.com/apps/new)
+
+3. In the 'Deploy' section choose deployment method i.e Github or Docker
+
+4. Set Environment Variables and add build and run command i.e npm i and bash start.sh and you are all set now
 
 # Features:- :rocket:
 
