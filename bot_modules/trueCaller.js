@@ -46,7 +46,12 @@ class TrueCaller{
         if(res.data[0].internetAddresses[0]){
             result["Email:"]=res.data[0].internetAddresses[0].id;
         }
+        let imgPresence='image' in res.data[0];
         const details=`*Name:-* ${result["Name:"]}\n*Ph No.:-* ${result["Ph No.:-"]}\n*Country Code:-* ${result["Country Code:"]}\n*City:-* ${result["City:"]}\n*Time Zone:-* ${result["Time Zone:"]}\n*Carrier:-* ${result["Carrier:"]}\n*Email:-* ${result["Email:"]}`;
+        if(imgPresence){
+            await sock.sendMessage(chatId,{image:{url:res.data[0].image},caption:details},{quoted:msg});
+            return;
+        }
         await sock.sendMessage(chatId,{text:details},{quoted:msg});
     }
     catch(err){
