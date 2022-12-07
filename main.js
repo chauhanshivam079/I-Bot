@@ -398,7 +398,7 @@ const startSock = async () => {
                       if (tempId.length > 0) {
                         switch (msgData.cmd) {
                           case "add":
-                            groupManage.add(
+                            await groupManage.add(
                               sock,
                               chatId,
                               [tempId],
@@ -407,7 +407,7 @@ const startSock = async () => {
                             );
                             break;
                           case "kick":
-                            groupManage.remove(
+                            await groupManage.remove(
                               sock,
                               chatId,
                               [tempId],
@@ -416,7 +416,7 @@ const startSock = async () => {
                             );
                             break;
                           case "promote":
-                            groupManage.promote(
+                            await groupManage.promote(
                               sock,
                               chatId,
                               [tempId],
@@ -425,7 +425,7 @@ const startSock = async () => {
                             );
                             break;
                           case "demote":
-                            groupManage.demote(
+                            await groupManage.demote(
                               sock,
                               chatId,
                               [tempId],
@@ -453,7 +453,7 @@ const startSock = async () => {
                     break;
                   case "link":
                     if (await isAdminOrMember(chatId, botId, "isAdmin")) {
-                      groupManage.getLink(sock, chatId, senderId, msg);
+                      await groupManage.getLink(sock, chatId, senderId, msg);
                     } else {
                       await sock.sendMessage(
                         chatId,
@@ -461,45 +461,38 @@ const startSock = async () => {
                         { quoted: msg }
                       );
                     }
-
                     break;
                   case "l":
                   case "lyrics":
-                    Lyrics.getLyrics(sock,chatId,msg,msgData);
+                    await Lyrics.getLyrics(sock,chatId,msg,msgData);
                     break;
                   case "is":
-                    Search.isearch(sock, chatId, msg, msgData);
+                    await Search.isearch(sock, chatId, msg, msgData);
                     break;
-
                   case "gs":
-                    Search.gsearch(sock, chatId, msg, msgData);
+                    await Search.gsearch(sock, chatId, msg, msgData);
                     break;
-
                   case "vs":
-                    Search.vsearch(sock, chatId, msg, msgData);
-
+                    await Search.vsearch(sock, chatId, msg, msgData);
                     break;
-
                   case "ps":
-                    ProductSearch.search(sock, chatId, msg, msgData);
-
+                    await ProductSearch.search(sock, chatId, msg, msgData);
                     break;
                   case "mp3s":
-                    Search.searchMp3ByName(sock, chatId, msg, msgData);
-
+                    await Search.searchMp3ByName(sock, chatId, msg, msgData);
                     break;
                   case "mp3c":
-                    Search.mp3Convertor(sock, chatId, msg, msgData);
+                    await Search.mp3Convertor(sock, chatId, msg, msgData);
                     break;
                   case "horo":
                     if(msgData.msgText===""){await sock.sendMessage(chatId,{text:`Enter the horoscope name`},{quoted:msg})}
                     else{
                       let horo=new Horoscope(msgData);
-                      horo.getHoroscope(sock,chatId,msg,msgData);
+                      await horo.getHoroscope(sock,chatId,msg,msgData);
                     }
                     break;
                   case "movie":
-                    MovieLinks.getLinks(sock,chatId,msg,msgData);
+                    await MovieLinks.getLinks(sock,chatId,msg,msgData);
                     break;
                   case "tth":
                     try {
@@ -512,7 +505,7 @@ const startSock = async () => {
                           { quoted: msg }
                         );
 
-                        textToHand.checkForLeftOverDetails(
+                        await textToHand.checkForLeftOverDetails(
                           tthUserDetail,
                           senderId,
                           sock,
@@ -549,28 +542,28 @@ const startSock = async () => {
                           "videoMessage"
                         ))
                     ) {
-                      Sticker.imgToSticker(sock, chatId, msg, msgData);
+                      await Sticker.imgToSticker(sock, chatId, msg, msgData);
                     } else if (
                       msgData.msgType === "image" ||
                       msgData.msgType === "video"
                     ) {
-                      Sticker.imgToSticker(sock, chatId, msg, msgData);
+                      await Sticker.imgToSticker(sock, chatId, msg, msgData);
                     }
                     break;
                   case "tts":
-                    Sticker.textToSticker(sock,chatId,msg,msgData);
+                    await Sticker.textToSticker(sock,chatId,msg,msgData);
                     break;
                   case "ss":
                     if(msgData.msgText.length===0){
                       await sock.sendMessage(chatId,{text:`*Beti write something to be searched*`},{quoted:msg});
                     }
                     else{
-                      StickerSearch.stickerSearch(sock,chatId,msg,msgData);
+                      await StickerSearch.stickerSearch(sock,chatId,msg,msgData);
                     }
                     break;
                   case "steal":
                     if(msgData.isQuoted){
-                      Sticker.stealSticker(sock,chatId,msg,msgData);
+                      await Sticker.stealSticker(sock,chatId,msg,msgData);
                     }
                     else{
                       await sock.sendMessage(chatId,{text:"Tag a Sticker"},{quoted:msg});
@@ -589,7 +582,7 @@ const startSock = async () => {
                     RandomWord.getCurrWord(sock,chatId,msg);
                     break;
                   case "ans":
-                    RandomWord.wordAns(sock,chatId,msg);
+                    await RandomWord.wordAns(sock,chatId,msg);
                     break;
                   case "nw":
                     RandomWord.newWord(sock,chatId,msg);
@@ -602,7 +595,7 @@ const startSock = async () => {
                     break;
                   case "toimg":
                     if (msgData.isQuoted) {
-                      Sticker.stickerToImg(sock, chatId, msg, msgData);
+                      await Sticker.stickerToImg(sock, chatId, msg, msgData);
                     } else {
                       await sock.sendMessage(
                         chatId,
@@ -612,7 +605,7 @@ const startSock = async () => {
                     }
                     break;
                   case "iprof":
-                    InstaDownloader.iProfile(
+                    await InstaDownloader.iProfile(
                       sock,
                       chatId,
                       msg,
@@ -621,7 +614,7 @@ const startSock = async () => {
                     break;
                   case "i"  :
                   case "igd":
-                    InstaDownloader.igDownload(
+                    await InstaDownloader.igDownload(
                       sock,
                       chatId,
                       msg,
@@ -675,14 +668,14 @@ const startSock = async () => {
                   }
                     break;
                   case "tc":
-                    TrueCaller.getDetails(sock,chatId,msg,msgData);
+                    await TrueCaller.getDetails(sock,chatId,msg,msgData);
                     break;  
                   case "td":
-                    TwitterDownloader.postDownload(sock,chatId,msg,msgData);
+                    await TwitterDownloader.postDownload(sock,chatId,msg,msgData);
                     break;
                   case "tagall":
                     if (await isAdminOrMember(chatId, senderId, "isAdmin")) {
-                      groupManage.tagAll(sock, chatId, msgData, msg, false);
+                      await groupManage.tagAll(sock, chatId, msgData, msg, false);
                     } else {
                       await sock.sendMessage(
                         chatId,
@@ -694,7 +687,7 @@ const startSock = async () => {
                     break;
                   case "tagadmins":
                     if (await isAdminOrMember(chatId, senderId, "isAdmin")) {
-                      groupManage.tagAll(sock, chatId, msgData, msg, true);
+                      await groupManage.tagAll(sock, chatId, msgData, msg, true);
                     } else {
                       await sock.sendMessage(
                         chatId,
@@ -705,34 +698,34 @@ const startSock = async () => {
                     break;
                   case "cprice":
                   case "cp":
-                    Crypto.getPrices(sock, chatId, msgData, msg);
+                    await Crypto.getPrices(sock, chatId, msgData, msg);
                     break;
                   case "cnews":
                   case "cn":
-                    Crypto.getNews(sock, chatId, msgData);
+                    await Crypto.getNews(sock, chatId, msgData);
                     break;
                   case "sprice":
                   case "sp":
-                    Crypto.getStockPrice(sock, chatId, msgData, msg);
+                    await Crypto.getStockPrice(sock, chatId, msgData, msg);
                     break;
                   case "w":
                     RandomWord.getRandomWord(sock,chatId,msg);
                     break;
                   case "last_tag":
                   case "lt":
-                    MsgDetails.sendLastTag(sock, chatId, senderId, msg);
+                    await MsgDetails.sendLastTag(sock, chatId, senderId, msg);
                     break;
                   case "mc":
                   case "msgcount":
                     if(msgData.isQuoted){
-                      MsgDetails.taggedMsgCount(sock,chatId,msg,msgData);
+                      await MsgDetails.taggedMsgCount(sock,chatId,msg,msgData);
                     }
                     else{
-                      MsgDetails.msgCount(sock, chatId, senderId, msg);
+                      await MsgDetails.msgCount(sock, chatId, senderId, msg);
                     }
                     break;
                   case "run":
-                    Compiler.run(sock, chatId, msg, msgData);
+                    await Compiler.run(sock, chatId, msg, msgData);
                     break;
                   case "source":
                     if(chatId==="120363042653750912@g.us"){
