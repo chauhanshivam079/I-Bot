@@ -272,9 +272,9 @@ const startSock = async () => {
 
   setInterval(async () => {
     console.log("printing news");
-    await Crypto.getNews(sock, "918329198682-1614096949@g.us", { msgText: "" });
+    await Crypto.getNews(sock, "918329198682-1612849199@g.us", { msgText: "" });
     //Crypto.getNews(sock, "918329198682-1612849199@g.us", { msgText: "" });
-
+    
     //Crypto.getNnews(sock, "918329198682-1612849199@g.us", { msgText: "" });
     //Crypto.news(driver, "918329198682-1614096949@g.us", CRYPTOPANIC_API, "")
   }, 21600000);
