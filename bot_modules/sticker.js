@@ -8,8 +8,12 @@ const {
 } = require("wa-sticker-formatter");
 const axios=require("axios");
 const { off } = require("process");
+const ffmpegInstaller=require("@ffmpeg-installer/ffmpeg");
+const ffmpeg=require("fluent-ffmpeg");
+ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 class sticker {
     static async imgToSticker(sock, chatId, msg, msgData) {
+        try{
         let fileName;
         let buffer;
         let data;
@@ -58,9 +62,13 @@ class sticker {
             quality: 50, // The quality of the output file
         });
         await sock.sendMessage(chatId, await sticker.toMessage(), { quoted: msg });
+    }catch(err){
+        await sock.sendMessage(chatId,{text:`${err.message}`},{quoted:msg});
+    }
     }
 
     static async stickerToImg(sock, chatId, msg, msgData) {
+        try{
         let buffer;
         let fileName;
         if (msgData.quotedMessage.quotedMessage.hasOwnProperty("stickerMessage")) {
@@ -87,8 +95,12 @@ class sticker {
                 chatId, { text: "Can only convert sticker to image" }, { quoted: msg }
             );
         }
+    }catch(err){
+        await sock.sendMessage(chatId,{text:`${err.message}`},{quoted:msg});
+    }
     }
     static async stealSticker(sock,chatId,msg,msgData){
+        try{
         if(msgData.quotedMessage.quotedMessage.hasOwnProperty("stickerMessage")){
             let author="I-Bot Stickers";
             if(msgData.msgText!=""){
@@ -116,6 +128,9 @@ class sticker {
         else{
             await sock.sendMessage(chatId,{text:"Can change the author of sticker only"},{quoted:msg});
         }
+    }catch(err){
+        await sock.sendMessage(chatId,{text:`${err.message}`},{quoted:msg});
+    }
     }
     static async textToSticker(sock,chatId,msg,msgData){
         try{
