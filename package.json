@@ -37,6 +37,7 @@
         "cheerio": "1.0.0-rc.12",
         "curve25519-js": "^0.0.4",
         "dotenv": "^16.0.3",
+        "@ffmpeg-installer/ffmpeg":"^1.0.13",
         "fluent-ffmpeg": "^2.1.2",
         "g-i-s": "^2.1.6",
         "genius-lyrics": "^4.4.0",
