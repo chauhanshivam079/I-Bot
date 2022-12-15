@@ -219,7 +219,7 @@ class InstaDownloader {
                     },
                     method: "GET",
                 });
-                metaData = metaData.data["items"][0];
+                metaData = metaData.data.items[0];
                 //console.log(metaData);
 
                 let getType;
