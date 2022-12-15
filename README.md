@@ -16,9 +16,9 @@ Easy deploy your bot, steps in the bottom.
 1. Create account on Mongodb (https://account.mongodb.com/account/login)
 2. Create database and collection with given keys as shown:- 
 
-##img 
+## img 
 
-<img src="https://ibb.co/fCSc1Rp" alt="chauhanshivam079" />
+<img src="https://i.ibb.co/xzYfzLJ/mongodb.png" alt="chauhanshivam079" />
 
 ## Git Setup
 
@@ -56,9 +56,9 @@ Now Bot will start working!! Work even if the device is offline!!
 
 4. Set Environment Variables and add build and run command i.e npm i and bash start.sh and you are all set now
 
-#env
+# env
 
-<img src="https://ibb.co/3hhRkKq" alt="chauhanshivam079" />
+<img src="https://i.ibb.co/ngLfL0Q/env.png" alt="chauhanshivam079" />
 
 # Features:- :rocket:
 
