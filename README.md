@@ -58,7 +58,7 @@ Now Bot will start working!! Work even if the device is offline!!
 
 # env
 
-<img src="https://i.ibb.co/ngLfL0Q/env.png" alt="chauhanshivam079" />
+<img src="https://i.ibb.co/qgsS8FV/env.png" alt="chauhanshivam079" />
 
 # Features:- :rocket:
 
