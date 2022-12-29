@@ -80,12 +80,20 @@ class groupManage {
                         chatId,
                         list,
                         "add" // replace this parameter with "remove", "demote" or "promote"
-                    )
-                    .catch((err) => {
-                        reply = "Incorrect Number";
-                        console.log(err.message);
-                        chkCatch = 1;
-                    });
+                    );
+                const res=response[0].status;
+                if(res==='403'){
+                    await sock.sendMessage(chatId,{text:`_❌ Number has privacy on adding group!_`},{quoted:msg});
+                    return;
+                }    
+                if(res==='408'){
+                    await sock.sendMessage(chatId,{text:`_❌ Number has left the group recently!_`},{quoted:msg});
+                    return;
+                }
+                if(res==='500'){
+                    await sock.sendMessage(chatId,{text:`_❌ Group is currently full!_`},{quoted:msg});
+                    return;
+                }
                 return response;
                 console.log(response, "97y793y94");
                 if (!chkCatch) {
@@ -124,7 +132,15 @@ class groupManage {
                     list,
                     "remove" // replace this parameter with "remove", "demote" or "promote"
                 );
+                const res=response[0].status;
+                if(res==='406'){
+                    await sock.sendMessage(chatId,{text:`Group owner cannot be removed!`},{quoted:msg});
+                    return;
+                }
+                if(res==='200')
                 reply = `Number removed from the group`;
+                else
+                    reply=`Number couldn't be removed`;
             } else {
                 reply = "Number not in the group";
             }
