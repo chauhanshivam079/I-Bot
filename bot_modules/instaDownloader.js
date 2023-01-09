@@ -1,3 +1,4 @@
+require("dotenv").config({ path: "./Keys.env" });
 const axios = require("axios");
 const fs = require("fs");
 const fetch=require("node-fetch");
@@ -29,7 +30,7 @@ class InstaDownloader {
                     'x-csrftoken': '9id7NIrYulj8aPVUSAOLvNC2nkhRRWdd',
                     'x-ig-app-id': '936619743392459',
                     'x-ig-www-claim':'hmac.AR2rCmfN1Jb98fTtIV5rXy1EHz-DxQIGk6fgEQbmFdZp0uiw',
-                    cookie:'sessionid=5661644639%3AIwpVrhW6YK6dfx%3A7%3AAYf8LV6zzyBBwZQYQv3ktBQ9dZob4pqRd5dBdZOQXA; ig_nrcb=1; fbm_124024574287414=base_domain=.instagram.com; ds_user_id=5661644639; dpr=1.5; ',
+                    cookie:`sessionid=${process.env.session_Id}; ig_nrcb=1; fbm_124024574287414=base_domain=.instagram.com; ds_user_id=${process.env.ds_User_Id}; dpr=1.5; `,
                     Referer: 'https://www.instagram.com/',
                     'Referrer-Policy': 'strict-origin-when-cross-origin',
                 },
@@ -119,9 +120,9 @@ class InstaDownloader {
                         "sec-fetch-site": "same-site",
                         'x-asbd-id': '198387',
                         'x-csrftoken': '9id7NIrYulj8aPVUSAOLvNC2nkhRRWdd',
-                    'x-ig-app-id': '936619743392459',
-                    'x-ig-www-claim':'hmac.AR2rCmfN1Jb98fTtIV5rXy1EHz-DxQIGk6fgEQbmFdZp0uiw',
-                    cookie:'sessionid=5661644639%3AIwpVrhW6YK6dfx%3A7%3AAYf8LV6zzyBBwZQYQv3ktBQ9dZob4pqRd5dBdZOQXA; ig_nrcb=1; fbm_124024574287414=base_domain=.instagram.com; ds_user_id=5661644639; dpr=1.5; ',
+                        'x-ig-app-id': '936619743392459',
+                        'x-ig-www-claim':'hmac.AR2rCmfN1Jb98fTtIV5rXy1EHz-DxQIGk6fgEQbmFdZp0uiw',
+                        cookie:`sessionid=${process.env.session_Id}; ig_nrcb=1; fbm_124024574287414=base_domain=.instagram.com; ds_user_id=${process.env.ds_User_Id}; dpr=1.5; `,
                         Referer: 'https://www.instagram.com/',
                         'Referrer-Policy': 'strict-origin-when-cross-origin',
                     },
@@ -211,9 +212,9 @@ class InstaDownloader {
                         "sec-fetch-site": "same-site",
                         'x-asbd-id': '198387',
                         'x-csrftoken': '9id7NIrYulj8aPVUSAOLvNC2nkhRRWdd',
-                    'x-ig-app-id': '936619743392459',
-                    'x-ig-www-claim':'hmac.AR2rCmfN1Jb98fTtIV5rXy1EHz-DxQIGk6fgEQbmFdZp0uiw',
-                    cookie:'sessionid=5661644639%3AIwpVrhW6YK6dfx%3A7%3AAYf8LV6zzyBBwZQYQv3ktBQ9dZob4pqRd5dBdZOQXA; ig_nrcb=1; fbm_124024574287414=base_domain=.instagram.com; ds_user_id=5661644639; dpr=1.5; ',
+                        'x-ig-app-id': '936619743392459',
+                        'x-ig-www-claim':'hmac.AR2rCmfN1Jb98fTtIV5rXy1EHz-DxQIGk6fgEQbmFdZp0uiw',
+                        cookie:`sessionid=${process.env.session_Id}; ig_nrcb=1; fbm_124024574287414=base_domain=.instagram.com; ds_user_id=${process.env.ds_User_Id}; dpr=1.5; `,
                         Referer: 'https://www.instagram.com/',
                         'Referrer-Policy': 'strict-origin-when-cross-origin',
                     },
