@@ -13,7 +13,7 @@ class AiImageGeneration{
                 n:1,
             });
             await sock.sendMessage(chatId,{image: { url: response.data.data[0].url },
-            caption: msgData​​​​,
+            caption: msgData.msgText​​​​,
             },{quoted:msg});
         }catch(err){
             await sock.sendMessage(chatId,{text:`${err.message}`},{quoted:msg});
