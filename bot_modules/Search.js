@@ -193,10 +193,10 @@ class Search {
             console.log(vurl);
             let finalVideoUrl = `https://www.youtube.com/watch?v=${vurl}`;
             let info = await ytdl.getInfo(vurl);
-            if (info.videoDetails.lengthSeconds >= 1800) {
+            if (info.videoDetails.lengthSeconds > 3600) {
                 await sock.sendMessage(
                     chatId, {
-                        text: "Video duration must be less than 30 mins",
+                        text: "Video duration must be less than 60 mins",
                     }, { quoted: msg }
                 );
             } else {
@@ -204,10 +204,20 @@ class Search {
                 await sock.sendMessage(
                     chatId, { text: "Download has begun!" }, { quoted: msg }
                 );
-                let stream = ytdl(finalVideoUrl, {
-                    filter: (info) => info.itag == 22 || info.itag == 18,
-                }).pipe(fs.createWriteStream(`Media/Video/${randomName}.mp4`));
-
+                let stream;
+                try{
+                    let format=ytdl.chooseFormat(info.formats,{quality:'136'});
+                        stream=ytdl(finalVideoUrl,{
+                        filter:(info)=>info.itag==136,}).pipe(fs.createWriteStream(`Media/Video/${randomName}.mp4`));
+                }catch(err){
+                    try{stream = ytdl(finalVideoUrl, {
+                        filter: (info) => info.itag == 22 || info.itag == 18,
+                    }).pipe(fs.createWriteStream(`Media/Video/${randomName}.mp4`));
+                }
+                catch(err){
+                    await sock.sendMessage(chatId,{text:`${err.message}`},{quoted:msg});
+                }
+                }
                 await new Promise((resolve, reject) => {
                     stream.on("error", reject);
                     stream.on("finish", resolve);
@@ -215,7 +225,7 @@ class Search {
 
                 let stats = fs.statSync(`Media/Video/${randomName}.mp4`);
                 console.log(stats.size);
-                if (stats.size / 1048576 < 40) {
+                if (stats.size / 1048576 <=100) {
                     console.log("Sending video....");
                     await sock.sendMessage(
                         chatId, {
@@ -226,7 +236,7 @@ class Search {
                     );
                 } else {
                     await sock.sendMessage(
-                        chatId, { text: "Video size must be less than 40 mb" }, { quoted: msg }
+                        chatId, { text: "Video size must be less than 100 mb" }, { quoted: msg }
                     );
                 }
                 fs.unlinkSync(`Media/Video/${randomName}.mp4`);
@@ -274,10 +284,10 @@ class Search {
             }
             console.log(vurl[1]);
             let info = await ytdl.getInfo(vurl[1]);
-            if (info.videoDetails.lengthSeconds >= 1800) {
+            if (info.videoDetails.lengthSeconds > 3600) {
                 await sock.sendMessage(
                     chatId, {
-                        text: "Audio duration must be less than 30 mins",
+                        text: "Audio duration must be less than 60 mins",
                     }, { quoted: msg }
                 );
             } else {
@@ -297,7 +307,7 @@ class Search {
 
                 let stats = fs.statSync(`Media/Audio/${randomName}.mp3`);
 
-                if (stats.size / 1048576 < 40) {
+                if (stats.size / 1048576 <= 100) {
                     await sock.sendMessage(
                         chatId, {
                             audio: { url: `Media/Audio/${randomName}.mp3` },
@@ -306,7 +316,7 @@ class Search {
                     );
                 } else {
                     await sock.sendMessage(
-                        chatId, { text: "Audio size must be less than 40 mb" }, { quoted: msg }
+                        chatId, { text: "Audio size must be less than 100 mb" }, { quoted: msg }
                     );
                     fs.unlinkSync(`Media/Audio/${randomName}.mp3`);
                 }
@@ -353,10 +363,10 @@ class Search {
             const vurl = data.items[0].id.videoId;
             let finalVideoUrl = `https://www.youtube.com/watch?v=${vurl}`;
             let info = await ytdl.getInfo(finalVideoUrl);
-            if (info.videoDetails.lengthSeconds >= 1800) {
+            if (info.videoDetails.lengthSeconds >= 3600) {
                 await sock.sendMessage(
                     chatId, {
-                        text: "Audio duration is greater than 30 mins",
+                        text: "Audio duration is greater than 60 mins",
                     }, { quoted: msg }
                 );
             } else {
@@ -376,7 +386,7 @@ class Search {
 
                 let stats = fs.statSync(`Media/Audio/${randomName}.mp3`);
 
-                if (stats.size / 1048576 < 40) {
+                if (stats.size / 1048576 <= 100) {
                     await sock.sendMessage(
                         chatId, {
                             audio: { url: `Media/Audio/${randomName}.mp3` },
@@ -386,7 +396,7 @@ class Search {
                     fs.unlinkSync(`Media/Audio/${randomName}.mp3`);
                 } else {
                     await sock.sendMessage(
-                        chatId, { text: "Audio size is greater than 40 mb" }, { quoted: msg }
+                        chatId, { text: "Audio size is greater than 100 mb" }, { quoted: msg }
                     );
                     fs.unlinkSync(`Media/Audio/${randomName}.mp3`);
                 }
