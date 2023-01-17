@@ -6,8 +6,7 @@ const {
     createSticker,
     StickerTypes,
 } = require("wa-sticker-formatter");
-const axios=require("axios");
-const { off } = require("process");
+const tti=require("text-to-image");
 const ffmpegInstaller=require("@ffmpeg-installer/ffmpeg");
 const ffmpeg=require("fluent-ffmpeg");
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
@@ -134,9 +133,30 @@ class sticker {
     }
     static async textToSticker(sock,chatId,msg,msgData){
         try{
-            let text=encodeURI(msgData.msgText);
-            let res=await axios.get(`https://api.xteam.xyz/attp?file&text=${text}`,{responseType:"arraybuffer"});
-            await sock.sendMessage(chatId,{sticker:Buffer.from(res.data)},{quoted:msg});
+            let ques;
+            if (msgData.isQuoted && msgData.quotedMessage.quotedMessage.conversation) {
+                ques = msgData.quotedMessage.quotedMessage.conversation;
+            } else {
+                ques = msgData.msgText;
+            }
+            //console.log(ques);
+
+            if (ques === "") {
+                await sock.sendMessage(
+                    chatId, { text: "Write text or tag message to convert it into sticker" }, { quoted: msg });
+                return;
+            }
+            const datauri= await tti.generate(ques);
+            const buffer=Buffer.from(datauri,"base64");
+            const sticker=new Sticker(buffer,{
+                pack: "I-Bot Stickers", // The pack name
+                author: "I-Bot", // The author name
+                type: stickerType, // The sticker type
+                categories: ["🤩", "🎉"], // The sticker category
+                id: "12345", // The sticker id
+                quality: 50, // The quality of the output file
+        });
+        await sock.sendMessage(chatId, await sticker.toMessage(), { quoted: msg });
         }catch(err){
             console.log(err);
             await sock.sendMessage(chatId,{text:`${err.message}`},{quoted:msg});
