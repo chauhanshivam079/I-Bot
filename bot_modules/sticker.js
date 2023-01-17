@@ -147,7 +147,7 @@ class sticker {
                 return;
             }
             const datauri= await tti.generate(ques);
-            const buffer=Buffer.from(datauri,"base64");
+            const buffer=Buffer.from(datauri.split(",")[1],"base64");
             const sticker=new Sticker(buffer,{
                 pack: "I-Bot Stickers", // The pack name
                 author: "I-Bot", // The author name
