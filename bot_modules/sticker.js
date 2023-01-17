@@ -151,7 +151,7 @@ class sticker {
             const sticker=new Sticker(buffer,{
                 pack: "I-Bot Stickers", // The pack name
                 author: "I-Bot", // The author name
-                type: stickerType, // The sticker type
+                type: "full", // The sticker type
                 categories: ["🤩", "🎉"], // The sticker category
                 id: "12345", // The sticker id
                 quality: 50, // The quality of the output file
