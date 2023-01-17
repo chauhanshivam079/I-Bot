@@ -8,8 +8,17 @@ const openAi=new OpenAIApi(config);
 class AiImageGeneration{
     static async aiImageGeneration(sock,chatId,msg,msgData){
         try{
+            let ques;
+        if (msgData.isQuoted && msgData.quotedMessage.quotedMessage.conversation) {
+            ques = msgData.quotedMessage.quotedMessage.conversation;
+        } else {
+            ques = msgData.msgText;
+        }
+        if(ques.length===0){
+            await sock.sendMessage(chatId,{text:`Are bhaiya kya search krna wo to likho`},{quoted:msg});
+        }
             const response=await openAi.createImage({
-                prompt:msgData.msgText,
+                prompt:ques,
                 n:1,
             });
             await sock.sendMessage(chatId,{image: { url: response.data.data[0].url }},{quoted:msg});
@@ -21,10 +30,10 @@ class AiImageGeneration{
         try{
             let buffer;
             let data;
-            if(msgData.isQuoted){
+            if(msgData.isQuoted && msgData.quotedMessage.quotedMessage.hasOwnProperty("imageMessage")){
                 data=msgData.quotedMessage.quotedMessage;
             }else{
-                data=msg.message;
+                await sock.sendMessage(chatId,{text:`Tag a image message to get the variation`},{quoted:msg});
             }
             if(data.hasOwnProperty("imageMessage")){
                 const stream = await downloadContentFromMessage(
