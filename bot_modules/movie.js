@@ -8,7 +8,7 @@ class MovieLinks {
                 await sock.sendMessage(chatId,{text:`*Abe Saale* Send movie name to be searched!!`},{quoted:msg});
                 return;
             }
-            let url = `https://pronoob-aio-drive.cf/Sct?search=${msgData.msgText.replaceAll(
+            let url = `https://pronoob-aio-drive.gq/Sct?search=${msgData.msgText.replaceAll(
         " ",
         "+"
       )}`;
@@ -18,7 +18,7 @@ class MovieLinks {
             // Load HTML we fetched in the previous line
             const $ = cheerio.load(data);
             const list = $(".m-2 div[title] span a");
-            let prefix = "https://pronoob-aio-drive.cf/";
+            let prefix = "https://pronoob-aio-drive.gq/";
             let movieList = `🍿👀📽\n`;
 
             if (list.length === 0) {
