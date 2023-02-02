@@ -32,7 +32,7 @@ class DbOperation {
                     }
 
                     taggedMsgs.push(JSON.stringify(msg));
-                    collection1.updateMany({ _id: 0 }, {
+                    await collection1.updateMany({ _id: 0 }, {
                         $inc: {
                             "data.$[updateGroup].Members.$[updateMember].tagCount": 1,
                         },
@@ -47,7 +47,7 @@ class DbOperation {
                     });
                 }
             }
-            collection1.updateMany({ _id: 0 }, {
+            await collection1.updateMany({ _id: 0 }, {
                 $set: {
                     "data.$[updateGroup].groupName": grpName,
                 },
@@ -64,7 +64,7 @@ class DbOperation {
             });
 
             let memberName = msg.pushName;
-            collection2.updateMany({ _id: 0 }, {
+            await collection2.updateMany({ _id: 0 }, {
                 $set: { "data.$[member].memberName": memberName },
                 $inc: { "data.$[member].totalMsgCount": 1 },
             }, {
@@ -78,7 +78,7 @@ class DbOperation {
     }
     static async updateGroupsIn(chatId, memberId) {
         try {
-            collection2.updateOne({ _id: 0 }, { $pull: { "data.$[member].groupsIn": chatId } }, {
+            await collection2.updateOne({ _id: 0 }, { $pull: { "data.$[member].groupsIn": chatId } }, {
                 arrayFilters: [{ "member.memberId": memberId }],
             });
         } catch (err) {
@@ -112,7 +112,7 @@ class DbOperation {
                     })
                     .toArray()
                 ).length) {
-                collection1.updateMany({ _id: 0 }, {
+                await collection1.updateMany({ _id: 0 }, {
                     $push: {
                         "data.$[updateGroup].Members": tempObj,
                     },
@@ -153,11 +153,11 @@ class DbOperation {
                     groupsIn: [chatId],
                     totalMsgCount: 0,
                 };
-                collection2.updateOne({ _id: 0 }, { $push: { data: tempMemberObj } });
+                await collection2.updateOne({ _id: 0 }, { $push: { data: tempMemberObj } });
             } else {
                 console.log("Member Data found ,appending id to his groupsIN");
                 //if member already present in memberdata then update groupsIn array
-                collection2.updateOne({ _id: 0 }, { $addToSet: { "data.$[member].groupsIn": chatId } }, {
+                await collection2.updateOne({ _id: 0 }, { $addToSet: { "data.$[member].groupsIn": chatId } }, {
                     arrayFilters: [{ "member.memberId": senderId }],
                 });
             }
@@ -211,11 +211,11 @@ class DbOperation {
                             groupsIn: [obj.id],
                             totalMsgCount: 0,
                         };
-                        collection2.updateOne({ _id: 0 }, { $push: { data: tempMemberObj } });
+                        await collection2.updateOne({ _id: 0 }, { $push: { data: tempMemberObj } });
                     } else {
                         console.log("Member Data found ,appending id to his groupsIN");
                         //if member already present in memberdata then update groupsIn array
-                        collection2.updateOne({ _id: 0 }, { $addToSet: { "data.$[member].groupsIn": obj.id } }, {
+                        await collection2.updateOne({ _id: 0 }, { $addToSet: { "data.$[member].groupsIn": obj.id } }, {
                             arrayFilters: [{ "member.memberId": `${tempMemberId}` }],
                         });
                     }
@@ -233,10 +233,10 @@ class DbOperation {
                     Members: members,
                 };
                 //console.log("temperoray Group obj: ", groupObj);
-                collection1.updateOne({ _id: 0 }, { $push: { data: groupObj } });
+                await collection1.updateOne({ _id: 0 }, { $push: { data: groupObj } });
             } else {
                 console.log("Group Already present in db");
-                collection1.updateOne({ _id: 0 }, {
+                await collection1.updateOne({ _id: 0 }, {
                     $set: {
                         "data.$[updateGroup].groupName": obj.subject,
                     },
@@ -269,7 +269,7 @@ class DbOperation {
         let lastTagArr = data[0].data.Members.taggedMsg;
         if (lastTagArr.length > 0) {
             let lastTagObj = lastTagArr.pop();
-            collection1.updateOne({ _id: 0 }, {
+            await collection1.updateOne({ _id: 0 }, {
                 $set: {
                     "data.$[updateGroup].Members.$[updateMember].taggedMsg": lastTagArr,
                 },

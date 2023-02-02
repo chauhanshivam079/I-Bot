@@ -331,9 +331,15 @@ const startSock = async () => {
             const chatId = m.messages[0].key.remoteJid;
             const msgContent = m.messages[0].message;
             const msgData = Helper.getMessageData(msgContent, pre);
+            const status=await DbOperation.checkOn(chatId);
             //console.log(JSON.stringify(msg, undefined, 2));
             if (chatId.includes("@g")) {
+              const status=await DbOperation.checkOn(chatId);
               allMsgArray.push([msg, msgData, chatId, senderId]);
+              if(!status){
+                sock.sendMessage(chatId,{text:`Bot is inactive for this group`},{quoted:msg});
+              }
+              return;
               // if (!(await DbOperation.checkCmd(chatId, "profanity")) &&
               //     msgData.msgText &&
               //     !msgData.msgText.includes("rem_ab")
