@@ -229,11 +229,29 @@ class groupManage {
 
         await sock.sendMessage(chatId, { text: reply }, { quoted: msg });
     }
-    static async groupSetting(sock, chatId, msg) {
-        // // only allow admins to send messages
-        // await sock.groupSettingUpdate(chatId, "announcement");
-        // // allow everyone to send messages
-        // await sock.groupSettingUpdate(chatId, "not_announcement");
+    static async groupSetting(sock, chatId, senderId,state) {
+        let reply = "";
+        const grpMembers = await sock.groupMetadata(chatId);
+        const grpAdminList = [];
+        let i;
+        for (i = 0; i < grpMembers.participants.length; i++) {
+            if (grpMembers.participants[i].admin) {
+                grpAdminList.push(grpMembers.participants[i].id);
+            }
+        }
+        if (grpAdminList.find((id) => id === senderId)) {
+            if(state==0){
+            // only allow admins to send messages
+            await sock.groupSettingUpdate(chatId, "announcement");
+            }
+            if(state==1){
+            // allow everyone to send messages
+            await sock.groupSettingUpdate(chatId, "not_announcement");
+            }
+        } else {
+            await sock.sendMessage(chatId,{text:'Admin ban pehle lamde'},{quoted:msg});
+        }
+
         // // allow everyone to modify the group's settings -- like display picture etc.
         // await sock.groupSettingUpdate(chatId, "unlocked");
         // // only allow admins to modify the group's settings
@@ -267,7 +285,7 @@ class groupManage {
         // };
         const groupLink=`*${grpMembers.subject} Link* ❤️ \n${reply}`
         //await sock.sendMessage(chatId, templateMessage);
-        sock.sendMessage(chatId,{
+        await sock.sendMessage(chatId,{
                                  text:groupLink,
                                  linkPreview:true    
                                 },
