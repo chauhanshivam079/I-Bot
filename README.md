@@ -81,6 +81,7 @@ Now Bot will start working!! Work even if the device is offline!!
 | :-------------: | :-----------------------------------------------: | :------: |
 |    `#msgcount`  |        Know message count in current group        |   `#mc`  |
 |    `#sticker`   |        Create sticker from different media types  |   `#s`   |
+|    `#ss`        |        to search for a sticker                    |          |
 |    `#disable`   |        To block particular commands for group     |          |
 |    `#toimg`     |        Create image from sticker                  |          |
 |    `#mp3s`      |        Get any song in good quality               |          |
@@ -101,6 +102,11 @@ Now Bot will start working!! Work even if the device is offline!!
 |    `#horo`      |        to know the horoscope of current date      |          |
 |    `#dict`      |        to know the meaning of a word              |   `#d`   |
 |    `#td`        |        to download twitter post                   |          |
+|    `#tc`        |        to get details of a phone number           |          |
+|    `#as`        |        to search for the result by chatgpt        |          |
+|    `#ai`        |        to get ai generated image                  |          |
+|    `#aiv`       |        to get the ai generated variation of image |          |
+|    `#tts`       |        to convert text into sticker               |          |
 
 
 <hr>
@@ -111,10 +117,12 @@ Now Bot will start working!! Work even if the device is offline!!
 |      `#kick`       |                  kick member from group                 |         |
 |      `#promote`    |                  to make member a admin in group        |         |
 |      `#demote`     |                  to make admin a member in group        |         |
+|      `#mute`       |                  to only allow admins to send messages  |         |
+|      `#unmute`     |                  to allow everyone to send messages     |         |
 |      `#tagadmins`  |                  Tag all admins of group                |         |
 |      `#warning`    |                  Give warning to user                   |         |
 |      `#tagall`     |                  Tag all members in group               |         |
-|      `#delte`      |                  to delete message of anyone in a group |  `#dd`  |
+|      `#delete`     |                 to delete message of anyone in a group  |  `#dd`  |
 
 <hr>
 
