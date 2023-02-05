@@ -205,19 +205,9 @@ class Search {
                     chatId, { text: "Download has begun!" }, { quoted: msg }
                 );
                 let stream;
-                try{
-                    let format=ytdl.chooseFormat(info.formats,{quality:'136'});
-                        stream=ytdl(finalVideoUrl,{
-                        filter:(info)=>info.itag==136,}).pipe(fs.createWriteStream(`Media/Video/${randomName}.mp4`));
-                }catch(err){
-                    try{stream = ytdl(finalVideoUrl, {
+                stream = ytdl(finalVideoUrl, {
                         filter: (info) => info.itag == 22 || info.itag == 18,
                     }).pipe(fs.createWriteStream(`Media/Video/${randomName}.mp4`));
-                }
-                catch(err){
-                    await sock.sendMessage(chatId,{text:`${err.message}`},{quoted:msg});
-                }
-                }
                 await new Promise((resolve, reject) => {
                     stream.on("error", reject);
                     stream.on("finish", resolve);
@@ -244,7 +234,7 @@ class Search {
         } catch (err) {
             console.log(err);
             await sock.sendMessage(
-                chatId, { text: "Some Error Occured!" }, { quoted: msg }
+                chatId, { text: `${err.message}` }, { quoted: msg }
             );
         }
     }
