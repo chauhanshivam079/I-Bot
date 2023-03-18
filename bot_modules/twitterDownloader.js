@@ -1,4 +1,5 @@
 const axios=require("axios");
+require("dotenv").config({ path: "./Keys.env" })
 
 class TwitterDownloader{
     static async postDownload(sock,chatId,msg,msgData){
@@ -8,29 +9,25 @@ class TwitterDownloader{
                 await sock.sendMessage(chatId,{text:`Enter url to be downloaded`},{quoted:msg});
                 return;
             }
-            temp=temp.split("/")[5].split("?")[0];
-            let baseUrl="https://tweetpik.com/api/tweets";
-            axios({url:`${baseUrl}/${temp}`}).then(async res=>{
-                const type=res.data.media[0].type;
-                if(type==="photo"){
-                    for(let i=0;i<res.data.media.length;i++){
-                        await sock.sendMessage(chatId,{
-                            image:{url:res.data.media[i].url}
+            const res = await axios.post(process.env.smd,{
+                url:temp
+            });
+                if(res.data.url[0].type === "jpg"){
+                    await sock.sendMessage(chatId,{
+                            image:{url:res.data.url[0].url}
                         },
                         {quoted:msg});
-                    }
+                        return;
                 }
-                if(type==="animated_gif" || type==="video"){
-                    axios({url:`${baseUrl}/${temp}/video`}).then(async res=>{
-                        await sock.sendMessage(chatId,{
-                            video:{url:res.data.variants[res.data.variants.length-1].url},
-                            caption:"",
+                if(res.data.url[0].type === "mp4"){
+                    await sock.sendMessage(chatId,{
+                            video:{url:res.data.url[0].url},
+                            caption:`${res.data.url[0].quality}p`,
                             gifPlayback: false,
                           },
                           {quoted:msg});
-                    });
+                          return;
                 }
-            });
         }
         catch(err){
             console.log(err);
