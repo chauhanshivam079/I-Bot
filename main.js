@@ -50,7 +50,6 @@ const ownerIds = ownerIdsString.split(" ").map((id) => id + "@s.whatsapp.net");
 mdClient.connect();
 
 const MAIN_LOGGER = require("@adiwajshing/baileys/lib/Utils/logger");
-const FacebookDownloader = require("./bot_modules/fbDownloader.js");
 
 // const logger = MAIN_LOGGER.child({});
 // logger.level = "trace";
