@@ -21,7 +21,7 @@ class FacebookDownloader{
                 }
                 if(res.data.url[0].type === "mp4"){
                     await sock.sendMessage(chatId,{
-                            video:{url:res.data.url[0].url},
+                            video:{url:res.data.url[0].subname === 'HD' ? res.data.url[0].url : res.data.url[1].url},
                             caption:`${res.data.url[0].subname}`,
                             gifPlayback: false,
                           },
