@@ -54,7 +54,7 @@ class sticker {
         }
         const sticker = new Sticker(buffer, {
             pack: "I-Bot Stickers", // The pack name
-            author: "I-Bot", // The author name
+            author: chatId=="917389283811-1577375970@g.us"?"Bablabot😋":"I-Bot", // The author name
             type: stickerType, // The sticker type
             categories: ["🤩", "🎉"], // The sticker category
             id: "12345", // The sticker id
