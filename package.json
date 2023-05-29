@@ -30,7 +30,7 @@
         "url": "git+https://github.com/chauhanshivam079/I-Bot.git"
     },
     "dependencies": {
-        "@adiwajshing/baileys": "github:jacktheboss220/baileys",
+        "@adiwajshing/baileys": "github:WhiskeySockets/Baileys",
         "@ffmpeg-installer/ffmpeg": "^1.0.13",
         "@hapi/boom": "^10.0.0",
         "@juliendu11/instagram-downloader": "^0.2.0",
