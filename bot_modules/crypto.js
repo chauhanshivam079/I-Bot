@@ -48,11 +48,13 @@ class Crypto {
                         this._coinsDataName.has(this._coinsDetails[i].name.toLowerCase())
                     ) {
                         let tempArr = this._coinsDataName.get(this._coinsDetails[i].name);
+                        if(tempArr){
                         tempArr.push(this._coinsDetails[i].id);
                         this._coinsDataName.set(
                             this._coinsDetails[i].name.toLowerCase(),
                             tempArr
                         );
+                        }
                     } else {
                         this._coinsDataName.set(this._coinsDetails[i].name.toLowerCase(), [
                             this._coinsDetails[i].id,
