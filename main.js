@@ -522,7 +522,7 @@ const startSock = async () => {
                   case "horo":
                     if(msgData.msgText===""){await sock.sendMessage(chatId,{text:`Enter the horoscope name`},{quoted:msg})}
                     else{
-                      let horo=new Horoscope(msgData);
+                      let horo=new Horoscope();
                       await horo.getHoroscope(sock,chatId,msg,msgData);
                     }
                     break;
