@@ -1,5 +1,6 @@
 const axios=require('axios');
 const { Module } = require('module');
+const cheerio = require("cheerio");
 
 class Horoscope{
     #url;
