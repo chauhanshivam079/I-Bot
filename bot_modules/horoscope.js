@@ -4,8 +4,8 @@ const { Module } = require('module');
 class Horoscope{
     #url;
     #horoArray;
-    constructor(msgData){
-        this.#url=`https://aztro.sameerkumar.website/?sign=${msgData.msgText}&day=today`;
+    constructor(){
+        this.#url = `https://www.horoscope.com/us/horoscopes/general/horoscope-general-daily-today.aspx?sign=`;
         this.#horoArray=["aries","taurus","gemini","cancer","leo","virgo","libra","scorpio","sagittarius","capricorn","aquarius","pisces"];
     }
         async getHoroscope(sock,chatId,msg,msgData){
@@ -15,9 +15,10 @@ class Horoscope{
                 await sock.sendMessage(chatId,{text:"Enter the right spelling"},{quoted:msg});
             }
             else{
-                let result=await axios.post(this.#url);
-                result=result.data;
-                result=`*Date Range:-* ${result.date_range}\n*Today's Date:-* ${result.current_date}\n*Nature Hold's For You:-* ${result.description}\n*Compatibility:-* ${result.compatibility}\n*Mood:-* ${result.mood}\n*Color:-* ${result.color}\n*Lucky Number:-* ${result.lucky_number}\n*Lucky Time:-* ${result.lucky_time}`;
+                const { data } = await axios.get(this.#url + `${index + 1}`);
+                const $ = cheerio.load(data);
+                const horoscope = $("body > div.grid.grid-right-sidebar.primis-rr > main > div.main-horoscope > p:nth-child(2)").text();
+                let result = `*Today's Date:-* ${horoscope.split("-")[0]}\n*Nature Hold's For You:-* ${horoscope.split("-")[1]}`;
                 await sock.sendMessage(chatId,{text:result},{quoted:msg});
             }
         }  
