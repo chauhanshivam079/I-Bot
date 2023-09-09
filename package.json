@@ -59,7 +59,7 @@
         "url-regex": "^5.0.0",
         "wa-sticker-formatter": "^4.3.2",
         "ws": "^8.11.0",
-        "ytdl-core": "github:jacktheboss220/node-ytdl-core"
+        "ytdl-core": "git+ssh://git@github.com:khlevon/node-ytdl-core.git"
     },
     "peerDependencies": {
         "@adiwajshing/keyed-db": "^0.2.4",
