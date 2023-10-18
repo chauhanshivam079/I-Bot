@@ -35,6 +35,10 @@ class DbOperation {
                     await collection1.updateMany(
                         // { _id: 0 }, 
                         {
+                            "data.groupId": chatId,  // Match the documents with the specified chatId
+                            "data.Members.memberId": mentionedIds[i],  // Match the documents with the specified senderId
+                        },
+                        {
                         $inc: {
                             "data.$[updateGroup].Members.$[updateMember].tagCount": 1,
                         },
@@ -51,6 +55,10 @@ class DbOperation {
             }
             await collection1.updateMany(
                 // { _id: 0 }, 
+                {
+                    "data.groupId": chatId,  // Match the documents with the specified chatId
+                    "data.Members.memberId": senderId,  // Match the documents with the specified senderId
+                },
                 {
                 $set: {
                     "data.$[updateGroup].groupName": grpName,
@@ -117,7 +125,10 @@ class DbOperation {
                     .toArray()
                 ).length) {
                 await collection1.updateMany(
-                    // { _id: 0 }, 
+                    // { _id: 0 },
+                    {
+                            "data.groupId": chatId,  // Match the documents with the specified chatId
+                    },
                     {
                     $push: {
                         "data.$[updateGroup].Members": tempObj,
@@ -247,6 +258,9 @@ class DbOperation {
                 await collection1.updateOne(
                     //{ _id: 0 }, 
                     {
+                        "data.groupId": obj.id,  // Match the documents with the specified chatId
+                    },
+                    {
                     $set: {
                         "data.$[updateGroup].groupName": obj.subject,
                     },
@@ -281,6 +295,10 @@ class DbOperation {
             let lastTagObj = lastTagArr.pop();
             await collection1.updateOne(
                 //{ _id: 0 }, 
+                {
+                    "data.groupId": chatId,  // Match the documents with the specified chatId
+                    "data.Members.memberId": senderId,  // Match the documents with the specified senderId
+                },
                 {
                 $set: {
                     "data.$[updateGroup].Members.$[updateMember].taggedMsg": lastTagArr,
@@ -343,6 +361,9 @@ class DbOperation {
                 await collection1.updateOne(
                     //{ _id: 0 }, 
                     {
+                        "data.groupId": chatId,  // Match the documents with the specified chatId
+                    },
+                    {
                     $pull: {
                         "data.$[updateGroup].disableCmds": cmd,
                     },
@@ -372,6 +393,9 @@ class DbOperation {
                 console.log("all:", msgData);
                 await collection1.updateOne(
                     //{ _id: 0 }, 
+                    {
+                        "data.groupId": chatId,  // Match the documents with the specified chatId
+                    },
                     {
                     $addToSet: {
                         "data.$[updateGroup].disableCmds": cmdsArr[i],
@@ -430,6 +454,9 @@ class DbOperation {
             await collection1.updateOne(
                 //{ _id: 0 }, 
                 {
+                    "data.groupId": chatId,  // Match the documents with the specified chatId
+                },
+                {
                 $set: {
                     "data.$[updateGroup].botEnable": botEnable,
                 },
@@ -480,6 +507,10 @@ class DbOperation {
             await collection1.updateOne(
                 //{ _id: 0 }, 
                 {
+                    "data.groupId": chatId,  // Match the documents with the specified chatId
+                    "data.Members.memberId": senderId,  // Match the documents with the specified senderId
+                },
+                {
                 $set: {
                     "data.$[updateGroup].Members.$[updateMember].warnCount": 0,
                 },
@@ -499,6 +530,10 @@ class DbOperation {
         try {
             await collection1.updateOne(
                 //{ _id: 0 }, 
+                {
+                    "data.groupId": chatId,  // Match the documents with the specified chatId
+                    "data.Members.memberId": senderId,  // Match the documents with the specified senderId
+                },
                 {
                 $inc: {
                     "data.$[updateGroup].Members.$[updateMember].warnCount": 1,
