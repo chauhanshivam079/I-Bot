@@ -18,7 +18,7 @@ class DbOperation {
                     let taggedMsgs = (
                         await collection1
                         .aggregate([
-                            { $match: { _id: 0 } },
+                            // { $match: { _id: 0 } },
                             { $unwind: "$data" },
                             { $match: { "data.groupId": chatId } },
                             { $unwind: "$data.Members" },
@@ -32,7 +32,9 @@ class DbOperation {
                     }
 
                     taggedMsgs.push(JSON.stringify(msg));
-                    await collection1.updateMany({ _id: 0 }, {
+                    await collection1.updateMany(
+                        // { _id: 0 }, 
+                        {
                         $inc: {
                             "data.$[updateGroup].Members.$[updateMember].tagCount": 1,
                         },
@@ -47,7 +49,9 @@ class DbOperation {
                     });
                 }
             }
-            await collection1.updateMany({ _id: 0 }, {
+            await collection1.updateMany(
+                // { _id: 0 }, 
+                {
                 $set: {
                     "data.$[updateGroup].groupName": grpName,
                 },
@@ -112,7 +116,9 @@ class DbOperation {
                     })
                     .toArray()
                 ).length) {
-                await collection1.updateMany({ _id: 0 }, {
+                await collection1.updateMany(
+                    // { _id: 0 }, 
+                    {
                     $push: {
                         "data.$[updateGroup].Members": tempObj,
                     },
