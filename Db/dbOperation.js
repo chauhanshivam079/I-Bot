@@ -239,10 +239,14 @@ class DbOperation {
                     Members: members,
                 };
                 //console.log("temperoray Group obj: ", groupObj);
-                await collection1.updateOne({ _id: 0 }, { $push: { data: groupObj } });
+                await collection1.updateOne(
+                    //{ _id: 0 }, 
+                    { $push: { data: groupObj } },{ upsert: true });
             } else {
                 console.log("Group Already present in db");
-                await collection1.updateOne({ _id: 0 }, {
+                await collection1.updateOne(
+                    //{ _id: 0 }, 
+                    {
                     $set: {
                         "data.$[updateGroup].groupName": obj.subject,
                     },
@@ -264,7 +268,7 @@ class DbOperation {
     static async getLastTagObj(chatId, senderId) {
         let data = await collection1
             .aggregate([
-                { $match: { _id: 0 } },
+                //{ $match: { _id: 0 } },
                 { $unwind: "$data" },
                 { $match: { "data.groupId": chatId } },
                 { $unwind: "$data.Members" },
@@ -275,7 +279,9 @@ class DbOperation {
         let lastTagArr = data[0].data.Members.taggedMsg;
         if (lastTagArr.length > 0) {
             let lastTagObj = lastTagArr.pop();
-            await collection1.updateOne({ _id: 0 }, {
+            await collection1.updateOne(
+                //{ _id: 0 }, 
+                {
                 $set: {
                     "data.$[updateGroup].Members.$[updateMember].taggedMsg": lastTagArr,
                 },
@@ -314,7 +320,7 @@ class DbOperation {
         try {
             let data = await collection1
                 .aggregate([
-                    { $match: { _id: 0 } },
+                    //{ $match: { _id: 0 } },
                     { $unwind: "$data" },
                     { $match: { "data.groupId": chatId } },
                     { $unwind: "$data.Members" },
@@ -334,7 +340,9 @@ class DbOperation {
                 let cmd = cmdsArr[i];
 
                 //console.log("all:", msgData);
-                await collection1.updateOne({ _id: 0 }, {
+                await collection1.updateOne(
+                    //{ _id: 0 }, 
+                    {
                     $pull: {
                         "data.$[updateGroup].disableCmds": cmd,
                     },
@@ -344,7 +352,7 @@ class DbOperation {
             }
             let data = await collection1
                 .aggregate([
-                    { $match: { _id: 0 } },
+                    //{ $match: { _id: 0 } },
                     { $unwind: "$data" },
                     { $match: { "data.groupId": chatId } },
                 ])
@@ -362,7 +370,9 @@ class DbOperation {
             const cmdsArr = msgData.msgText.split(" ");
             for (let i = 0; i < cmdsArr.length; i++) {
                 console.log("all:", msgData);
-                await collection1.updateOne({ _id: 0 }, {
+                await collection1.updateOne(
+                    //{ _id: 0 }, 
+                    {
                     $addToSet: {
                         "data.$[updateGroup].disableCmds": cmdsArr[i],
                     },
@@ -373,7 +383,7 @@ class DbOperation {
 
             let data = await collection1
                 .aggregate([
-                    { $match: { _id: 0 } },
+                    //{ $match: { _id: 0 } },
                     { $unwind: "$data" },
                     { $match: { "data.groupId": chatId } },
                 ])
@@ -390,7 +400,7 @@ class DbOperation {
         try {
             let data = await collection1
                 .aggregate([
-                    { $match: { _id: 0 } },
+                    //{ $match: { _id: 0 } },
                     { $unwind: "$data" },
                     { $match: { "data.groupId": chatId } },
                 ])
@@ -417,7 +427,9 @@ class DbOperation {
             } else {
                 botEnable = 0;
             }
-            await collection1.updateOne({ _id: 0 }, {
+            await collection1.updateOne(
+                //{ _id: 0 }, 
+                {
                 $set: {
                     "data.$[updateGroup].botEnable": botEnable,
                 },
@@ -438,7 +450,7 @@ class DbOperation {
         try {
             let data = await collection1
                 .aggregate([
-                    { $match: { _id: 0 } },
+                    //{ $match: { _id: 0 } },
                     { $unwind: "$data" },
                     { $match: { "data.groupId": chatId } },
                 ])
@@ -465,7 +477,9 @@ class DbOperation {
     }
     static async resetWarn(chatId, senderId) {
         try {
-            await collection1.updateOne({ _id: 0 }, {
+            await collection1.updateOne(
+                //{ _id: 0 }, 
+                {
                 $set: {
                     "data.$[updateGroup].Members.$[updateMember].warnCount": 0,
                 },
@@ -483,7 +497,9 @@ class DbOperation {
     }
     static async addWarn(chatId, senderId) {
         try {
-            await collection1.updateOne({ _id: 0 }, {
+            await collection1.updateOne(
+                //{ _id: 0 }, 
+                {
                 $inc: {
                     "data.$[updateGroup].Members.$[updateMember].warnCount": 1,
                 },
@@ -540,7 +556,7 @@ class DbOperation {
         try {
             let data = await collection1
                 .aggregate([
-                    { $match: { _id: 0 } },
+                    //{ $match: { _id: 0 } },
                     { $unwind: "$data" },
                     { $match: { "data.groupId": chatId } },
                     { $unwind: "$data.Members" },
