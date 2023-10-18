@@ -250,9 +250,9 @@ class DbOperation {
                     Members: members,
                 };
                 //console.log("temperoray Group obj: ", groupObj);
-                await collection1.updateOne(
+                await collection1.insertOne(
                     //{ _id: 0 }, 
-                    { $push: { data: groupObj } },{ upsert: true });
+                    { data: [groupObj] } );
             } else {
                 console.log("Group Already present in db");
                 await collection1.updateOne(
