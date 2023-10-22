@@ -407,14 +407,14 @@ const startSock = async () => {
                       if (tempId.length > 0) {
                         switch (msgData.cmd) {
                           case "add":
-                            await sock.sendMessage(chatId,{text:"Command disabled"},{quoted:msg});
-                            // await groupManage.add(
-                            //   sock,
-                            //   chatId,
-                            //   [tempId],
-                            //   senderId,
-                            //   msg
-                            // );
+                            //await sock.sendMessage(chatId,{text:"Command disabled"},{quoted:msg});
+                            await groupManage.add(
+                              sock,
+                              chatId,
+                              [tempId],
+                              senderId,
+                              msg
+                            );
                             break;
                           case "kick":
                             await groupManage.remove(
