@@ -237,10 +237,6 @@ const startSock = async () => {
     "source"
   ];
 
-  setInterval(async () => {
-    throw "sd";
-  }, 7200000);
-
   //to update the dababase constantly
   let interval2 = setInterval(async () => {
     if (allMsgArray.length > 0) {
