@@ -459,6 +459,14 @@ const startSock = async () => {
                     break;
                   case "mute":
                     if (await isAdminOrMember(chatId, botId, "isAdmin")) {
+                      if(!await isAdminOrMember(chatId,senderId,"isAdmin")) {
+                          await sock.sendMessage(
+                        chatId,
+                        { text: "🤭 kya matlab tum admin nhi ho." },
+                        { quoted: msg }
+                      );
+                      }
+                      else
                       await groupManage.groupSetting(sock, chatId, senderId, 0);
                     } else {
                       await sock.sendMessage(
@@ -470,6 +478,14 @@ const startSock = async () => {
                     break;
                   case "unmute":
                     if (await isAdminOrMember(chatId, botId, "isAdmin")) {
+                      if(!await isAdminOrMember(chatId,senderId,"isAdmin")) {
+                          await sock.sendMessage(
+                        chatId,
+                        { text: "🤭 kya matlab tum admin nhi ho." },
+                        { quoted: msg }
+                      );
+                      }
+                      else
                       await groupManage.groupSetting(sock, chatId, senderId,1 );
                     } else {
                       await sock.sendMessage(
