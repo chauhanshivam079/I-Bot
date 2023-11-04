@@ -299,6 +299,7 @@ class InstaDownloader {
             try{
                 console.log("Ig link>>>",link);
                 const res = await snapsave(link);
+                console.log('Snapsave Resp>...',res);
                 if(!res?.status) {
                     await sock.sendMessage(
                         chatId, { text: `${res?.message}` }, { quoted: msg }
