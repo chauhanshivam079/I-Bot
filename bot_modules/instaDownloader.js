@@ -331,6 +331,7 @@ class InstaDownloader {
             );
         }
     }
+}
     
 module.exports = InstaDownloader;
 
