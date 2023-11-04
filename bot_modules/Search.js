@@ -300,8 +300,8 @@ class Search {
                 if (stats.size / 1048576 <= 100) {
                     await sock.sendMessage(
                         chatId, {
-                            audio: { url: `Media/Audio/${randomName}.mp3` },
-                            mimetype: "audio/mp4",
+                            audio: fs.readFileSync(`Media/Audio/${randomName}.mp3`) ,
+                            mimetype: "audio/mp3",
                         }, { quoted: msg }
                     );
                 } else {
@@ -379,8 +379,8 @@ class Search {
                 if (stats.size / 1048576 <= 100) {
                     await sock.sendMessage(
                         chatId, {
-                            audio: { url: `Media/Audio/${randomName}.mp3` },
-                            mimetype: "audio/mp4",
+                            audio: fs.readFileSync(`Media/Audio/${randomName}.mp3`),
+                            mimetype: "audio/mp3",
                         }, { quoted: msg }
                     );
                     fs.unlinkSync(`Media/Audio/${randomName}.mp3`);
