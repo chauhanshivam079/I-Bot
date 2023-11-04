@@ -306,7 +306,7 @@ class InstaDownloader {
                     return;
                 }
                 for(const obj of res?.data) {
-                    if(obj.includes('jpg')) {
+                    if(obj?.url.includes('jpg')) {
                         await sock.sendMessage(
                         chatId, {
                             image: { url: obj.url },
