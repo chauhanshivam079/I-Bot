@@ -302,7 +302,7 @@ class InstaDownloader {
                 console.log('Snapsave Resp>...',res);
                 if(!res?.status) {
                     await sock.sendMessage(
-                        chatId, { text: `${res?.message}` }, { quoted: msg }
+                        chatId, { text: `${res?.msg}` }, { quoted: msg }
                     );
                     return;
                 }
