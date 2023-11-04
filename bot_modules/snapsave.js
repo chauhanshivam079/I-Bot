@@ -1,5 +1,6 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
+const formData = require('form-data')
 
 module.exports = snapsave = (url) => {
   return new Promise(async (resolve) => {
@@ -85,7 +86,7 @@ module.exports = snapsave = (url) => {
     //       form: { url },
     //     })
     //     .text();
-    let d = new FormData();
+    let d = new formData();
     d.append("url", `${url}`);
 
     let config = {
