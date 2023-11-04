@@ -294,14 +294,13 @@ class Search {
                     stream.on("error", reject);
                     stream.on("finish", resolve);
                 });
-
+                console.log("song converted");
                 let stats = fs.statSync(`Media/Audio/${randomName}.mp3`);
-
+                console.log('sending mp3c now');
                 if (stats.size / 1048576 <= 100) {
                     await sock.sendMessage(
                         chatId, {
-                            audio: fs.readFileSync(`Media/Audio/${randomName}.mp3`) ,
-                            mimetype: "audio/mp3",
+                            audio: fs.readFileSync(`Media/Audio/${randomName}.mp3`) 
                         }, { quoted: msg }
                     );
                 } else {
@@ -368,19 +367,18 @@ class Search {
                     filter: (info) =>
                         info.audioBitrate == 160 || info.audioBitrate == 128,
                 }).pipe(fs.createWriteStream(`Media/Audio/${randomName}.mp3`));
-
+                console.log("song downloaded");
                 await new Promise((resolve, reject) => {
                     stream.on("error", reject);
                     stream.on("finish", resolve);
                 });
-
+                console.log("now sending");
                 let stats = fs.statSync(`Media/Audio/${randomName}.mp3`);
 
                 if (stats.size / 1048576 <= 100) {
                     await sock.sendMessage(
                         chatId, {
-                            audio: fs.readFileSync(`Media/Audio/${randomName}.mp3`),
-                            mimetype: "audio/mp3",
+                            audio: fs.readFileSync(`Media/Audio/${randomName}.mp3`)
                         }, { quoted: msg }
                     );
                     fs.unlinkSync(`Media/Audio/${randomName}.mp3`);
