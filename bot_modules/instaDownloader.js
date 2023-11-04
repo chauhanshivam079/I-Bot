@@ -330,6 +330,7 @@ class InstaDownloader {
                 chatId, { text: `${error.message}` }, { quoted: msg }
             );
         }
+    }
     
 module.exports = InstaDownloader;
 
