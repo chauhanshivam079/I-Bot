@@ -19,7 +19,7 @@ class Horoscope{
                 const { data } = await axios.get(this.#url + `${index + 1}`);
                 const $ = cheerio.load(data);
                 const horoscope = $("body > div.grid.grid-right-sidebar.primis-rr > main > div.main-horoscope > p:nth-child(2)").text();
-                let result = `*Today's Date:-* ${horoscope.split("-")[0]}\n*Nature Hold's For You:-* ${horoscope.split("-")[1]}`;
+                let result = `*Today's Date:-* ${horoscope.split("-")[0]}\n*Nature Hold's For You:-* ${horoscope.substring(horoscope.indexOf('-')+1)}`;
                 await sock.sendMessage(chatId,{text:result},{quoted:msg});
             }
         }  
