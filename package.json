@@ -7,10 +7,6 @@
     "directories": {
         "lib": "lib"
     },
-    "engines": {
-        "node": "16.14.2",
-        "npm": "8.19.2"
-    },
     "keywords": [
         "whatsapp",
         "js-whatsapp",
