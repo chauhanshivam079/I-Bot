@@ -219,9 +219,8 @@ class Search {
                     console.log("Sending video....");
                     await sock.sendMessage(
                         chatId, {
-                            video: fs.readFileSync(`Media/Video/${randomName}.mp4`),
-                            caption: titleYt,
-                            gifPlayback: false,
+                            audio: { url: `Media/Audio/${randomName}.mp3` },
+                            mimetype: "audio/mp4",
                         }, { quoted: msg }
                     );
                 } else {
@@ -300,7 +299,8 @@ class Search {
                 if (stats.size / 1048576 <= 100) {
                     await sock.sendMessage(
                         chatId, {
-                            audio: fs.readFileSync(`Media/Audio/${randomName}.mp3`) 
+                            audio: { url: `Media/Audio/${randomName}.mp3` },
+                            mimetype: "audio/mp4",
                         }, { quoted: msg }
                     );
                 } else {
