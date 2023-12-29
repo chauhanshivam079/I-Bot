@@ -378,7 +378,8 @@ class Search {
                 if (stats.size / 1048576 <= 100) {
                     await sock.sendMessage(
                         chatId, {
-                            audio: fs.readFileSync(`Media/Audio/${randomName}.mp3`)
+                            audio: { url: `Media/Audio/${randomName}.mp3` },
+                            mimetype: "audio/mp4",
                         }, { quoted: msg }
                     );
                     fs.unlinkSync(`Media/Audio/${randomName}.mp3`);
