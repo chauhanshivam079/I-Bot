@@ -219,9 +219,11 @@ class Search {
                     console.log("Sending video....");
                     await sock.sendMessage(
                         chatId, {
-                            audio: { url: `Media/Audio/${randomName}.mp3` },
-                            mimetype: "audio/mp4",
-                        }, { quoted: msg }
+                        video: fs.readFileSync(`Media/Video/${randomName}.mp4`),
+                            caption: titleYt,
+                            gifPlayback: false,
+                        },
+                        {quoted:msg}
                     );
                 } else {
                     await sock.sendMessage(
