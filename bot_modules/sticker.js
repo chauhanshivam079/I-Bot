@@ -7,13 +7,13 @@ const {
     StickerTypes,
 } = require("wa-sticker-formatter");
 const tti=require("text-to-image");
-// const ffmpegInstaller=require("@ffmpeg-installer/ffmpeg");
-// const ffmpeg=require("fluent-ffmpeg");
-// ffmpeg.setFfmpegPath(ffmpegInstaller.path);
-// const ffmpegInstaller=require("@ffmpeg-installer/ffmpeg");
-const avconv = require("avconv");
+const ffmpegInstaller=require("@ffmpeg-installer/ffmpeg");
 const ffmpeg=require("fluent-ffmpeg");
-ffmpeg.setFfmpegPath(avconv);
+ffmpeg.setFfmpegPath(ffmpegInstaller.path);
+// const ffmpegInstaller=require("@ffmpeg-installer/ffmpeg");
+// const avconv = require("avconv");
+// const ffmpeg=require("fluent-ffmpeg");
+// ffmpeg.setFfmpegPath(avconv);
 class sticker {
     static async imgToSticker(sock, chatId, msg, msgData) {
         try{
