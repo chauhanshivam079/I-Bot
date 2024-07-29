@@ -57,7 +57,7 @@
     "urban-dictionary": "github:jacktheboss220/urban-dictionary",
     "wa-sticker-formatter": "^4.3.2",
     "ws": "^8.13.0",
-    "ytdl-core": "git+https://github.com/distubejs/ytdl-core.git"
+    "ytdl-core": "github:distubejs/ytdl-core"
   },
   "peerDependencies": {
     "jimp": "^0.16.1",
