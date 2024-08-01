@@ -192,7 +192,15 @@ class Search {
             }
             console.log(vurl);
             let finalVideoUrl = `https://www.youtube.com/watch?v=${vurl}`;
-            let info = await ytdl.getInfo(vurl);
+            let info = '';
+            try{
+                info = await ytdl.getInfo(vurl);
+            }catch(err) {
+                console.log("ytdl error>>>>", err);
+                await sock.sendMessage(
+                    chatId, { text: `${err.message}` }, { quoted: msg }
+                );
+            }
             if (info.videoDetails.lengthSeconds > 3600) {
                 await sock.sendMessage(
                     chatId, {
