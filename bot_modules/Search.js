@@ -4,6 +4,7 @@ const ytdl = require("ytdl-core");
 const gApi = process.env.G_API;
 const ytApi = process.env.YT_API;
 const gApiEngineId = process.env.G_API_ENGINE_ID;
+const axios = require('axios');
 class Search {
     static async gsearch(sock, chatId, msg, msgData) {
         let ques;
@@ -192,54 +193,75 @@ class Search {
             }
             console.log(vurl);
             let finalVideoUrl = `https://www.youtube.com/watch?v=${vurl}`;
-            let info = '';
-            try{
-                info = await ytdl.getInfo(vurl);
-            }catch(err) {
-                console.log("ytdl error>>>>", err);
+            let apiVideoUrl = 'https://api.giftedtech.my.id/api/download/ytmp4?apikey=_0x5aff35,_0x1876stqr&url=';
+            try {
+                const res = await axios.get(`${apiVideoUrl}${finalVideoUrl}`;
+                if(res?.data?.result?.download_url)
+                    await sock.sendMessage(
+                        chatId, {
+                            video: { url: res?.data?.result?.download_url},
+                            caption: "",
+                            gifPlayback: false,
+                        }, { quoted: msg }
+                    );
+                else 
+                    await sock.sendMessage(
+                    chatId, { text: `Some error occured. Try again later` }, { quoted: msg }
+                );
+            }
+            catch(err) {
+                console.log("api error>>>>", err);
                 await sock.sendMessage(
                     chatId, { text: `${err.message}` }, { quoted: msg }
                 );
             }
-            if (info.videoDetails.lengthSeconds > 3600) {
-                await sock.sendMessage(
-                    chatId, {
-                        text: "Video duration must be less than 60 mins",
-                    }, { quoted: msg }
-                );
-            } else {
-                let titleYt = info.videoDetails.title;
-                await sock.sendMessage(
-                    chatId, { text: "Download has begun!" }, { quoted: msg }
-                );
-                let stream;
-                stream = ytdl(finalVideoUrl, {
-                        filter: (info) => info.itag == 22 || info.itag == 18,
-                    }).pipe(fs.createWriteStream(`Media/Video/${randomName}.mp4`));
-                await new Promise((resolve, reject) => {
-                    stream.on("error", reject);
-                    stream.on("finish", resolve);
-                });
+            // try{
+            //     info = await ytdl.getInfo(vurl);
+            // }catch(err) {
+            //     console.log("ytdl error>>>>", err);
+            //     await sock.sendMessage(
+            //         chatId, { text: `${err.message}` }, { quoted: msg }
+            //     );
+            // }
+            // if (info.videoDetails.lengthSeconds > 3600) {
+            //     await sock.sendMessage(
+            //         chatId, {
+            //             text: "Video duration must be less than 60 mins",
+            //         }, { quoted: msg }
+            //     );
+            // } else {
+            //     let titleYt = info.videoDetails.title;
+            //     await sock.sendMessage(
+            //         chatId, { text: "Download has begun!" }, { quoted: msg }
+            //     );
+            //     let stream;
+            //     stream = ytdl(finalVideoUrl, {
+            //             filter: (info) => info.itag == 22 || info.itag == 18,
+            //         }).pipe(fs.createWriteStream(`Media/Video/${randomName}.mp4`));
+            //     await new Promise((resolve, reject) => {
+            //         stream.on("error", reject);
+            //         stream.on("finish", resolve);
+            //     });
 
-                let stats = fs.statSync(`Media/Video/${randomName}.mp4`);
-                console.log(stats.size);
-                if (stats.size / 1048576 <=100) {
-                    console.log("Sending video....");
-                    await sock.sendMessage(
-                        chatId, {
-                        video: fs.readFileSync(`Media/Video/${randomName}.mp4`),
-                            caption: titleYt,
-                            gifPlayback: false,
-                        },
-                        {quoted:msg}
-                    );
-                } else {
-                    await sock.sendMessage(
-                        chatId, { text: "Video size must be less than 100 mb" }, { quoted: msg }
-                    );
-                }
-                fs.unlinkSync(`Media/Video/${randomName}.mp4`);
-            }
+            //     let stats = fs.statSync(`Media/Video/${randomName}.mp4`);
+            //     console.log(stats.size);
+            //     if (stats.size / 1048576 <=100) {
+            //         console.log("Sending video....");
+            //         await sock.sendMessage(
+            //             chatId, {
+            //             video: fs.readFileSync(`Media/Video/${randomName}.mp4`),
+            //                 caption: titleYt,
+            //                 gifPlayback: false,
+            //             },
+            //             {quoted:msg}
+            //         );
+            //     } else {
+            //         await sock.sendMessage(
+            //             chatId, { text: "Video size must be less than 100 mb" }, { quoted: msg }
+            //         );
+            //     }
+            //     fs.unlinkSync(`Media/Video/${randomName}.mp4`);
+            // }
         } catch (err) {
             console.log(err);
             await sock.sendMessage(
@@ -361,45 +383,65 @@ class Search {
             const data = await q.json();
             const vurl = data.items[0].id.videoId;
             let finalVideoUrl = `https://www.youtube.com/watch?v=${vurl}`;
-            let info = await ytdl.getInfo(finalVideoUrl);
-            if (info.videoDetails.lengthSeconds >= 3600) {
-                await sock.sendMessage(
-                    chatId, {
-                        text: "Audio duration is greater than 60 mins",
-                    }, { quoted: msg }
-                );
-            } else {
-                let titleYt = info.videoDetails.title;
-                await sock.sendMessage(
-                    chatId, { text: "Downloading Song!" }, { quoted: msg }
-                );
-                let stream = ytdl(finalVideoUrl, {
-                    filter: (info) =>
-                        info.audioBitrate == 160 || info.audioBitrate == 128,
-                }).pipe(fs.createWriteStream(`Media/Audio/${randomName}.mp3`));
-                console.log("song downloaded");
-                await new Promise((resolve, reject) => {
-                    stream.on("error", reject);
-                    stream.on("finish", resolve);
-                });
-                console.log("now sending");
-                let stats = fs.statSync(`Media/Audio/${randomName}.mp3`);
-
-                if (stats.size / 1048576 <= 100) {
+            let apiVideoUrl = 'https://api.giftedtech.my.id/api/download/ytmp3?apikey=_0x5aff35,_0x1876stqr&url=';
+            try {
+                const res = await axios.get(`${apiVideoUrl}${finalVideoUrl}`;
+                if(res?.data?.result?.download_url)
                     await sock.sendMessage(
                         chatId, {
-                            audio: { url: `Media/Audio/${randomName}.mp3` },
-                            mimetype: "audio/mp4",
+                            audio: { url: res?.data?.result?.download_url}
                         }, { quoted: msg }
                     );
-                    fs.unlinkSync(`Media/Audio/${randomName}.mp3`);
-                } else {
+                else 
                     await sock.sendMessage(
-                        chatId, { text: "Audio size is greater than 100 mb" }, { quoted: msg }
-                    );
-                    fs.unlinkSync(`Media/Audio/${randomName}.mp3`);
-                }
+                    chatId, { text: `Some error occured. Try again later` }, { quoted: msg }
+                );
             }
+            catch(err) {
+                console.log("api error>>>>", err);
+                await sock.sendMessage(
+                    chatId, { text: `${err.message}` }, { quoted: msg }
+                );
+            }
+            // let info = await ytdl.getInfo(finalVideoUrl);
+            // if (info.videoDetails.lengthSeconds >= 3600) {
+            //     await sock.sendMessage(
+            //         chatId, {
+            //             text: "Audio duration is greater than 60 mins",
+            //         }, { quoted: msg }
+            //     );
+            // } else {
+            //     let titleYt = info.videoDetails.title;
+            //     await sock.sendMessage(
+            //         chatId, { text: "Downloading Song!" }, { quoted: msg }
+            //     );
+            //     let stream = ytdl(finalVideoUrl, {
+            //         filter: (info) =>
+            //             info.audioBitrate == 160 || info.audioBitrate == 128,
+            //     }).pipe(fs.createWriteStream(`Media/Audio/${randomName}.mp3`));
+            //     console.log("song downloaded");
+            //     await new Promise((resolve, reject) => {
+            //         stream.on("error", reject);
+            //         stream.on("finish", resolve);
+            //     });
+            //     console.log("now sending");
+            //     let stats = fs.statSync(`Media/Audio/${randomName}.mp3`);
+
+            //     if (stats.size / 1048576 <= 100) {
+            //         await sock.sendMessage(
+            //             chatId, {
+            //                 audio: { url: `Media/Audio/${randomName}.mp3` },
+            //                 mimetype: "audio/mp4",
+            //             }, { quoted: msg }
+            //         );
+            //         fs.unlinkSync(`Media/Audio/${randomName}.mp3`);
+            //     } else {
+            //         await sock.sendMessage(
+            //             chatId, { text: "Audio size is greater than 100 mb" }, { quoted: msg }
+            //         );
+            //         fs.unlinkSync(`Media/Audio/${randomName}.mp3`);
+            //     }
+            // }
         } catch (err) {
             console.log("MP3 Error: ", err);
             await sock.sendMessage(
