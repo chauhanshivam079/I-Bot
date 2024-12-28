@@ -529,7 +529,7 @@ const startSock = async () => {
                     await Search.searchMp3ByName(sock, chatId, msg, msgData);
                     break;
                   case "mp3c":
-                    await Search.mp3Convertor(sock, chatId, msg, msgData);
+                    await Search.searchMp3ByName(sock, chatId, msg, msgData);
                     break;
                   case "horo":
                     if(msgData.msgText===""){await sock.sendMessage(chatId,{text:`Enter the horoscope name`},{quoted:msg})}
