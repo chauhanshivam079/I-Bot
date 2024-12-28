@@ -191,7 +191,7 @@ class Search {
                 console.log("dattttttttttttt", data);
                 vurl = data.items[0].id.videoId;
            
-            console.logurl);
+            console.log(vurl);
             let finalVideoUrl = `https://www.youtube.com/watch?v=${vurl}`;
             let apiVideoUrl = 'https://api.giftedtech.my.id/api/download/ytmp4?apikey=_0x5aff35,_0x1876stqr&url=';
             try {
