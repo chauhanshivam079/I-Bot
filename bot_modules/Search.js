@@ -195,7 +195,7 @@ class Search {
             let finalVideoUrl = `https://www.youtube.com/watch?v=${vurl}`;
             let apiVideoUrl = 'https://api.giftedtech.my.id/api/download/ytmp4?apikey=_0x5aff35,_0x1876stqr&url=';
             try {
-                const res = await axios.get(`${apiVideoUrl}${finalVideoUrl}`;
+                const res = await axios.get(`${apiVideoUrl}${finalVideoUrl}`);
                 if(res?.data?.result?.download_url)
                     await sock.sendMessage(
                         chatId, {
@@ -385,7 +385,7 @@ class Search {
             let finalVideoUrl = `https://www.youtube.com/watch?v=${vurl}`;
             let apiVideoUrl = 'https://api.giftedtech.my.id/api/download/ytmp3?apikey=_0x5aff35,_0x1876stqr&url=';
             try {
-                const res = await axios.get(`${apiVideoUrl}${finalVideoUrl}`;
+                const res = await axios.get(`${apiVideoUrl}${finalVideoUrl}`);
                 if(res?.data?.result?.download_url)
                     await sock.sendMessage(
                         chatId, {
