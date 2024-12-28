@@ -190,8 +190,8 @@ class Search {
                 const data = await q.json();
                 console.log("dattttttttttttt", data);
                 vurl = data.items[0].id.videoId;
-            }
-            console.log(vurl);
+           
+            console.logurl);
             let finalVideoUrl = `https://www.youtube.com/watch?v=${vurl}`;
             let apiVideoUrl = 'https://api.giftedtech.my.id/api/download/ytmp4?apikey=_0x5aff35,_0x1876stqr&url=';
             try {
@@ -200,8 +200,8 @@ class Search {
                     await sock.sendMessage(
                         chatId, {
                             video: { url: res?.data?.result?.download_url},
-                            caption: "",
-                            gifPlayback: false,
+                            caption: res.data.result.title,
+                            gifPlayback: true
                         }, { quoted: msg }
                     );
                 else 
@@ -389,7 +389,7 @@ class Search {
                 if(res?.data?.result?.download_url)
                     await sock.sendMessage(
                         chatId, {
-                            audio: { url: res?.data?.result?.download_url}
+                            audio: { url: res?.data?.result?.download_url},mimetype: 'audio/mp4'
                         }, { quoted: msg }
                     );
                 else 
