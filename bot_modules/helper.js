@@ -92,7 +92,7 @@ class Helper {
             isQuoted: this._isQuoted,
             quotedMessage: this._quotedMessage,
             isCmd: this._isCmd,
-            cmd: this._cmd,
+            cmd: this._cmd
         };
     }
 }
