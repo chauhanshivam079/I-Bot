@@ -30,7 +30,7 @@ class Crypto {
             //console.log(this._coinsDetails);
             setTimeout(() => {
                 let count = 0;
-                for (let i = 0; i < this._coinsDetails.length; i++) {
+                for (let i = 0; i < this._coinsDetails?.length; i++) {
                     count++;
                     if (this._coinsData.has(this._coinsDetails[i].symbol)) {
                         let tempArr = this._coinsData.get(this._coinsDetails[i].symbol);
