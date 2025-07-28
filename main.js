@@ -296,7 +296,7 @@ const startSock = async () => {
         console.log("connection update", update);
         const { connection, lastDisconnect } = update;
         if (connection === "close") {
-          console.log("Inside Connection Close");
+          console.log("Inside Connection Close", JSON.stringify(lastDisconnect,null,2));
           // reconnect if not logged out
           if (
             lastDisconnect.error.output.statusCode == DisconnectReason.loggedOut
