@@ -133,7 +133,7 @@ const startSock = async () => {
   const { state, saveCreds } = await useMultiFileAuthState("auth_info_multi");
   //await delay(20000);
   const sock = makeWASocket({
-    version,
+    version:[2,300,1023223821],
     // logger,
     printQRInTerminal: true,
     auth: state,
