@@ -46,6 +46,7 @@ const AiImage=require("./bot_modules/aiImage");
 const ChatGpt=require("./bot_modules/chatGPT");
 const FacebookDownloader = require("./bot_modules/fbDownloader");
 let ownerIdsString = process.env.OWNER_IDS;
+const groupMetadataCache = new Map();
 const ownerIds = ownerIdsString.split(" ").map((id) => id + "@s.whatsapp.net");
 mdClient.connect();
 
@@ -238,7 +239,7 @@ const startSock = async () => {
   ];
 
   //to update the dababase constantly
-  let interval2 = setInterval(async () => {
+/*  let interval2 = setInterval(async () => {
     if (allMsgArray.length > 0) {
       try {
         let tempMsg = allMsgArray[0];
@@ -273,7 +274,50 @@ const startSock = async () => {
         console.log("Error in updating each msg to db", err);
       }
     }
-  }, 500);
+  }, 500);*/
+
+  let interval2 = setInterval(async () => {
+    if (allMsgArray.length > 0) {
+        try {
+            let tempMsg = allMsgArray[0];
+            
+            // Get data from the array by index, just like your original code
+            let originalMsg = tempMsg[0];
+            let msgDetails = tempMsg[1];
+            let chatId = tempMsg[2];
+            let senderId = tempMsg[3]; // The original senderId
+            let groupName = tempMsg[4]; // The NEW cached groupName
+
+            // **Your original senderId formatting is preserved**
+            senderId = senderId.replace(
+                senderId.substring(
+                    senderId.indexOf(":") === -1
+                        ? senderId.indexOf("@")
+                        : senderId.indexOf(":"),
+                    senderId.indexOf("@")
+                ),
+                ""
+            );
+            
+            // **The slow sock.groupMetadata() call is now GONE from this loop**
+
+            // Your original database call
+            DbOperation.updateData(
+                chatId,
+                senderId,
+                originalMsg,
+                msgDetails,
+                groupName // Use the cached name
+            );
+
+            // Your original shift() at the end
+            allMsgArray.shift();
+
+        } catch (err) {
+            console.log("Error in updating each msg to db", err);
+        }
+    }
+}, 500);
 
   setInterval(async () => {
     console.log("printing news");
@@ -333,7 +377,29 @@ const startSock = async () => {
             const msgData = Helper.getMessageData(msgContent, pre);
             //console.log(JSON.stringify(msg, undefined, 2));
             if (chatId.includes("@g")) {
-              allMsgArray.push([msg, msgData, chatId, senderId]);
+              // Inside sock.ev.process(async (events) => { ... })
+// Inside if (events["messages.upsert"]) { ... }
+// Inside if (chatId.includes("@g")) { ... }
+
+let groupName;
+// Check if we have the group name cached
+if (groupMetadataCache.has(chatId)) {
+    groupName = groupMetadataCache.get(chatId);
+} else {
+    console.log(`[Cache] New group found, fetching metadata for: ${chatId}`);
+    try {
+        const metadata = await sock.groupMetadata(chatId);
+        groupName = metadata.subject;
+        groupMetadataCache.set(chatId, groupName); // Save to cache
+    } catch (err) {
+        console.log(`[Cache] Failed to fetch metadata for ${chatId}`, err);
+        groupName = ""; // Use a default value
+    }
+}
+
+// NOW push to the array with the group name already included
+allMsgArray.push([msg, msgData, chatId, senderId, groupName]);
+              //allMsgArray.push([msg, msgData, chatId, senderId]);
               // if (!(await DbOperation.checkCmd(chatId, "profanity")) &&
               //     msgData.msgText &&
               //     !msgData.msgText.includes("rem_ab")
