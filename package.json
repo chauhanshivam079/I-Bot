@@ -46,7 +46,7 @@
     "mongodb": "^4.12.1",
     "music-metadata": "^7.12.3",
     "node-cache": "^5.1.2",
-    "openai": "^3.1.0",
+    "openai": "^5.23.0",
     "pino": "^7.0.0",
     "pretty": "^2.0.0",
     "protobufjs": "^6.11.3",
