@@ -1,9 +1,10 @@
-const {Configuration,OpenAIApi} = require("openai");
+const OpenAI = require("openai");
 require("dotenv").config({ path: "./Keys.env" });
-const config = new Configuration({
-    apiKey:process.env.openai,
+
+const openAi = new OpenAI({
+    apiKey: process.env.openai
 });
-const openAi = new OpenAIApi(config);
+
 class ChatGpt{
     static async search(sock,chatId,msg,msgData){
         try{
@@ -13,8 +14,8 @@ class ChatGpt{
             }
             let ques;
                 ques = msgData.msgText;
-            const response = await openAi.createCompletion({
-                model:"text-davinci-003",
+            const response = await openAi.completions.create({
+                model:"gpt-3.5-turbo-instruct",
                 prompt:ques,
                 max_tokens:3000,
                 temperature:0.3,
