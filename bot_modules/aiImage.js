@@ -9,7 +9,6 @@ class AiImageGeneration{
     static async aiImageGeneration(sock,chatId,msg,msgData){
         try{
                         await sock.sendMessage(chatId,{text:`command temporarily disabled`},{quoted:msg});
-return;
         //     let ques;
         // if (msgData.isQuoted && msgData.quotedMessage.quotedMessage.conversation) {
         //     ques = msgData.quotedMessage.quotedMessage.conversation;
@@ -31,7 +30,6 @@ return;
     static async aiImageVariation(sock,chatId,msg,msgData){
         try{
              await sock.sendMessage(chatId,{text:`command temporarily disabled`},{quoted:msg});
-return;
             // let buffer;
             // let data;
             // if(msgData.isQuoted && msgData.quotedMessage.quotedMessage.hasOwnProperty("imageMessage")){
@@ -53,8 +51,8 @@ return;
             //         buffer,
             //         1);
             //     await sock.sendMessage(chatId,{image:{url:response.data.data[0].url}},{quoted:msg});
-            }
-        }catch(err){
+        }
+        catch(err){
             await sock.sendMessage(chatId,{text:`${err.message}`},{quoted:msg});
         }
     }
