@@ -61,7 +61,7 @@
     "ytdl-core": "github:khlevon/node-ytdl-core#v4.11.4-patch.2"
   },
   "peerDependencies": {
-    "jimp": "^0.16.1",
+    "jimp": "^1.6.0",
     "link-preview-js": "^3.0.0",
     "qrcode-terminal": "^0.12.0",
     "sharp": "^0.32.6"
@@ -90,8 +90,8 @@
     "@types/sharp": "^0.29.4",
     "@types/ws": "^8.0.0",
     "conventional-changelog-cli": "^2.2.2",
-    "eslint": "^8.0.0",
-    "jimp": "^0.16.1",
+    "eslint": "^9.0.0",
+    "jimp": "^1.6.0",    
     "link-preview-js": "^3.0.0",
     "open": "^8.4.2",
     "qrcode-terminal": "^0.12.0",
