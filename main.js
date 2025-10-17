@@ -20,6 +20,7 @@ const {
   MessageRetryMap,
   useMultiFileAuthState,
 } = require("@adiwajshing/baileys");
+const QRCode = require('qrcode');
 const groupManage = require("./bot_modules/groupManage.js");
 const textToHand = require("./bot_modules/textToHandwriting.js");
 const ProductSearch = require("./bot_modules/ProductSearch.js");
@@ -134,12 +135,13 @@ const startSock = async () => {
   const { state, saveCreds } = await useMultiFileAuthState("auth_info_multi");
   //await delay(20000);
   const sock = makeWASocket({
-    version:[2,3000,1023223821],
+    version,
+    browser: ['Mac OS','Chrome','14.4.1'],
     // logger,
-    printQRInTerminal: true,
+    // printQRInTerminal: true,
     auth: state,
     msgRetryCounterMap,
-    defaultQueryTimeoutMs:undefined,
+    defaultQueryTimeoutMs: undefined,
     // implement to handle retries
   });
 
@@ -338,7 +340,16 @@ const startSock = async () => {
         console.log("Inside Connecion UPDATE");
         const update = events["connection.update"];
         console.log("connection update", update);
-        const { connection, lastDisconnect } = update;
+        const { connection, lastDisconnect, qr } = update;
+        if (qr) {
+          try {
+            const qrStr = await QRCode.toString(qr, { type: "terminal", small: true });
+            console.log(qrStr);
+          } catch (e) {
+            console.log("Open this QR with a scanner:");
+            console.log(qr);
+          }
+        }
         if (connection === "close") {
           console.log("Inside Connection Close", JSON.stringify(lastDisconnect,null,2));
           // reconnect if not logged out
