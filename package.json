@@ -8,7 +8,7 @@
     "lib": "lib"
   },
   "engines": {
-    "node": "24.8.0",
+    "node": "24.x.x",
     "npm": "11.6.0"
   },
   "keywords": [
