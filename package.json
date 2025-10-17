@@ -102,5 +102,5 @@
     "typedoc": "^0.24.7",
     "typescript": "^4.6.4"
   },
-  "packageManager": "npm@11.x.x"
+  "packageManager": "npm@9.9.2"
 }
