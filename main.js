@@ -20,7 +20,7 @@ const {
   MessageRetryMap,
   useMultiFileAuthState,
 } = require("@adiwajshing/baileys");
-const QRCode = require('qrcode');
+// const QRCode = require('qrcode');
 const groupManage = require("./bot_modules/groupManage.js");
 const textToHand = require("./bot_modules/textToHandwriting.js");
 const ProductSearch = require("./bot_modules/ProductSearch.js");
@@ -341,15 +341,15 @@ const startSock = async () => {
         const update = events["connection.update"];
         console.log("connection update", update);
         const { connection, lastDisconnect, qr } = update;
-        if (qr) {
-          try {
-            const qrStr = await QRCode.toString(qr, { type: "terminal", small: true });
-            console.log(qrStr);
-          } catch (e) {
-            console.log("Open this QR with a scanner:");
-            console.log(qr);
-          }
-        }
+        // if (qr) {
+        //   try {
+        //     const qrStr = await QRCode.toString(qr, { type: "terminal", small: true });
+        //     console.log(qrStr);
+        //   } catch (e) {
+        //     console.log("Open this QR with a scanner:");
+        //     console.log(qr);
+        //   }
+        // }
         if (connection === "close") {
           console.log("Inside Connection Close", JSON.stringify(lastDisconnect,null,2));
           // reconnect if not logged out
