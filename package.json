@@ -30,7 +30,7 @@
     "url": "git+https://github.com/chauhanshivam079/I-Bot.git"
   },
   "dependencies": {
-    "@adiwajshing/baileys": "^6.7.20",
+    "@adiwajshing/baileys": "7.0.0-rc.5",
     "@adiwajshing/keyed-db": "^0.2.4",
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@hapi/boom": "^9.1.3",
