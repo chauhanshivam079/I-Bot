@@ -1066,11 +1066,13 @@ allMsgArray.push([msg, msgData, chatId, senderId, groupName]);
                     break;
                   case "a":
                     console.log("Hello");
-                    await sock.sendMessage(
+                    try{
+                    console.log("chatId",chatId, msg);
+                      await sock.sendMessage(
                       chatId,
                       { text: "Yup! I am active" },
                       { quoted: msg }
-                    );
+                    );}catch(err){console.log("active>>>>",err);}
                     break;
                   case "makehimgay":
                     if (msgData.isQuoted) {
