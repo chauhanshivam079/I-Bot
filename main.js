@@ -401,7 +401,7 @@ if (groupMetadataCache.has(chatId)) {
     try {
         const metadata = await sock.groupMetadata(chatId);
         groupName = metadata.subject;
-        groupMetadataCache.set(chatId, groupName); // Save to cache
+        //groupMetadataCache.set(chatId, groupName); // Save to cache
     } catch (err) {
         console.log(`[Cache] Failed to fetch metadata for ${chatId}`, err);
         groupName = ""; // Use a default value
