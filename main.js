@@ -64,7 +64,8 @@ const doReplies = !process.argv.includes("--no-reply");
 const msgRetryCounterMap = MessageRetryMap;
 // the store maintains the data of the WA connection in memory
 // can be written out to a file & read from it
-const store = useStore ? makeInMemoryStore({}) : undefined;
+const store = undefined;
+  // useStore ? makeInMemoryStore({}) : undefined;
 
 let sessionThere = 1;
 // start a connection
