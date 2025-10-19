@@ -1,9 +1,9 @@
-const OpenAI = require("openai");
+// const OpenAI = require("openai");
 require("dotenv").config({ path: "./Keys.env" });
 
-const openAi = new OpenAI({
-    apiKey: process.env.openai
-});
+// const openAi = new OpenAI({
+//     apiKey: process.env.openai
+// });
 
 class ChatGpt{
     static async search(sock,chatId,msg,msgData){
