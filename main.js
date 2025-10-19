@@ -145,7 +145,7 @@ const startSock = async () => {
     // implement to handle retries
   });
 
-  //await delay(20000);
+  // await delay(20000);
 
   // store.bind(sock.ev);
   sessionThere = 2;
