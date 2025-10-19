@@ -147,7 +147,7 @@ const startSock = async () => {
 
   //await delay(20000);
 
-  store.bind(sock.ev);
+  // store.bind(sock.ev);
   sessionThere = 2;
   // const sendMessageWTyping = async(msg: AnyMessageContent, jid: string) => {
   //     await sock.presenceSubscribe(jid);
