@@ -12,8 +12,8 @@ COPY package.json package-lock.json* ./
 COPY .npmrc* ./
 
 # If your package-lock.json is up-to-date, prefer ci. Otherwise, use install.
-# RUN npm ci --omit=optional
-RUN npm install
+RUN npm ci --omit=optional
+# RUN npm install
 
 # (Optional) ensure ffmpeg linux binary is present in container
 RUN npm install @ffmpeg-installer/linux-x64 --force
