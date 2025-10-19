@@ -51,7 +51,7 @@ const groupMetadataCache = new Map();
 const ownerIds = ownerIdsString.split(" ").map((id) => id + "@s.whatsapp.net");
 mdClient.connect();
 
-const MAIN_LOGGER = require("@adiwajshing/baileys/lib/Utils/logger");
+// const MAIN_LOGGER = require("@adiwajshing/baileys/lib/Utils/logger");
 
 // const logger = MAIN_LOGGER.child({});
 // logger.level = "trace";
