@@ -64,7 +64,8 @@ const doReplies = !process.argv.includes("--no-reply");
 const msgRetryCounterMap = MessageRetryMap;
 // the store maintains the data of the WA connection in memory
 // can be written out to a file & read from it
-const store = useStore ? makeInMemoryStore({}) : undefined;
+const store = undefined;
+  // useStore ? makeInMemoryStore({}) : undefined;
 
 let sessionThere = 1;
 // start a connection
@@ -132,7 +133,7 @@ const startSock = async () => {
   const { version, isLatest } = await fetchLatestBaileysVersion();
   //console.log(`using WA v${version.join(".")}, isLatest: ${isLatest}`);
 
-  const { state, saveCreds } = await useMultiFileAuthState("auth_info_multi");
+  const { state, saveCreds, signalRepository } = await useMultiFileAuthState("auth_info_multi");
   //await delay(20000);
   const sock = makeWASocket({
     version,
@@ -141,13 +142,14 @@ const startSock = async () => {
     // printQRInTerminal: true,
     auth: state,
     msgRetryCounterMap,
+    signalRepository,
     defaultQueryTimeoutMs: undefined,
     // implement to handle retries
   });
 
   // await delay(20000);
 
-  store.bind(sock.ev);
+  // store.bind(sock.ev);
   sessionThere = 2;
   // const sendMessageWTyping = async(msg: AnyMessageContent, jid: string) => {
   //     await sock.presenceSubscribe(jid);
@@ -369,6 +371,9 @@ const startSock = async () => {
             startSock();
           }
         }
+      }
+      if(events['creds.update']){
+        sock.ev.on('creds.update', saveCreds);
       }
       if (events["messages.upsert"]) {
         //console.log('recv messages ', JSON.stringify(upsert, undefined, 2))
