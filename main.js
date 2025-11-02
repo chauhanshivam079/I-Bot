@@ -64,8 +64,7 @@ const doReplies = !process.argv.includes("--no-reply");
 const msgRetryCounterMap = MessageRetryMap;
 // the store maintains the data of the WA connection in memory
 // can be written out to a file & read from it
-const store = undefined;
-  // useStore ? makeInMemoryStore({}) : undefined;
+const store = useStore ? makeInMemoryStore({}) : undefined;
 
 let sessionThere = 1;
 // start a connection
@@ -148,7 +147,7 @@ const startSock = async () => {
 
   // await delay(20000);
 
-  // store.bind(sock.ev);
+  store.bind(sock.ev);
   sessionThere = 2;
   // const sendMessageWTyping = async(msg: AnyMessageContent, jid: string) => {
   //     await sock.presenceSubscribe(jid);
