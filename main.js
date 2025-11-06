@@ -46,6 +46,7 @@ const Lyrics=require("./bot_modules/lyrics");
 const AiImage=require("./bot_modules/aiImage");
 const ChatGpt=require("./bot_modules/chatGPT");
 const FacebookDownloader = require("./bot_modules/fbDownloader");
+const cron = require('node-cron');
 let ownerIdsString = process.env.OWNER_IDS;
 const groupMetadataCache = new Map();
 const ownerIds = ownerIdsString.split(" ").map((id) => id + "@s.whatsapp.net");
@@ -323,6 +324,15 @@ const startSock = async () => {
     }
 }, 500);
 
+    // Every Friday at 00:00 (12:00 AM) India time
+  cron.schedule('0 0 * * 5', async () => {
+    // TODO: call your specific function here
+    // Example:
+    // await someModule.someFunction(sock);
+    await sock.updateProfilePicture('120363349020287470@g.us', { url: './Media/Image/WhatsApp Image 2025-11-06 at 3.53.42 PM.jpeg' });
+    await sock.groupUpdateDescription('120363349020287470@g.us', 'Pancho Friday aa, Crown Royale, cocaine hookah naal sexu, fudiyaan padooo');
+    await sock.sendMessage('120363349020287470@g.us', { text: 'Friday 12:00 AM job ran (IST).' });
+  }, { timezone: 'Asia/Kolkata' });
   //setInterval(async () => {
    // console.log("printing news");
  //   await Crypto.getNews(sock, "918329198682-1612849199@g.us", { msgText: "" });
