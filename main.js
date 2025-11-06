@@ -337,7 +337,7 @@ const startSock = async () => {
     // Every hour on Friday (IST)
   cron.schedule('0 * * * 5', async () => {
     // await someModule.someFunction(sock);
-    await sock.sendMessage('120363349020287470@g.us', { sticker: fs.readFileSync('.Media/stickers/fridayHai.webp') })
+    await sock.sendMessage('120363349020287470@g.us', { sticker: fs.readFileSync('./Media/stickers/fridayHai.webp') })
     await sock.sendMessage('120363349020287470@g.us', { text: 'Friday hourly job ran (IST).' });
   }, { timezone: 'Asia/Kolkata' });
   //setInterval(async () => {
