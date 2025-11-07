@@ -331,15 +331,15 @@ const startSock = async () => {
     // await someModule.someFunction(sock);
     await sock.updateProfilePicture('120363349020287470@g.us', { url: './Media/Image/WhatsApp Image 2025-11-06 at 3.53.42 PM.jpeg' });
     await sock.groupUpdateDescription('120363349020287470@g.us', 'Pancho Friday aa, Crown Royale, cocaine hookah naal sexu, fudiyaan padooo');
+    await sock.sendMessage('120363349020287470@g.us', { sticker: fs.readFileSync('./Media/stickers/fridayHai.webp') })
     await sock.sendMessage('120363349020287470@g.us', { text: 'Friday 12:00 AM job ran (IST).' });
   }, { timezone: 'Asia/Kolkata' });
 
     // Every hour on Friday (IST)
-  cron.schedule('0 * * * 5', async () => {
-    // await someModule.someFunction(sock);
-    await sock.sendMessage('120363349020287470@g.us', { sticker: fs.readFileSync('./Media/stickers/fridayHai.webp') })
-    await sock.sendMessage('120363349020287470@g.us', { text: 'Friday hourly job ran (IST).' });
-  }, { timezone: 'Asia/Kolkata' });
+  // cron.schedule('0 * * * 5', async () => {
+  //   // await someModule.someFunction(sock);
+  //   await sock.sendMessage('120363349020287470@g.us', { text: 'Friday hourly job ran (IST).' });
+  // }, { timezone: 'Asia/Kolkata' });
   //setInterval(async () => {
    // console.log("printing news");
  //   await Crypto.getNews(sock, "918329198682-1612849199@g.us", { msgText: "" });
