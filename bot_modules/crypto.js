@@ -3,119 +3,111 @@ const INTL = require("intl");
 const axios = require("axios");
 const cheerio = require("cheerio");
 const pretty = require("pretty");
+
 class Crypto {
-    _baseUrl;
-    _coinsData;
-    _coinsDataName;
+    _baseUrl = "https://api.coingecko.com/api/v3/";
+    _coinsData = new Map();      // Map<symbol, id[]>   e.g. "btc" -> ["bitcoin", "wrapped-bitcoin", ...]
+    _coinsDataName = new Map();  // Map<name,   id[]>   e.g. "bitcoin" -> ["bitcoin"]
     _coinsDetails;
+    _ready = false;
     _newsApiKey = process.env.NEWS_API;
 
     constructor() {
-        setTimeout(() => {
-            //console.log("1111111111111", this._newsApiKey);
-            this._baseUrl = "https://api.coingecko.com/api/v3/";
-            fetch("https://api.coingecko.com/api/v3/coins/list").then((res) =>
-                res
-                .json()
-                .then((result) => ({
-                    data: result,
-                }))
-                .then((ress) => {
-                    this._coinsDetails = ress.data;
-                })
-            );
-
-            this._coinsData = new Map();
-            this._coinsDataName = new Map();
-            //console.log(this._coinsDetails);
-            setTimeout(() => {
-                let count = 0;
-                for (let i = 0; i < this._coinsDetails?.length; i++) {
-                    count++;
-                    if (this._coinsData.has(this._coinsDetails[i].symbol)) {
-                        let tempArr = this._coinsData.get(this._coinsDetails[i].symbol);
-                        tempArr.push(this._coinsDetails[i].id);
-                        this._coinsData.set(this._coinsDetails[i].symbol, tempArr);
-                    } else {
-                        this._coinsData.set(this._coinsDetails[i].symbol, [
-                            this._coinsDetails[i].id,
-                        ]);
-                    }
-                }
-
-                for (let i = 0; i < this._coinsDetails.length; i++) {
-                    if (
-                        this._coinsDataName.has(this._coinsDetails[i].name.toLowerCase())
-                    ) {
-                        let tempArr = this._coinsDataName.get(this._coinsDetails[i].name);
-                        if(tempArr){
-                        tempArr.push(this._coinsDetails[i].id);
-                        this._coinsDataName.set(
-                            this._coinsDetails[i].name.toLowerCase(),
-                            tempArr
-                        );
-                        }
-                    } else {
-                        this._coinsDataName.set(this._coinsDetails[i].name.toLowerCase(), [
-                            this._coinsDetails[i].id,
-                        ]);
-                    }
-                }
-            }, 10000);
-        }, 25000);
+        this._init().catch((e) => console.error("Crypto init failed:", e));
     }
+
+    async _init() {
+        const res = await fetch(`${this._baseUrl}coins/list`);
+        if (!res.ok) throw new Error(`coins/list failed: ${res.status}`);
+        this._coinsDetails = await res.json();
+
+        for (const coin of this._coinsDetails) {
+            const sym = coin.symbol && coin.symbol.toLowerCase();
+            const name = coin.name && coin.name.toLowerCase();
+            if (sym) {
+                const arr = this._coinsData.get(sym) || [];
+                arr.push(coin.id);
+                this._coinsData.set(sym, arr);
+            }
+            if (name) {
+                const arr = this._coinsDataName.get(name) || [];
+                arr.push(coin.id);
+                this._coinsDataName.set(name, arr);
+            }
+        }
+        this._ready = true;
+        console.log(`Crypto ready — ${this._coinsDetails.length} coins indexed`);
+    }
+
+    _fmt(n) {
+        if (n === undefined || n === null || Number.isNaN(n)) return "N/A";
+        return new INTL.NumberFormat("hi", {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 10,
+        }).format(n);
+    }
+
     async getPrices(sock, chatId, msgData, msg) {
-        if (msgData.msgText === "") {
+        if (!msgData || !msgData.msgText || msgData.msgText.trim() === "") {
+            await sock.sendMessage(chatId, { text: "Empty Parameter!" }, { quoted: msg });
+            return;
+        }
+
+        if (!this._ready) {
             await sock.sendMessage(
-                chatId, { text: "Empty Parameter!" }, { quoted: msg }
+                chatId,
+                { text: "Bot is still warming up, try again in a few seconds." },
+                { quoted: msg }
             );
             return;
         }
-        let coinName = msgData.msgText.toLowerCase();
-        let finalStr = "";
-        let flag = 0;
+
+        const coinName = msgData.msgText.toLowerCase().trim();
+
         let ids;
-        //  console.log(this._coinsData.get(coinName));
-        // console.log(this._coinsDataName);
-        if (this._coinsDataName.has(coinName)) {
-            ids = this._coinsDataName.get(coinName);
-        } else if (this._coinsData.has(coinName)) {
-            ids = this._coinsData.get(coinName);
-        } else {
-            flag = 1;
-            sock.sendMessage(chatId, { text: "Wrong Coin Name" }, { quoted: msg });
+        if (this._coinsDataName.has(coinName))    ids = this._coinsDataName.get(coinName);
+        else if (this._coinsData.has(coinName))   ids = this._coinsData.get(coinName);
+        else {
+            await sock.sendMessage(chatId, { text: "Wrong Coin Name" }, { quoted: msg });
+            return;
         }
 
-        if (!flag) {
-            for (let i = 0; i < ids.length; i++) {
-                let coinData = await fetch(
-                    `${this._baseUrl}simple/price/?ids=${ids[i]}&vs_currencies=usd,inr,btc`
-                );
-                let coinDataJson = await coinData.json();
-                //console.log(coinDataJson);
+        // Batch all ids into ONE request — avoids CoinGecko rate limiting (429).
+        const idList = ids.join(",");
+        let res, json;
+        try {
+            res = await fetch(
+                `${this._baseUrl}simple/price?ids=${encodeURIComponent(idList)}&vs_currencies=usd,inr,btc`
+            );
+            json = await res.json();
+        } catch (e) {
+            await sock.sendMessage(chatId, { text: `Network error: ${e.message}` }, { quoted: msg });
+            return;
+        }
 
-                let coinPricesObj = coinDataJson[ids[i]];
-                let usdPrice = new INTL.NumberFormat("hi", {
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 10,
-                }).format(coinPricesObj["usd"]);
-                let inrPrice = new INTL.NumberFormat("hi", {
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 10,
-                }).format(coinPricesObj["inr"]);
-                let btcPrice = new INTL.NumberFormat("hi", {
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 10,
-                }).format(coinPricesObj["btc"]);
-                finalStr =
-                    finalStr +
-                    `_*${ids[
-            i
-          ].toUpperCase()}*_ \n\n${coinName.toUpperCase()} USD = $${usdPrice}\n${coinName.toUpperCase()} INR = ₹${inrPrice}\n${coinName.toUpperCase()} BTC = ₿${btcPrice}\n\n`;
+        if (!res.ok) {
+            const note = res.status === 429 ? " (rate limited — try again in a minute)" : "";
+            await sock.sendMessage(chatId, { text: `API error ${res.status}${note}` }, { quoted: msg });
+            return;
+        }
+
+        let finalStr = "";
+        for (const id of ids) {
+            const prices = json && json[id];
+            if (!prices) {
+                finalStr += `_*${id.toUpperCase()}*_\nPrice data unavailable\n\n`;
+                continue;
             }
-            sock.sendMessage(chatId, { text: finalStr }, { quoted: msg });
+            finalStr +=
+                `_*${id.toUpperCase()}*_ \n\n` +
+                `${coinName.toUpperCase()} USD = $${this._fmt(prices.usd)}\n` +
+                `${coinName.toUpperCase()} INR = ₹${this._fmt(prices.inr)}\n` +
+                `${coinName.toUpperCase()} BTC = ₿${this._fmt(prices.btc)}\n\n`;
         }
+
+        await sock.sendMessage(chatId, { text: finalStr || "No price data returned." }, { quoted: msg });
     }
+
     async getNews(sock, chatId, msgData) {
         let newsJson;
         if (msgData.msgText != "") {
@@ -123,23 +115,24 @@ class Crypto {
                 `https://newsapi.org/v2/everything?q=+${msgData.msgText}&apiKey=${this._newsApiKey}&sortBy=relevancy&domains=cointelegraph.com,coindesk.com,u.today,cryptoslate.com&language=en`
             );
             newsJson = await news.json();
-            //console.log(newsJson);
         } else {
             const news = await fetch(
                 `https://newsapi.org/v2/everything?apiKey=${this._newsApiKey}&sortBy=publishedAt&domains=cointelegraph.com,coindesk.com,u.today,cryptoslate.com&language=en`
             );
             newsJson = await news.json();
-            //console.log(newsJson);
         }
 
-        let finalStr =
-            "*Crypto News* \n\n​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​";
-        //console.log(newsJson["articles"]);
-        for (let i = 0; i < Math.min(10, newsJson["articles"].length); i++) {
-            finalStr += `📊${newsJson["articles"][i]["description"]}\n\n`;
+        let finalStr = "*Crypto News* \n\n";
+        if (!newsJson || !Array.isArray(newsJson.articles)) {
+            await sock.sendMessage(chatId, { text: "Could not fetch news." });
+            return;
+        }
+        for (let i = 0; i < Math.min(10, newsJson.articles.length); i++) {
+            finalStr += `📊${newsJson.articles[i].description}\n\n`;
         }
         await sock.sendMessage(chatId, { text: finalStr });
     }
+
     async getStockPrice(sock, chatId, msgData, msg) {
         if (msgData.msgText === "") {
             await sock.sendMessage(
@@ -149,10 +142,7 @@ class Crypto {
         }
         const url = `https://www.google.com/finance/quote/${msgData.msgText}:NSE`;
         try {
-            // Fetch HTML of the page we want to scrape
             const { data } = await axios.get(url);
-
-            // Load HTML we fetched in the previous line
             const $ = cheerio.load(data);
             let finalString = "";
             const stockName = $(".zzDege");
@@ -168,4 +158,5 @@ class Crypto {
         }
     }
 }
+
 module.exports = new Crypto();
