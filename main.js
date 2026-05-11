@@ -421,8 +421,9 @@ if (groupMetadataCache.has(chatId)) {
 } else {
     console.log(`[Cache] New group found, fetching metadata for: ${chatId}`);
     try {
-        const metadata = await sock.groupMetadata(chatId);
-        groupName = metadata.subject;
+        // const metadata = await sock.groupMetadata(chatId);
+        groupName = ''
+          // metadata.subject;
         //groupMetadataCache.set(chatId, groupName); // Save to cache
     } catch (err) {
         console.log(`[Cache] Failed to fetch metadata for ${chatId}`, err);
